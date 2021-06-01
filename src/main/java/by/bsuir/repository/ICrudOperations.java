@@ -2,9 +2,11 @@ package by.bsuir.repository;
 
 import java.util.List;
 
+/*Generic interface for CRUD operations
+ * CRUD = Create Read Update Delete
+ * @params K - primary key of object
+ *         V - object type*/
 public interface ICrudOperations<K, T> {
-
-    //CRUD = Create Read Update Delete
 
     List<T> findAll();
 
@@ -18,5 +20,7 @@ public interface ICrudOperations<K, T> {
 
     T update(T entity);
 
-    void delete(K id);
+    void deleteHard(K id);
+
+    boolean delete(K id);
 }

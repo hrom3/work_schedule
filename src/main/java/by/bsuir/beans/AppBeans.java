@@ -1,5 +1,7 @@
 package by.bsuir.beans;
 
+import by.bsuir.util.RandomFromFile;
+import by.bsuir.util.UserGenerator;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +11,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import javax.sql.DataSource;
 
 
-//@Configuration
+@Configuration
 public class AppBeans {
 
     //select * from users where user id = ?
@@ -36,4 +38,14 @@ public class AppBeans {
 
         return  hikariDataSource;
     }
+
+    @Bean
+    public RandomFromFile getRandomMy() {
+        return new RandomFromFile();
+    }
+
+//    @Bean
+//    public UserGenerator getUserGenerator() {
+//        return new UserGenerator();
+//    }
 }

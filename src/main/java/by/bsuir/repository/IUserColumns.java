@@ -5,7 +5,7 @@ public interface IUserColumns {
     String ID = "id";
     String NAME = "name";
     String SURNAME = "surname";
-    String MIDDLENAME = "middleName";
+    String MIDDLE_NAME = "middle_name";
     String EMAIL = "email";
     String BIRTHDAY = "birth_day";
     String DEPARTMENT_ID = "department_id";
