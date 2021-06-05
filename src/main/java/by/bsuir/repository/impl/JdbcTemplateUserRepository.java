@@ -133,9 +133,21 @@ public class JdbcTemplateUserRepository implements IUserRepository {
         return result != null && result > 0;
     }
 
+    //Specification
+    //Criteria API
+    //Search Criteria object
+    //like '%query%' and like '%query%' and like '%query%'
+    //ElasticSearch
+    //PostgresFTS
     @Override
     public List<User> findUsersByQuery(Integer limit, String query) {
-        return null;
+        final String searchQuery = "select * from users where name like :query limit :limit";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("query", "%" + query + "%");
+        params.addValue("limit", limit);
+
+        return namedParameterJdbcTemplate.query(searchQuery, params, this::getUserRowMapper);
     }
 
     @Override
