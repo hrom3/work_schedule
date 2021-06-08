@@ -2,7 +2,7 @@ package by.bsuir.repository.impl;
 
 import by.bsuir.domain.User;
 import by.bsuir.exception.NoSuchEntityException;
-import by.bsuir.repository.IUserColumns;
+import by.bsuir.repository.columns.IUserColumns;
 import by.bsuir.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -98,39 +99,58 @@ public class JdbcTemplateUserRepository implements IUserRepository {
         namedParameterJdbcTemplate.update(createQuery, params);
     }
 
-    @Override
-    public void save(List<User> entities) {
-        for (User entry : entities) {
-            addOne(entry);
-        }
-    }
+//    @Override
+//    public void save(List<User> entities) {
+//        for (User entry : entities) {
+//            addOne(entry);
+//        }
+//    }
 
     @Override
     public User update(User entity) {
-        return null;
+        final String updateQuery = "update users set " +
+                "name = :name, " +
+                "surname = :surname, " +
+                "middle_name =:middleName, " +
+                "email = :email, " +
+                "birth_day = :birthDay, " +
+                "department_id = :departmentId, " +
+                "created = :created, " +
+                "changed = :changed, " +
+                "is_deleted = :is_deleted, " +
+                "rate_id = :rate_id, " +
+                "room_id = :room_id " +
+                "where id = :id";
+
+
+        MapSqlParameterSource params = generateUserParamsMap(entity);
+
+        namedParameterJdbcTemplate.update(updateQuery, params);
+
+        return findOne(entity.getId());
     }
 
     @Override
     public void deleteHard(Long id) {
-        final String findByIdQuery = "delete from users where id = :id;";
+        final String hardDeleteByIdQuery = "delete from users where id = :id;";
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("id", id);
 
-        namedParameterJdbcTemplate.update(findByIdQuery,parameters);
+        namedParameterJdbcTemplate.update(hardDeleteByIdQuery,parameters);
 
     }
 
     public boolean delete(Long id) {
-        final String updateByIdQuery = "update users set is_deleted = true" +
+        final String deleteByIdQuery = "update users set is_deleted = true" +
                 " where id = :id;";
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("id", id);
 
-        Integer result = namedParameterJdbcTemplate.update(updateByIdQuery, parameters);
+        Integer result = namedParameterJdbcTemplate.update(deleteByIdQuery, parameters);
 
-        return result != null && result > 0;
+        return result > 0;
     }
 
     //Specification
@@ -141,18 +161,33 @@ public class JdbcTemplateUserRepository implements IUserRepository {
     //PostgresFTS
     @Override
     public List<User> findUsersByQuery(Integer limit, String query) {
-        final String searchQuery = "select * from users where name like :query limit :limit";
+        final String searchQuery = "select * from users where name like :query " +
+                "limit :limit;";
 
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("query", "%" + query + "%");
         params.addValue("limit", limit);
 
-        return namedParameterJdbcTemplate.query(searchQuery, params, this::getUserRowMapper);
+        return namedParameterJdbcTemplate.query(searchQuery, params,
+                this::getUserRowMapper);
     }
 
     @Override
     public void batchInsert(List<User> users) {
+        final String createQuery = "insert into users (name, surname, middle_name, " +
+                "email, birth_day, department_id, created, changed, is_deleted, " +
+                "rate_id, room_id) " + "values (:name, :surname, :middleName, " +
+                ":email, :birthDay, :departmentId, :created, :changed, :isDeleted, " +
+                ":rateId, :roomId);";
 
+        List<MapSqlParameterSource> batchParams  =new ArrayList<>();
+
+        for (User user : users) {
+            batchParams.add(generateUserParamsMap(user));
+
+            namedParameterJdbcTemplate.batchUpdate(createQuery,
+                    batchParams.toArray(new MapSqlParameterSource[0]));
+        }
     }
 
     private MapSqlParameterSource generateUserParamsMap(User entity) {

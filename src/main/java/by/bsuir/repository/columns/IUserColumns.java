@@ -1,4 +1,4 @@
-package by.bsuir.repository;
+package by.bsuir.repository.columns;
 
 public interface IUserColumns {
 

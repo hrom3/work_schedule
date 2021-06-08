@@ -2,7 +2,6 @@ package by.bsuir.util;
 
 import by.bsuir.domain.User;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
@@ -40,4 +39,14 @@ public class UserGenerator {
         user.setRoomId(RandomUtils.nextInt(1, 7));
         return user;
     }
+
+    public User generateLiteUser() {
+        User user = new User();
+
+        user.setCreated(new Timestamp(System.currentTimeMillis()));
+        user.setChanged(new Timestamp(System.currentTimeMillis()));
+
+        return user;
+    }
+
 }

@@ -43,5 +43,10 @@ public class TestMain  {
 
         System.out.println(isOk);
 
+        User userToUpdate = userRepository.findOne(4L);
+
+
+
+
     }
 }
