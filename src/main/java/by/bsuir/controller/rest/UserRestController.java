@@ -1,5 +1,6 @@
 package by.bsuir.controller.rest;
 
+import by.bsuir.controller.exception.UnauthorizedException;
 import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.User;
 import by.bsuir.repository.IUserRepository;
@@ -37,8 +38,8 @@ public class UserRestController {
         if (StringUtils.isNotBlank(secretKey) && secretKey.equals(config.getSecretKey())) {
             return userRepository.findAll();
         } else {
-//          throw new UnauthorizedException();
-            return Collections.emptyList();
+          throw new UnauthorizedException("Unable to authenticate Domain " +
+                  "User for provided credentials.");
         }
     }
 
@@ -101,5 +102,20 @@ public class UserRestController {
         user.setRoomId(createRequest.getRoomId());
 
         return  userRepository.update(user);
+    }
+
+    @DeleteMapping("/delete_hard/{userId}")
+    public void deleteUserHard(@PathVariable Long userId) {
+        userRepository.deleteHard(userId);
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    public List<User> deleteUser(@PathVariable Long userId) {
+       boolean isDeleted = userRepository.delete(userId);
+
+       if (isDeleted) {
+           return userRepository.findAll();
+       }
+       return Collections.emptyList();
     }
 }

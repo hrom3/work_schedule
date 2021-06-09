@@ -20,4 +20,14 @@ public class DefaultExceptionHandler {
         return new ResponseEntity<>(new ErrorMessage(2L, e.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    public ResponseEntity<ErrorMessage> handleUnauthorizedException(Exception e) {
+        /* Handles Unauthorized exceptions. Status code 401. */
+        log.error(e.getMessage(), e);
+        log.info(e.getMessage(), e);
+        System.out.println(e.getMessage());
+        return new ResponseEntity<>(new ErrorMessage(401L, e.getMessage()),
+                HttpStatus.UNAUTHORIZED);
+    }
 }

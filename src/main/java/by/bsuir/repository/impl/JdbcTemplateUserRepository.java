@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-@Primary
 @RequiredArgsConstructor
 public class JdbcTemplateUserRepository implements IUserRepository {
 
@@ -87,17 +86,17 @@ public class JdbcTemplateUserRepository implements IUserRepository {
         return findOne(createdUserId);
     }
 
-    @Override
-    public void addOne(User entity) {
-        final String createQuery = "insert into users (name, surname, middle_name, " +
-                "email, birth_day, department_id, created, changed, is_deleted, " +
-                "rate_id, room_id) " + "values (:name, :surname, :middleName, " +
-                ":email, :birthDay, :departmentId, :created, :changed, :isDeleted, " +
-                ":rateId, :roomId);";
-
-        MapSqlParameterSource params = generateUserParamsMap(entity);
-        namedParameterJdbcTemplate.update(createQuery, params);
-    }
+//    @Override
+//    public void addOne(User entity) {
+//        final String createQuery = "insert into users (name, surname, middle_name, " +
+//                "email, birth_day, department_id, created, changed, is_deleted, " +
+//                "rate_id, room_id) " + "values (:name, :surname, :middleName, " +
+//                ":email, :birthDay, :departmentId, :created, :changed, :isDeleted, " +
+//                ":rateId, :roomId);";
+//
+//        MapSqlParameterSource params = generateUserParamsMap(entity);
+//        namedParameterJdbcTemplate.update(createQuery, params);
+//    }
 
 //    @Override
 //    public void save(List<User> entities) {

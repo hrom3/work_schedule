@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-@Primary
 @RequiredArgsConstructor
 public class JdbcTemplateDepartmentRepository implements IDepartmentRepository {
 
@@ -78,14 +77,14 @@ public class JdbcTemplateDepartmentRepository implements IDepartmentRepository {
         return findOne(createdDepartmentId);
     }
 
-    @Override
-    public void addOne(Department entity) {
-        final String createQuery = "insert into department (department_name) "
-                + "values (:departmenName);";
-
-        MapSqlParameterSource params = generateDepartmentParamsMap(entity);
-        namedParameterJdbcTemplate.update(createQuery, params);
-    }
+//    @Override
+//    public void addOne(Department entity) {
+//        final String createQuery = "insert into department (department_name) "
+//                + "values (:departmenName);";
+//
+//        MapSqlParameterSource params = generateDepartmentParamsMap(entity);
+//        namedParameterJdbcTemplate.update(createQuery, params);
+//    }
 
     @Override
     public Department update(Department entity) {
