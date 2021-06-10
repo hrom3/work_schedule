@@ -13,7 +13,7 @@ public class IssueFromJira {
 
     private Long id;
     private String nameOfProject;
-    private String shorNameOfProject;
+    private String shortNameOfProject;
     private Long jiraIssuesId;
 
 

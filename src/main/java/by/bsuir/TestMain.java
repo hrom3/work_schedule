@@ -2,7 +2,6 @@ package by.bsuir;
 
 import by.bsuir.domain.User;
 import by.bsuir.exception.NoSuchEntityException;
-import by.bsuir.repository.IUserColumns;
 import by.bsuir.repository.IUserRepository;
 import by.bsuir.util.UserGenerator;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -43,6 +42,11 @@ public class TestMain  {
         boolean isOk = userRepository.delete(newSavedUser.getId());
 
         System.out.println(isOk);
+
+        User userToUpdate = userRepository.findOne(4L);
+
+
+
 
     }
 }

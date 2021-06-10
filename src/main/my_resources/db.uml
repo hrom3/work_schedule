@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>DATABASE</ID>
+  <OriginalElement>465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.credential</OriginalElement>
+  <nodes>
+    <node x="397.75000000000006" y="204.0">465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.role</node>
+    <node x="222.75000000000006" y="127.0">465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.users</node>
+    <node x="391.75000000000006" y="441.0">465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.users_role</node>
+    <node x="570.75" y="204.0">465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.type_of_user_days</node>
+    <node x="54.25000000000006" y="430.0">465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.user_work_schedule</node>
+    <node x="26.5" y="618.0">465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.type_of_calendar_days</node>
+    <node x="0.0" y="745.0">465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.production calendar</node>
+    <node x="201.25000000000006" y="0.0">465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.department</node>
+    <node x="239.25000000000006" y="430.0">465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.credential</node>
+    <node x="0.0" y="182.0">465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.rate</node>
+    <node x="532.25" y="408.0">465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.user_worked_time</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.user_work_schedule" target="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.rate" relationship="REFERENCES">
+      <point x="-41.25" y="-60.5" />
+      <point x="0.0" y="60.5" />
+    </edge>
+    <edge source="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.user_worked_time" target="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.type_of_user_days" relationship="REFERENCES">
+      <point x="38.5" y="-82.5" />
+      <point x="0.0" y="38.5" />
+    </edge>
+    <edge source="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.credential" target="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.users" relationship="REFERENCES">
+      <point x="0.0" y="-60.5" />
+      <point x="0.0" y="115.5" />
+    </edge>
+    <edge source="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.user_worked_time" target="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.users" relationship="REFERENCES">
+      <point x="-38.5" y="-82.5" />
+      <point x="570.75" y="383.0" />
+      <point x="300.25000000000006" y="383.0" />
+      <point x="0.0" y="115.5" />
+    </edge>
+    <edge source="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.users_role" target="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.users" relationship="REFERENCES">
+      <point x="-27.5" y="-49.5" />
+      <point x="419.25000000000006" y="383.0" />
+      <point x="300.25000000000006" y="383.0" />
+      <point x="0.0" y="115.5" />
+    </edge>
+    <edge source="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.users" target="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.department" relationship="REFERENCES">
+      <point x="0.0" y="-115.5" />
+      <point x="0.0" y="38.5" />
+    </edge>
+    <edge source="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.users_role" target="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.role" relationship="REFERENCES">
+      <point x="27.5" y="-49.5" />
+      <point x="0.0" y="38.5" />
+    </edge>
+    <edge source="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.production calendar" target="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.type_of_calendar_days" relationship="REFERENCES">
+      <point x="0.0" y="-60.5" />
+      <point x="0.0" y="38.5" />
+    </edge>
+    <edge source="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.user_work_schedule" target="465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.users" relationship="REFERENCES">
+      <point x="41.25" y="-60.5" />
+      <point x="178.00000000000006" y="383.0" />
+      <point x="300.25000000000006" y="383.0" />
+      <point x="0.0" y="115.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic" zoom="1.0" showDependencies="false" x="362.0" y="433.0" />
+  <SelectedNodes>
+    <node>465258ea-511e-48fd-9f6e-b92916a3def0.TABLE:work_time_report.public.credential</node>
+  </SelectedNodes>
+  <Categories>
+    <Category>Columns</Category>
+    <Category>Key columns</Category>
+    <Category>Virtual foreign keys</Category>
+  </Categories>
+</Diagram>
+

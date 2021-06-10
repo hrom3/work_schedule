@@ -9,4 +9,6 @@ public interface IUserRepository extends ICrudOperations<Long, User> {
     List<User> findUsersByQuery(Integer limit, String query);
 
     void batchInsert(List<User> users);
+
+    boolean delete(Long id);
 }
