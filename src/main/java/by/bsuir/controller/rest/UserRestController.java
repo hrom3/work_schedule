@@ -5,6 +5,9 @@ import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.User;
 import by.bsuir.repository.IUserRepository;
 import by.bsuir.util.UserGenerator;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import by.bsuir.beans.SecurityConfig;
 import org.apache.commons.lang3.StringUtils;
@@ -25,12 +28,18 @@ public class UserRestController {
     private final UserGenerator userGenerator;
     private final SecurityConfig config;
 
+    @ApiOperation(value = "Find all users")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<User> findAll() {
         return userRepository.findAll();
     }
 
+    @ApiOperation(value = "Find all users with Secret key")
+    @ApiImplicitParams(
+            @ApiImplicitParam( name = "Secret-Key", dataType = "string",
+                    paramType = "header", value = "Secret key for secret functionality")
+    )
     @GetMapping("/hello")
     public List<User> securedFindAll(HttpServletRequest request) {
         String secretKey = request.getHeader("Secret-Key");
@@ -75,6 +84,12 @@ public class UserRestController {
         return userRepository.save(generatedUser);
     }
 
+    @ApiOperation(value = "Create autogenerate users")
+    @ApiImplicitParams({
+            @ApiImplicitParam( name = "usersCount", dataType = "integer",
+                    paramType = "path", value = "Count of users for generate",
+            required = true, defaultValue = "10")
+    })
     @PostMapping("/generate/{usersCount}")
     @ResponseStatus(HttpStatus.CREATED)
     public List<User> generateUsers(@PathVariable("usersCount") Integer count) {

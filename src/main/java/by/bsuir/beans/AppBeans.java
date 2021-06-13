@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 
-
 @Configuration
 public class AppBeans {
 
@@ -19,4 +18,5 @@ public class AppBeans {
     public UserGenerator getUserGenerator() {
         return new UserGenerator();
     }
+
 }
