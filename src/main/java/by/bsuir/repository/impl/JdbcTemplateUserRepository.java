@@ -1,5 +1,7 @@
 package by.bsuir.repository.impl;
 
+import by.bsuir.domain.Credential;
+import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.repository.columns.IUserColumns;
@@ -16,11 +18,13 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 @Repository
+@Primary
 @RequiredArgsConstructor
 public class JdbcTemplateUserRepository implements IUserRepository {
 
@@ -35,7 +39,8 @@ public class JdbcTemplateUserRepository implements IUserRepository {
         user.setSurname(rs.getString(IUserColumns.SURNAME));
         user.setMiddleName(rs.getString(IUserColumns.MIDDLE_NAME));
         user.setEmail(rs.getString(IUserColumns.EMAIL));
-        user.setBirthDay(rs.getDate(IUserColumns.BIRTHDAY));
+        user.setBirthDay((rs.getDate(IUserColumns.BIRTHDAY)).toInstant()
+                .atZone(ZoneId.systemDefault()).toLocalDateTime());
         user.setDepartmentId(rs.getInt(IUserColumns.DEPARTMENT_ID));
         user.setCreated(rs.getTimestamp(IUserColumns.CREATED));
         user.setChanged(rs.getTimestamp(IUserColumns.CHANGED));
@@ -188,6 +193,33 @@ public class JdbcTemplateUserRepository implements IUserRepository {
                     batchParams.toArray(new MapSqlParameterSource[0]));
         }
     }
+
+    @Override
+    public void saveUserRoles(User user, List<Role> roles) {
+
+    }
+
+    @Override
+    public User findByLoginAndPassword(String login, String password) {
+
+        final String findUserByLoginAndPassword = "select users.id, users.name, users.surname, " +
+                "users.email, users.birth_day, users.department_id, users.created, " +
+                "users.changed, users.is_deleted, users.rate_id, users.middle_name, " +
+                "users.room_id from users join credential c on users.id = c.id_users " +
+                "where login = :login and password = :password;";
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("login", login);
+        parameters.addValue("password", password);
+
+        try {
+            return namedParameterJdbcTemplate.queryForObject(findUserByLoginAndPassword,
+                    parameters, this::getUserRowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchEntityException("No such user with this credential");
+        }
+    }
+
 
     private MapSqlParameterSource generateUserParamsMap(User entity) {
         MapSqlParameterSource params = new MapSqlParameterSource();

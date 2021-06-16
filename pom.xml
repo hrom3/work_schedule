@@ -70,6 +70,11 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
         </dependency>
@@ -104,6 +109,18 @@
             <artifactId>gson</artifactId>
         </dependency>
 
+        <!--         API, java.xml.bind module -->
+<!--        <dependency>-->
+<!--            <groupId>jakarta.xml.bind</groupId>-->
+<!--            <artifactId>jakarta.xml.bind-api</artifactId>-->
+<!--        </dependency>-->
+
+        <!--         Runtime, com.sun.xml.bind module -->
+<!--        <dependency>-->
+<!--            <groupId>org.glassfish.jaxb</groupId>-->
+<!--            <artifactId>jaxb-runtime</artifactId>-->
+<!--        </dependency>-->
+
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>javax.servlet.jsp-api</artifactId>
@@ -134,6 +151,11 @@
             <version>${swagger.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jwt.version}</version>
+        </dependency>
 
 <!--        <dependency>-->
 <!--            <groupId>jstl</groupId>-->
@@ -151,24 +173,6 @@
 <!--            <groupId>javax.inject</groupId>-->
 <!--            <artifactId>javax.inject</artifactId>-->
 <!--             <version>1</version>-->
-<!--        </dependency>-->
-
-<!--        <dependency>-->
-<!--            <groupId>io.jsonwebtoken</groupId>-->
-<!--            <artifactId>jjwt</artifactId>-->
-<!--            <version>${jwt.version}</version>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash;         API, java.xml.bind module &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>jakarta.xml.bind</groupId>-->
-<!--            <artifactId>jakarta.xml.bind-api</artifactId>-->
-<!--        </dependency>-->
-
-<!--        &lt;!&ndash; Runtime, com.sun.xml.bind module &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.glassfish.jaxb</groupId>-->
-<!--            <artifactId>jaxb-runtime</artifactId>-->
 <!--        </dependency>-->
 
     </dependencies>
