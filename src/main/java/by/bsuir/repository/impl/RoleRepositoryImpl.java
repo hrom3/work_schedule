@@ -2,6 +2,7 @@ package by.bsuir.repository.impl;
 
 import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.Role;
+import by.bsuir.domain.User;
 import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.repository.IRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -103,5 +104,20 @@ public class RoleRepositoryImpl implements IRoleRepository {
         parameters.addValue("id", id);
 
         namedParameterJdbcTemplate.update(hardDeleteByIdQuery, parameters);
+    }
+
+    @Override
+    public List<Role> getUserRoles(User user) {
+        final String findeUserRoleQuery = "select " +
+                "role.id as id," +
+                "role.role_name as role_name " +
+                "from users_role join role on users_role.id_role = role.id " +
+                "where users_role.id_user = :userId;";
+
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        params.addValue("userId", user.getId());
+
+        return namedParameterJdbcTemplate.query(findeUserRoleQuery, params,
+                this::getRoleRowMapper);
     }
 }

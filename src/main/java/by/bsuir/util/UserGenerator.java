@@ -6,8 +6,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -31,7 +33,9 @@ public class UserGenerator {
         user.setMiddleName(RandomStringUtils.randomAlphabetic(5, 15));
         user.setEmail(RandomStringUtils.randomAlphabetic(5, 15)
                 .toLowerCase(Locale.ROOT) + "@bsuir.by");
-        user.setBirthDay(new Date(RandomUtils.nextLong(0L, 946677600000L)));
+        user.setBirthDay(LocalDateTime.ofInstant(
+                Instant.ofEpochMilli(RandomUtils.nextLong(0L, 946677600000L)),
+                ZoneId.systemDefault()));
         user.setDepartmentId(RandomUtils.nextInt(1, 3));
         user.setCreated(new Timestamp(System.currentTimeMillis()));
         user.setChanged(new Timestamp(System.currentTimeMillis()));

@@ -26,7 +26,7 @@ import java.util.Objects;
 @Repository
 @Primary
 @RequiredArgsConstructor
-public class JdbcTemplateUserRepository implements IUserRepository {
+public class  JdbcTemplateUserRepository implements IUserRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -196,16 +196,70 @@ public class JdbcTemplateUserRepository implements IUserRepository {
 
     @Override
     public void saveUserRoles(User user, List<Role> roles) {
+        final String createQuery = "insert into users_role (id_user, id_role) "
+                + "values (:idUser, :idRole);";
 
+        List<MapSqlParameterSource> batchParams  =new ArrayList<>();
+
+        for (Role role : roles) {
+
+            MapSqlParameterSource params = new MapSqlParameterSource();
+            params.addValue("idUser", user.getId());
+            params.addValue("idRole", role.getId());
+
+            batchParams.add(generateUserParamsMap(user));
+
+            namedParameterJdbcTemplate.batchUpdate(createQuery,
+                    batchParams.toArray(new MapSqlParameterSource[0]));
+        }
+    }
+
+    @Override
+    public User findUserByLogin(String login) {
+        final String findUserByLogin = "select " +
+                "u.id as id, " +
+                "u.name as name, " +
+                "u.surname as surname, " +
+                "u.email as email, " +
+                "u.birth_day as birth_day, " +
+                "u.department_id as department_id, " +
+                "u.created as created, " +
+                "u.changed as changed, " +
+                "u.is_deleted as is_deleted, " +
+                "u.rate_id as  rate_id, " +
+                "u.middle_name as middle_name, " +
+                "u.room_id as room_id " +
+                "from users u join credential c on u.id = c.id_users " +
+                "where c.login = :login;";
+
+        MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("login", login);
+
+        try {
+            return namedParameterJdbcTemplate.queryForObject(findUserByLogin,
+                    parameters, this::getUserRowMapper);
+        } catch (EmptyResultDataAccessException e) {
+            throw new NoSuchEntityException("No such user with this login");
+        }
     }
 
     @Override
     public User findByLoginAndPassword(String login, String password) {
 
-        final String findUserByLoginAndPassword = "select users.id, users.name, users.surname, " +
-                "users.email, users.birth_day, users.department_id, users.created, " +
-                "users.changed, users.is_deleted, users.rate_id, users.middle_name, " +
-                "users.room_id from users join credential c on users.id = c.id_users " +
+        final String findUserByLoginAndPassword = "select " +
+                "u.id as id, " +
+                "u.name as name, " +
+                "u.surname as surname, " +
+                "u.email as email, " +
+                "u.birth_day as birth_day, " +
+                "u.department_id as department_id, " +
+                "u.created as created, " +
+                "u.changed as changed, " +
+                "u.is_deleted as is_deleted, " +
+                "u.rate_id as  rate_id, " +
+                "u.middle_name as middle_name, " +
+                "u.room_id as room_id " +
+                "from users u join credential c on u.id = c.id_users " +
                 "where login = :login and password = :password;";
 
         MapSqlParameterSource parameters = new MapSqlParameterSource();
