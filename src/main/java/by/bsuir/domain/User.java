@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -35,7 +36,8 @@ public class User {
     private String email;
 
     @Column(name = "birth_day")
-    private LocalDateTime birthDay;
+//    private Date birthDay;
+    private LocalDate birthDay;
 
     @Column(name = "department_id")
     private Integer departmentId;

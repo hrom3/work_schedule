@@ -39,8 +39,8 @@ public class  JdbcTemplateUserRepository implements IUserRepository {
         user.setSurname(rs.getString(IUserColumns.SURNAME));
         user.setMiddleName(rs.getString(IUserColumns.MIDDLE_NAME));
         user.setEmail(rs.getString(IUserColumns.EMAIL));
-        user.setBirthDay((rs.getDate(IUserColumns.BIRTHDAY)).toInstant()
-                .atZone(ZoneId.systemDefault()).toLocalDateTime());
+        user.setBirthDay((rs.getDate(IUserColumns.BIRTHDAY)).toLocalDate());
+ //       user.setBirthDay((rs.getDate(IUserColumns.BIRTHDAY)));
         user.setDepartmentId(rs.getInt(IUserColumns.DEPARTMENT_ID));
         user.setCreated(rs.getTimestamp(IUserColumns.CREATED));
         user.setChanged(rs.getTimestamp(IUserColumns.CHANGED));
@@ -216,6 +216,9 @@ public class  JdbcTemplateUserRepository implements IUserRepository {
 
     @Override
     public User findUserByLogin(String login) {
+//        final String findUserByLogin = "select * from users " +
+//        "where id = :id" +
+//                "(select id_users from credential where login = :login);";
         final String findUserByLogin = "select " +
                 "u.id as id, " +
                 "u.name as name, " +
@@ -240,7 +243,9 @@ public class  JdbcTemplateUserRepository implements IUserRepository {
                     parameters, this::getUserRowMapper);
         } catch (EmptyResultDataAccessException e) {
             throw new NoSuchEntityException("No such user with this login");
+
         }
+//        return findOne(2L);
     }
 
     @Override

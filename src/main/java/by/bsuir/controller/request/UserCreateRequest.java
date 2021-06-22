@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,7 +14,8 @@ public class UserCreateRequest {
     private String surname;
     private String middleName;
     private String email;
-    private LocalDateTime birthDay;
+//    private Date birthDay;
+    private LocalDate birthDay;
     private Integer departmentId;
     private Integer rateId;
     private Integer roomId;

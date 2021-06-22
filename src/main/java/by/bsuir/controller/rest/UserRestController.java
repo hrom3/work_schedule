@@ -4,6 +4,7 @@ import by.bsuir.controller.exception.UnauthorizedException;
 import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.User;
 import by.bsuir.repository.IUserRepository;
+import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.UserGenerator;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -13,8 +14,10 @@ import by.bsuir.beans.SecurityConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.List;
@@ -27,6 +30,7 @@ public class UserRestController {
     private final IUserRepository userRepository;
     private final UserGenerator userGenerator;
     private final SecurityConfig config;
+    private final PrincipalUtil principalUtil;
 
     @ApiOperation(value = "Find all users")
     @GetMapping
@@ -36,16 +40,24 @@ public class UserRestController {
     }
 
     @ApiOperation(value = "Find all users with Secret key")
-    @ApiImplicitParams(
-            @ApiImplicitParam( name = "Secret-Key", dataType = "string",
-                    paramType = "header", value = "Secret key for secret functionality")
-    )
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Secret-Key", dataType = "string",
+                    paramType = "header", value = "Secret key for secret functionality"),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
     @GetMapping("/hello")
-    public List<User> securedFindAll(HttpServletRequest request) {
+    public List<User> securedFindAll(HttpServletRequest request,
+                                     @ApiIgnore Principal principal) {
+        String login = principalUtil.getUsername(principal);
         String secretKey = request.getHeader("Secret-Key");
 
+        User userByLogin = userRepository.findUserByLogin(login);
+
         if (StringUtils.isNotBlank(secretKey) && secretKey.equals(config.getSecretKey())) {
-            return userRepository.findAll();
+           // return userRepository.findAll();
+            return Collections.singletonList(userRepository.findUserByLogin(login));
+
         } else {
           throw new UnauthorizedException("Unable to authenticate Domain " +
                   "User for provided credentials.");

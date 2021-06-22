@@ -1,5 +1,7 @@
 package by.bsuir.security.configuration;
 
+import by.bsuir.security.filter.AuthenticationTokenFilter;
+import by.bsuir.security.utils.TokenUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -11,21 +13,22 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
-
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class WebSecurityConfiguration {
+public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final UserDetailsService userProvider;
 
-//    private final TokenUtils tokenUtils;
+    private final TokenUtils tokenUtils;
 
     private  final NoOpPasswordEncoder noOpPasswordEncoder;
 
@@ -43,12 +46,14 @@ public class WebSecurityConfiguration {
                 .passwordEncoder(noOpPasswordEncoder);
     }
 
-//    @Bean
-//    public AuthenticationTokenFilter authenticationTokenFilterBean(AuthenticationManager authenticationManager) throws Exception {
-//        AuthenticationTokenFilter authenticationTokenFilter = new AuthenticationTokenFilter(tokenUtils, userProvider);
-//        authenticationTokenFilter.setAuthenticationManager(authenticationManager);
-//        return authenticationTokenFilter;
-//    }
+    @Bean
+    public AuthenticationTokenFilter authenticationTokenFilterBean
+            (AuthenticationManager authenticationManager) throws Exception {
+        AuthenticationTokenFilter authenticationTokenFilter =
+                new AuthenticationTokenFilter(tokenUtils, userProvider);
+        authenticationTokenFilter.setAuthenticationManager(authenticationManager);
+        return authenticationTokenFilter;
+    }
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
@@ -62,7 +67,9 @@ public class WebSecurityConfiguration {
                 .and()
                 .authorizeRequests()
                 /*For swagger access only*/
-                .antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui.html", "/webjars/**").permitAll()
+                .antMatchers("/v2/api-docs", "/configuration/ui/**",
+                        "/swagger-resources/**", "/configuration/security/**",
+                        "/swagger-ui.html", "/webjars/**").permitAll()
                 .antMatchers("/actuator/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/swagger-ui.html#").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -74,15 +81,18 @@ public class WebSecurityConfiguration {
                 .antMatchers("/admin/**").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
-//        // Custom JWT based authentication
-//        httpSecurity
-//                .addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()), UsernamePasswordAuthenticationFilter.class);
+        // Custom JWT based authentication
+        httpSecurity
+                .addFilterBefore(authenticationTokenFilterBean(authenticationManagerBean()),
+                        UsernamePasswordAuthenticationFilter.class);
     }
 
     //For swagger access only
     @Override
     public void configure(WebSecurity web) throws Exception {
         web.ignoring()
-                .antMatchers("/v2/api-docs", "/configuration/ui/**", "/swagger-resources/**", "/configuration/security/**", "/swagger-ui.html", "/webjars/**");
+                .antMatchers("/v2/api-docs", "/configuration/ui/**",
+                        "/swagger-resources/**", "/configuration/security/**",
+                        "/swagger-ui.html", "/webjars/**");
     }
 }
