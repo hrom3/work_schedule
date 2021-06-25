@@ -1,5 +1,6 @@
 package by.bsuir.repository;
 
+import by.bsuir.domain.Credential;
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 

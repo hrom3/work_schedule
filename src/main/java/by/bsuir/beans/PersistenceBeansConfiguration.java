@@ -7,7 +7,7 @@ import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import javax.sql.DataSource;
 import java.util.Properties;
 
-public class PersistenceContextBeansConfiguration {
+public class PersistenceBeansConfiguration {
 
     @Bean(name = "sessionFactory")
     public SessionFactory getSessionFactory(DataSource dataSource) throws Exception {
@@ -19,6 +19,7 @@ public class PersistenceContextBeansConfiguration {
 
         // Package contain entity classes
         factoryBean.setPackagesToScan("by.bsuir");
+//        factoryBean.setMappingResources("hibernate"); // for xml config
         factoryBean.setDataSource(dataSource);
         factoryBean.setHibernateProperties(getAdditionalProperties());
         factoryBean.afterPropertiesSet();

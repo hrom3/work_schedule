@@ -39,7 +39,7 @@ public class AuthenticationTokenFilter extends UsernamePasswordAuthenticationFil
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
                 //TODO: refactor validate token method
-                if (tokenUtils.validateToken(authToken, userDetails)) {
+                if (tokenUtils.validateUser(username, userDetails)) {
 
                     UsernamePasswordAuthenticationToken authentication =
                             new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

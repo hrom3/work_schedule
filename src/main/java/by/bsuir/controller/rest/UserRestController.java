@@ -19,6 +19,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -52,7 +53,6 @@ public class UserRestController {
         String login = principalUtil.getUsername(principal);
         String secretKey = request.getHeader("Secret-Key");
 
-        User userByLogin = userRepository.findUserByLogin(login);
 
         if (StringUtils.isNotBlank(secretKey) && secretKey.equals(config.getSecretKey())) {
            // return userRepository.findAll();
@@ -77,24 +77,6 @@ public class UserRestController {
         return userRepository.findUsersByQuery(limit, query);
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public User createUser(@ModelAttribute UserCreateRequest createRequest) {
-
-        User generatedUser = userGenerator.generateLiteUser();
-//        User generatedUser = userGenerator.generate();
-
-        generatedUser.setName(createRequest.getName());
-        generatedUser.setSurname(createRequest.getSurname());
-        generatedUser.setMiddleName(createRequest.getMiddleName());
-        generatedUser.setEmail(createRequest.getEmail());
-        generatedUser.setBirthDay(createRequest.getBirthDay());
-        generatedUser.setDepartmentId(createRequest.getDepartmentId());
-        generatedUser.setRateId(createRequest.getRateId());
-        generatedUser.setRoomId(createRequest.getRoomId());
-
-        return userRepository.save(generatedUser);
-    }
 
     @ApiOperation(value = "Create autogenerate users")
     @ApiImplicitParams({
@@ -122,7 +104,7 @@ public class UserRestController {
         user.setSurname(createRequest.getSurname());
         user.setMiddleName(createRequest.getMiddleName());
         user.setEmail(createRequest.getEmail());
-        user.setBirthDay(createRequest.getBirthDay());
+        user.setBirthDay(LocalDate.parse(createRequest.getBirthDay()));
         user.setDepartmentId(createRequest.getDepartmentId());
         user.setChanged(new Timestamp(System.currentTimeMillis()));
         user.setRateId(createRequest.getRateId());

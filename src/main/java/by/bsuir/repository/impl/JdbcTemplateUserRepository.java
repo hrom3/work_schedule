@@ -26,7 +26,7 @@ import java.util.Objects;
 @Repository
 @Primary
 @RequiredArgsConstructor
-public class  JdbcTemplateUserRepository implements IUserRepository {
+public class JdbcTemplateUserRepository implements IUserRepository {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -40,7 +40,7 @@ public class  JdbcTemplateUserRepository implements IUserRepository {
         user.setMiddleName(rs.getString(IUserColumns.MIDDLE_NAME));
         user.setEmail(rs.getString(IUserColumns.EMAIL));
         user.setBirthDay((rs.getDate(IUserColumns.BIRTHDAY)).toLocalDate());
- //       user.setBirthDay((rs.getDate(IUserColumns.BIRTHDAY)));
+        //       user.setBirthDay((rs.getDate(IUserColumns.BIRTHDAY)));
         user.setDepartmentId(rs.getInt(IUserColumns.DEPARTMENT_ID));
         user.setCreated(rs.getTimestamp(IUserColumns.CREATED));
         user.setChanged(rs.getTimestamp(IUserColumns.CHANGED));
@@ -65,8 +65,8 @@ public class  JdbcTemplateUserRepository implements IUserRepository {
         parameters.addValue("id", id);
 
         try {
-        return namedParameterJdbcTemplate.queryForObject(findOneWithId,
-                parameters, this::getUserRowMapper);
+            return namedParameterJdbcTemplate.queryForObject(findOneWithId,
+                    parameters, this::getUserRowMapper);
         } catch (EmptyResultDataAccessException e) {
             throw new NoSuchEntityException("No such user with id:" + id);
         }
@@ -141,7 +141,7 @@ public class  JdbcTemplateUserRepository implements IUserRepository {
         MapSqlParameterSource parameters = new MapSqlParameterSource();
         parameters.addValue("id", id);
 
-        namedParameterJdbcTemplate.update(hardDeleteByIdQuery,parameters);
+        namedParameterJdbcTemplate.update(hardDeleteByIdQuery, parameters);
 
     }
 
@@ -184,7 +184,7 @@ public class  JdbcTemplateUserRepository implements IUserRepository {
                 ":email, :birthDay, :departmentId, :created, :changed, :isDeleted, " +
                 ":rateId, :roomId);";
 
-        List<MapSqlParameterSource> batchParams  =new ArrayList<>();
+        List<MapSqlParameterSource> batchParams = new ArrayList<>();
 
         for (User user : users) {
             batchParams.add(generateUserParamsMap(user));
@@ -199,7 +199,7 @@ public class  JdbcTemplateUserRepository implements IUserRepository {
         final String createQuery = "insert into users_role (id_user, id_role) "
                 + "values (:idUser, :idRole);";
 
-        List<MapSqlParameterSource> batchParams  =new ArrayList<>();
+        List<MapSqlParameterSource> batchParams = new ArrayList<>();
 
         for (Role role : roles) {
 
@@ -207,11 +207,11 @@ public class  JdbcTemplateUserRepository implements IUserRepository {
             params.addValue("idUser", user.getId());
             params.addValue("idRole", role.getId());
 
-            batchParams.add(generateUserParamsMap(user));
-
+            batchParams.add(params);
+        }
             namedParameterJdbcTemplate.batchUpdate(createQuery,
                     batchParams.toArray(new MapSqlParameterSource[0]));
-        }
+
     }
 
     @Override

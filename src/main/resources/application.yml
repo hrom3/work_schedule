@@ -20,4 +20,4 @@ security:
 
 jwtconfig:
   secret: Top_secret12!!#@#
-  expiration: 600_000
+  expiration: 6_000_000

@@ -14,9 +14,11 @@ public class UserCreateRequest {
     private String surname;
     private String middleName;
     private String email;
-//    private Date birthDay;
-    private LocalDate birthDay;
+    private String birthDay;
     private Integer departmentId;
     private Integer rateId;
     private Integer roomId;
+
+    private String login;
+    private String password;
 }

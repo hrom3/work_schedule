@@ -110,4 +110,10 @@ public class TokenUtils {
         final String username = getUsernameFromToken(token);
         return username.equals(userDetails.getUsername());
     }
+
+    public Boolean validateUser(String login, UserDetails userDetails) {
+
+        return login.equals(userDetails.getUsername());
+    }
+
 }

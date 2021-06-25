@@ -132,4 +132,11 @@ public class CredentialRepositoryImpl implements ICredentialRepository {
         return namedParameterJdbcTemplate.queryForObject(findeUserCredentialQuery,
                 params, this::getCredentialRowMapper);
     }
+
+    public void saveUserCredentials(User user, Credential userCredential) {
+
+        userCredential.setIdUser(user.getId());
+
+        save(userCredential);
+    }
 }

@@ -1,6 +1,7 @@
 package by.bsuir;
 
 import by.bsuir.beans.AppBeans;
+import by.bsuir.beans.PersistenceBeansConfiguration;
 import by.bsuir.beans.SecurityConfig;
 
 import by.bsuir.beans.SwaggerConfig;
@@ -19,6 +20,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @Import({
         AppBeans.class,
         WebSecurityConfiguration.class,
+        PersistenceBeansConfiguration.class,
         SwaggerConfig.class,
         SecurityConfig.class})
 public class SpringBootStarter {

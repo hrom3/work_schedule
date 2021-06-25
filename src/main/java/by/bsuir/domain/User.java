@@ -23,16 +23,16 @@ public class User {
     @Id
     private Long id;
 
-    @Column(name = "name")
+    @Column
     private String name;
 
-    @Column(name = "surname")
+    @Column
     private String surname;
 
     @Column(name = "middle_name")
     private String middleName;
 
-    @Column(name = "email")
+    @Column
     private String email;
 
     @Column(name = "birth_day")
@@ -42,14 +42,14 @@ public class User {
     @Column(name = "department_id")
     private Integer departmentId;
 
-    @Column(name = "created")
+    @Column
     private Timestamp created;
 
-    @Column(name = "changed")
+    @Column
     private Timestamp changed;
 
     @Column(name = "is_deleted")
-    private boolean isDeleted;
+    private Boolean isDeleted;
 
     @Column(name = "rate_id")
     private Integer rateId;
