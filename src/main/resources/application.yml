@@ -17,3 +17,7 @@ spring:
 
 security:
   secretKey: top_secret_key_hoho!
+
+jwtconfig:
+  secret: Top_secret12!!#@#
+  expiration: 6_000_000

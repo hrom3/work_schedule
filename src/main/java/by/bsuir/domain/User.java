@@ -4,25 +4,57 @@ import lombok.*;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+@Entity
+@Table(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
 
+    @Id
     private Long id;
+
+    @Column
     private String name;
+
+    @Column
     private String surname;
+
+    @Column(name = "middle_name")
     private String middleName;
+
+    @Column
     private String email;
-    private Date birthDay;
+
+    @Column(name = "birth_day")
+//    private Date birthDay;
+    private LocalDate birthDay;
+
+    @Column(name = "department_id")
     private Integer departmentId;
+
+    @Column
     private Timestamp created;
+
+    @Column
     private Timestamp changed;
-    private boolean isDeleted;
+
+    @Column(name = "is_deleted")
+    private Boolean isDeleted;
+
+    @Column(name = "rate_id")
     private Integer rateId;
+
+    @Column(name = "room_id")
     private Integer roomId;
 
     public String toString() {

@@ -1,0 +1,34 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+        <!DOCTYPE hibernate-mapping PUBLIC
+                "-//Hibernate/Hibernate Mapping DTD//EN"
+               "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+       <hibernate-mapping>
+        <class name="by.bsuir.domain.User" table="users">
+
+            <id name="id" type="long" column="id">
+                <generator class="identity"/>
+            </id>
+
+            <property name="name" column="name" type="string"/> <!--size 200-->
+            <property name="surname" column="surname" type="string"/> <!--size 200-->
+            <property name="middleName" column="middle_name" type="string"/> <!--size 200-->
+            <property name="email" column="email" type="string"/> <!--size 200-->
+            <property name="birthDay" column="birth_day" type="date"/> <!--@Temporal(TemporalType.DATE)-->
+            <property name="departmentId" column="department_id" type="integer"/> <!--size 200-->
+            <property name="departmentId" column="department_id" type="integer"/> <!--size 200-->
+            <property name="created" column="created" type="timestamp"/> <!--size 200-->
+            <property name="changed" column="changed" type="timestamp"/> <!--size 200-->
+            <property name="isDeleted" column="is_deleted" type="java.lang.Boolean"/> <!--size 200-->
+            <property name="rateId" column="rate_id" type="integer"/> <!--size 200-->
+            <property name="roomId" column="room_id" type="integer"/> <!--size 200-->
+
+<!--            <property name="gender" column="gender">-->
+<!--                <type name="org.hibernate.type.EnumType">-->
+<!--                    <param name="enumClass">com.noirix.domain.Gender</param>-->
+<!--                    <param name="useNamed">true</param>-->
+<!--                    <param name="type">STRING</param>-->
+<!--                </type>-->
+<!--            </property>-->
+        </class>
+    </hibernate-mapping>

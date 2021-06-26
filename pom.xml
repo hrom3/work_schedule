@@ -12,7 +12,7 @@
 
     <groupId>by.bsuir</groupId>
     <artifactId>work_schedule</artifactId>
-    <version>0.0.20210520</version>
+    <version>0.0.20210615</version>
 
     <packaging>jar</packaging>
 
@@ -27,6 +27,8 @@
         <log4j>1.2.17</log4j>
         <commons_io>2.8.0</commons_io>
         <jsp_api>2.3.3</jsp_api>
+        <swagger.version>2.9.2</swagger.version>
+        <jwt.version>0.9.1</jwt.version>
     </properties>
 
     <dependencies>
@@ -63,6 +65,26 @@
         </dependency>
 
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-jpamodelgen</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-core</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
@@ -87,6 +109,23 @@
             <artifactId>gson</artifactId>
         </dependency>
 
+<!--                 API, java.xml.bind module-->
+        <dependency>
+            <groupId>jakarta.xml.bind</groupId>
+            <artifactId>jakarta.xml.bind-api</artifactId>
+        </dependency>
+
+<!--                 Runtime, com.sun.xml.bind module-->
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>javax.servlet.jsp</groupId>
             <artifactId>javax.servlet.jsp-api</artifactId>
@@ -105,23 +144,36 @@
             <version>${log4j}</version>
         </dependency>
 
-        <!--        <dependency>-->
-        <!--            <groupId>jstl</groupId>-->
-        <!--            <artifactId>jstl</artifactId>-->
-        <!--        </dependency>-->
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger2</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
 
-        <!--
+        <dependency>
+            <groupId>io.springfox</groupId>
+            <artifactId>springfox-swagger-ui</artifactId>
+            <version>${swagger.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>${jwt.version}</version>
+        </dependency>
+
+<!--
        <dependency>
            <groupId>com.zaxxer</groupId>
            <artifactId>HikariCP</artifactId>
            <version>3.4.5</version>
        </dependency>
-       -->
+-->
 
 <!--        <dependency>-->
 <!--            <groupId>javax.inject</groupId>-->
 <!--            <artifactId>javax.inject</artifactId>-->
-<!--            <version>1</version>-->
+<!--             <version>1</version>-->
 <!--        </dependency>-->
 
     </dependencies>
