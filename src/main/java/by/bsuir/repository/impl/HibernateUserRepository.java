@@ -7,6 +7,7 @@ import by.bsuir.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
@@ -15,10 +16,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
-public class HibernateRepository implements IHibernateUserRepository {
+public class HibernateUserRepository implements IHibernateUserRepository {
 
     private final SessionFactory sessionFactory;
 
@@ -46,17 +48,34 @@ public class HibernateRepository implements IHibernateUserRepository {
     }
 
     @Override
+    public Optional<User> findById(Long id) {
+            return Optional.of(findOne(id));
+    }
+
+    @Override
     public User save(User entity) {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            session.saveOrUpdate(entity);
+            return entity;
+        }
     }
 
     @Override
     public User update(User entity) {
-        return null;
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
+            session.saveOrUpdate(entity);
+            transaction.commit();
+            return entity;
+        }
     }
 
     @Override
     public void deleteHard(Long id) {
-
+        try (Session session = sessionFactory.openSession()) {
+            User userToDelete = findOne(id);
+            session.delete(userToDelete);
+        }
     }
 }

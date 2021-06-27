@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -24,11 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class RegistrationController {
 
-    private final AuthenticationManager authenticationManager;
-
-    private final TokenUtils tokenUtils;
-
-    private final UserDetailsService userProvider;
+    private final PasswordEncoder passwordEncoder;
 
     private final IUserRepository userRepository;
 
@@ -41,7 +38,7 @@ public class RegistrationController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@ModelAttribute UserCreateRequest createRequest) {
-
+        //converter
         User generatedUser = userGenerator.generateLiteUser();
 //        User generatedUser = userGenerator.generate();
 
@@ -59,7 +56,7 @@ public class RegistrationController {
         Credential credentialForGeneratedUser = new Credential();
 
         credentialForGeneratedUser.setLogin(createRequest.getLogin());
-        credentialForGeneratedUser.setPassword(createRequest.getPassword());
+        credentialForGeneratedUser.setPassword(passwordEncoder.encode(createRequest.getPassword()));
 
         credentialRepository.saveUserCredentials(savedUser,
                 credentialForGeneratedUser);

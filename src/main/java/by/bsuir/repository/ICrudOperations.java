@@ -15,7 +15,7 @@ public interface ICrudOperations<K, T> {
 
     T findOne(K id);
 
-    T   save(T entity);
+    T save(T entity);
 
 //    void addOne(T entity);
 

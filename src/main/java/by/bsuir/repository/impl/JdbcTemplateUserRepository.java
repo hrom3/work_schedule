@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Objects;
 
 @Repository
-@Primary
 @RequiredArgsConstructor
 public class JdbcTemplateUserRepository implements IUserRepository {
 
@@ -44,7 +43,7 @@ public class JdbcTemplateUserRepository implements IUserRepository {
         user.setDepartmentId(rs.getInt(IUserColumns.DEPARTMENT_ID));
         user.setCreated(rs.getTimestamp(IUserColumns.CREATED));
         user.setChanged(rs.getTimestamp(IUserColumns.CHANGED));
-        user.setDeleted(rs.getBoolean(IUserColumns.IS_DELETED));
+        user.setIsDeleted(rs.getBoolean(IUserColumns.IS_DELETED));
         user.setRateId(rs.getInt(IUserColumns.RATE_ID));
         user.setRoomId(rs.getInt(IUserColumns.ROOM_ID));
         return user;
@@ -290,7 +289,7 @@ public class JdbcTemplateUserRepository implements IUserRepository {
         params.addValue("departmentId", entity.getDepartmentId());
         params.addValue("created", entity.getCreated());
         params.addValue("changed", entity.getChanged());
-        params.addValue("isDeleted", entity.isDeleted());
+        params.addValue("isDeleted", entity.getIsDeleted());
         params.addValue("rateId", entity.getRateId());
         params.addValue("roomId", entity.getRoomId());
 

@@ -8,6 +8,11 @@ import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.repository.ICredentialRepository;
 import by.bsuir.repository.IRoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,6 +22,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.TypedQuery;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -27,116 +36,91 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class CredentialRepositoryImpl implements ICredentialRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final SessionFactory sessionFactory;
 
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-
-    private static final String CREDENTIAL_ID = "id";
-    private static final String CREDENTIAL_LOGIN = "login";
-    private static final String CREDENTIAL_PASSWORD = "password";
-    private static final String CREDENTIAL_USERS_ID = "id_users";
-
-    private Credential getCredentialRowMapper(ResultSet rs, int i)
-            throws SQLException {
-
-        Credential credential = new Credential();
-
-        credential.setId(rs.getLong(CREDENTIAL_ID));
-        credential.setLogin(rs.getString(CREDENTIAL_LOGIN));
-        credential.setPassword(rs.getString(CREDENTIAL_PASSWORD));
-        credential.setIdUser(rs.getLong(CREDENTIAL_USERS_ID));
-
-        return credential;
-    }
+//    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+//
+//    private static final String CREDENTIAL_ID = "id";
+//    private static final String CREDENTIAL_LOGIN = "login";
+//    private static final String CREDENTIAL_PASSWORD = "password";
+//    private static final String CREDENTIAL_USERS_ID = "id_users";
+//
+//    private Credential getCredentialRowMapper(ResultSet rs, int i)
+//            throws SQLException {
+//
+//        Credential credential = new Credential();
+//
+//        credential.setId(rs.getLong(CREDENTIAL_ID));
+//        credential.setLogin(rs.getString(CREDENTIAL_LOGIN));
+//        credential.setPassword(rs.getString(CREDENTIAL_PASSWORD));
+//        credential.setIdUser(rs.getLong(CREDENTIAL_USERS_ID));
+//
+//        return credential;
+//    }
 
     @Override
     public List<Credential> findAll() {
-        return jdbcTemplate.query("select * from credential order by id",
-                this::getCredentialRowMapper);
+        try (Session session = sessionFactory.openSession()) {
+
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Credential> cq = cb.createQuery(Credential.class);
+            Root<Credential> hibernateCredentialRoot = cq.from(Credential.class);
+            CriteriaQuery<Credential> all = cq.select(hibernateCredentialRoot);
+
+            TypedQuery<Credential> allQuery = session.createQuery(all);
+
+            return allQuery.getResultList();
+        }
     }
 
     @Override
     public Credential findOne(Long id) {
-        final String findOneWithId = "select * from credential where id = :id";
-
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("id", id);
-
-        try {
-            return namedParameterJdbcTemplate.queryForObject(findOneWithId,
-                    parameters, this::getCredentialRowMapper);
-        } catch (EmptyResultDataAccessException e) {
-            throw new NoSuchEntityException("No such credential with id:" + id);
+        try (Session session = sessionFactory.openSession()) {
+            return session.find(Credential.class, id);
         }
     }
 
     @Override
     public Credential save(Credential entity) {
-        final String createQuery = "insert into " +
-                "credential (id_users, login, password) " +
-                "values (:idUsers, :login, :password);";
-
-        KeyHolder keyHolder = new GeneratedKeyHolder();
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("idUsers", entity.getIdUser());
-        params.addValue("login", entity.getLogin());
-        params.addValue("password", entity.getPassword());
-
-        namedParameterJdbcTemplate.update(createQuery, params, keyHolder,
-                new String[]{"id"});
-
-        long createdRoleId = Objects.requireNonNull(keyHolder.getKey()).longValue();
-
-        return findOne(createdRoleId);
+        try (Session session = sessionFactory.openSession()) {
+            session.saveOrUpdate(entity);
+        }
+            return entity;
     }
 
     @Override
     public Credential update(Credential entity) {
-        final String updateQuery = "update " +
-                "credential set " +
-                "id_users = :idUsers, " +
-                "login = :login, " +
-                "password = :password " +
-                "where id = :id";
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("id", entity.getId());
-        params.addValue("idUsers", entity.getIdUser());
-        params.addValue("login", entity.getLogin());
-        params.addValue("password", entity.getPassword());
-
-        namedParameterJdbcTemplate.update(updateQuery, params);
-
-        return findOne(entity.getId());
+        try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
+            session.saveOrUpdate(entity);
+            transaction.commit();
+            return entity;
+        }
     }
 
     @Override
     public void deleteHard(Long id) {
-        final String hardDeleteByIdQuery = "delete from credential where id = :id;";
-
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        parameters.addValue("id", id);
-
-        namedParameterJdbcTemplate.update(hardDeleteByIdQuery, parameters);
+        try (Session session = sessionFactory.openSession()) {
+            Credential credentialToDelete = findOne(id);
+            session.delete(credentialToDelete);
+        }
     }
 
     @Override
     public Credential findByUser(User user) {
-        final String findeUserCredentialQuery = "select * from credential " +
-                "where id_users = :userId;";
-
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("userId", user.getId());
-
-        return namedParameterJdbcTemplate.queryForObject(findeUserCredentialQuery,
-                params, this::getCredentialRowMapper);
+        Long userId = user.getId();
+        try (Session session = sessionFactory.openSession()) {
+            Credential credential = session.byNaturalId(Credential.class)
+                    .using("userId", userId)
+                    .load();
+            return credential;
+        }
     }
 
     public void saveUserCredentials(User user, Credential userCredential) {
 
         userCredential.setIdUser(user.getId());
-
         save(userCredential);
     }
 }
