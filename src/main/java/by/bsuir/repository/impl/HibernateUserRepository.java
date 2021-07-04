@@ -3,7 +3,6 @@ package by.bsuir.repository.impl;
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.repository.IHibernateUserRepository;
-import by.bsuir.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.Query;
 import org.hibernate.Session;
@@ -16,7 +15,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

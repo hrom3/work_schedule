@@ -24,6 +24,9 @@ public class Credential {
     @Column(name = "id_users")
     private Long idUser;
 
+    @OneToOne(optional = false, mappedBy = "credential")
+    private User user;
+
     @Column
     private String login;
 

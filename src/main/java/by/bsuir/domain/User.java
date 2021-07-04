@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"roles"})
+@EqualsAndHashCode(exclude = {"roles", "credential"})
 public class User {
 
     @Id
@@ -55,6 +55,10 @@ public class User {
 
     @Column(name = "room_id")
     private Integer roomId;
+
+    @OneToOne
+    @JoinColumn(name = "credential_id")
+    private Credential credential;
 
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);

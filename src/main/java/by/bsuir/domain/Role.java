@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "role")
@@ -21,6 +22,9 @@ public class Role {
     @Column(name = "role_name")
     @Enumerated(EnumType.STRING)
     private ESystemRoles roleName = ESystemRoles.ROLE_USER;
+
+    @OneToMany(mappedBy = "role")
+    List<Role> roles;
 
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
