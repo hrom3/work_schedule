@@ -3,6 +3,7 @@ package by.bsuir.controller.rest;
 import by.bsuir.controller.exception.UnauthorizedException;
 import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.User;
+import by.bsuir.repository.IHibernateUserRepository;
 import by.bsuir.repository.IUserRepository;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.UserGenerator;
@@ -40,7 +41,8 @@ public class UserRestController {
         return userRepository.findAll();
     }
 
-    @ApiOperation(value = "Find all users with Secret key")
+
+    @ApiOperation(value = "Find all users with Secret key and authenticate")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "Secret-Key", dataType = "string",
                     paramType = "header", value = "Secret key for secret functionality"),
@@ -55,12 +57,34 @@ public class UserRestController {
 
 
         if (StringUtils.isNotBlank(secretKey) && secretKey.equals(config.getSecretKey())) {
-           // return userRepository.findAll();
-            return Collections.singletonList(userRepository.findUserByLogin(login));
-
+            return userRepository.findAll();
         } else {
           throw new UnauthorizedException("Unable to authenticate Domain " +
                   "User for provided credentials.");
+        }
+    }
+
+    @ApiOperation(value = "Find user by token with Secret key")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Secret-Key", dataType = "string",
+                    paramType = "header", value = "Secret key for secret functionality"),
+            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
+                    dataType = "string", paramType = "header")
+    })
+    @GetMapping("/hello/user")
+    public List<User> securedOneByToken(HttpServletRequest request,
+                                     @ApiIgnore Principal principal) {
+        String login = principalUtil.getUsername(principal);
+        String secretKey = request.getHeader("Secret-Key");
+
+
+        if (StringUtils.isNotBlank(secretKey) && secretKey.equals(config.getSecretKey())) {
+            // return userRepository.findAll();
+            return Collections.singletonList(userRepository.findUserByLogin(login));
+
+        } else {
+            throw new UnauthorizedException("Unable to authenticate Domain " +
+                    "User for provided credentials.");
         }
     }
 
@@ -119,12 +143,10 @@ public class UserRestController {
     }
 
     @DeleteMapping("/delete/{userId}")
-    public List<User> deleteUser(@PathVariable Long userId) {
-       boolean isDeleted = userRepository.delete(userId);
+    public User deleteUser(@PathVariable Long userId) {
+        userRepository.delete(userId);
 
-       if (isDeleted) {
-           return userRepository.findAll();
-       }
-       return Collections.emptyList();
+        return userRepository.findOne(userId);
     }
+
 }

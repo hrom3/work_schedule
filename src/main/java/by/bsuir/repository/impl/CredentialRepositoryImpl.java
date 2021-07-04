@@ -112,7 +112,7 @@ public class CredentialRepositoryImpl implements ICredentialRepository {
         Long userId = user.getId();
         try (Session session = sessionFactory.openSession()) {
             Credential credential = session.byNaturalId(Credential.class)
-                    .using("userId", userId)
+                    .using("idUser", userId)
                     .load();
             return credential;
         }

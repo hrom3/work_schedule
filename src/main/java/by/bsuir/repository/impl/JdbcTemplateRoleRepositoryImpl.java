@@ -24,7 +24,7 @@ import java.util.Objects;
 @Repository
 @Primary
 @RequiredArgsConstructor
-public class RoleRepositoryImpl implements IRoleRepository {
+public class JdbcTemplateRoleRepositoryImpl implements IRoleRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

@@ -50,13 +50,19 @@ public class RegistrationController {
         generatedUser.setDepartmentId(createRequest.getDepartmentId());
         generatedUser.setRateId(createRequest.getRateId());
         generatedUser.setRoomId(createRequest.getRoomId());
-
-        User savedUser = userRepository.save(generatedUser);
+        generatedUser.setIsDeleted(false);
 
         Credential credentialForGeneratedUser = new Credential();
 
         credentialForGeneratedUser.setLogin(createRequest.getLogin());
         credentialForGeneratedUser.setPassword(passwordEncoder.encode(createRequest.getPassword()));
+
+        User savedUser = userRepository.save(generatedUser);
+
+//        Credential credentialForGeneratedUser = new Credential();
+//
+//        credentialForGeneratedUser.setLogin(createRequest.getLogin());
+//        credentialForGeneratedUser.setPassword(passwordEncoder.encode(createRequest.getPassword()));
 
         credentialRepository.saveUserCredentials(savedUser,
                 credentialForGeneratedUser);

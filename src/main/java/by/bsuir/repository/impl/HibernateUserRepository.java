@@ -5,9 +5,11 @@ import by.bsuir.domain.User;
 import by.bsuir.repository.IHibernateUserRepository;
 import by.bsuir.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.TypedQuery;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
+@Primary
 @RequiredArgsConstructor
 public class HibernateUserRepository implements IHibernateUserRepository {
 
@@ -76,6 +79,26 @@ public class HibernateUserRepository implements IHibernateUserRepository {
         try (Session session = sessionFactory.openSession()) {
             User userToDelete = findOne(id);
             session.delete(userToDelete);
+        }
+    }
+
+    @Override
+    public void delete(Long id) {
+
+        User userToDelete = findOne(id);
+
+        userToDelete.setIsDeleted(true);
+
+        update(userToDelete);
+    }
+
+    @Override
+    public List<User> findUsersByQuery(Integer limit, String name) {
+        try (Session session = sessionFactory.openSession()) {
+            TypedQuery<User> query = session.createQuery(
+                    "from User where name like :name");
+            query.setParameter("name", name);
+            return query.getResultList();
         }
     }
 }
