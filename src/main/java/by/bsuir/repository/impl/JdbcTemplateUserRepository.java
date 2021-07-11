@@ -4,7 +4,7 @@ import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.repository.columns.IUserColumns;
-import by.bsuir.repository.IUserRepository;
+import by.bsuir.repository.IJDBCUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,7 +22,7 @@ import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
-public class JdbcTemplateUserRepository implements IUserRepository {
+public class JdbcTemplateUserRepository implements IJDBCUserRepository {
 
     private final JdbcTemplate jdbcTemplate;
 

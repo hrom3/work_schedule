@@ -6,18 +6,14 @@ import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.repository.ICredentialRepository;
 import by.bsuir.repository.IRoleRepository;
-import by.bsuir.repository.IUserRepository;
-import by.bsuir.security.utils.TokenUtils;
+import by.bsuir.repository.IJDBCUserRepository;
 import by.bsuir.util.UserGenerator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -27,7 +23,7 @@ public class RegistrationController {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final IUserRepository userRepository;
+    private final IJDBCUserRepository userRepository;
 
     private final ICredentialRepository credentialRepository;
 

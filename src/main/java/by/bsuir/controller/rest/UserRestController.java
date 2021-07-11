@@ -3,8 +3,7 @@ package by.bsuir.controller.rest;
 import by.bsuir.controller.exception.UnauthorizedException;
 import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.User;
-import by.bsuir.repository.IHibernateUserRepository;
-import by.bsuir.repository.IUserRepository;
+import by.bsuir.repository.IJDBCUserRepository;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.UserGenerator;
 import io.swagger.annotations.ApiImplicitParam;
@@ -29,7 +28,7 @@ import java.util.List;
 @RequestMapping("/rest/users")
 @RequiredArgsConstructor
 public class UserRestController {
-    private final IUserRepository userRepository;
+    private final IJDBCUserRepository userRepository;
     private final UserGenerator userGenerator;
     private final SecurityConfig config;
     private final PrincipalUtil principalUtil;

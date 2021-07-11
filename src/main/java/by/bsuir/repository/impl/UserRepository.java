@@ -1,12 +1,10 @@
 package by.bsuir.repository.impl;
 
 import by.bsuir.domain.Credential;
-import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.repository.ICredentialRepository;
-import by.bsuir.repository.IHibernateUserRepository;
+import by.bsuir.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -23,7 +21,7 @@ import java.util.Optional;
 @Repository
 @Primary
 @RequiredArgsConstructor
-public class HibernateUserRepository implements IHibernateUserRepository {
+public class UserRepository implements IUserRepository {
 
     private final SessionFactory sessionFactory;
 

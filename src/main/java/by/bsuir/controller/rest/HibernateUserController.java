@@ -2,20 +2,13 @@ package by.bsuir.controller.rest;
 
 import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.User;
-import by.bsuir.repository.IHibernateUserRepository;
 import by.bsuir.repository.IUserRepository;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Collections;
 import java.util.List;
 
 @RestController
@@ -23,7 +16,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class HibernateUserController {
 
-    private final IHibernateUserRepository hibernateUserRepository;
+    private final IUserRepository hibernateUserRepository;
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

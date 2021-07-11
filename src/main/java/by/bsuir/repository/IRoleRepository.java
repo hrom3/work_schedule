@@ -7,6 +7,4 @@ import java.util.List;
 
 public interface IRoleRepository extends ICrudOperations<Integer, Role> {
 
-
-    List<Role> getUserRoles(User user);
 }

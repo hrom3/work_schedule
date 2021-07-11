@@ -1,23 +1,18 @@
 package by.bsuir.repository;
 
-import by.bsuir.domain.Credential;
-import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IUserRepository extends ICrudOperations<Long, User> {
 
-    List<User> findUsersByQuery(Integer limit, String query);
+    Optional<User> findById(Long id);
 
-    void batchInsert(List<User> users);
+    public void delete(Long id);
 
-    boolean delete(Long id);
+    List<User> findUsersByQuery(Integer limit, String name);
 
-    void saveUserRoles(User user, List<Role> roles);
-
-    User findByLoginAndPassword(String login, String password);
-    
     User findUserByLogin(String login);
 
 }

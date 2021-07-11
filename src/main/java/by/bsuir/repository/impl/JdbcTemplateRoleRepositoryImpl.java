@@ -1,3 +1,4 @@
+/*
 package by.bsuir.repository.impl;
 
 import by.bsuir.domain.ESystemRoles;
@@ -98,3 +99,4 @@ public class JdbcTemplateRoleRepositoryImpl implements IRoleRepository {
         }
     }
 }
+*/

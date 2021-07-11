@@ -1,7 +1,7 @@
 package by.bsuir.repository.impl;
 
-import by.bsuir.domain.Role;
-import by.bsuir.repository.IRoleRepository;
+import by.bsuir.domain.Department;
+import by.bsuir.repository.IDepartmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,37 +18,37 @@ import java.util.List;
 @Repository
 @Primary
 @RequiredArgsConstructor
-public class RoleRepositoryImpl implements IRoleRepository {
+public class DepartmentRepositoryImpl implements IDepartmentRepository {
 
     private final SessionFactory sessionFactory;
 
     @Override
-    public List<Role> findAll() {
+    public List<Department> findAll() {
         try (Session session = sessionFactory.openSession()) {
 
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Role> criteriaBuilderQuery = criteriaBuilder
-                    .createQuery(Role.class);
-            Root<Role> hibernateRoleRoot = criteriaBuilderQuery
-                    .from(Role.class);
-            CriteriaQuery<Role> all = criteriaBuilderQuery
-                    .select(hibernateRoleRoot);
+            CriteriaQuery<Department> criteriaBuilderQuery = criteriaBuilder
+                    .createQuery(Department.class);
+            Root<Department> hibernateDepartmentRoot = criteriaBuilderQuery
+                    .from(Department.class);
+            CriteriaQuery<Department> all = criteriaBuilderQuery
+                    .select(hibernateDepartmentRoot);
 
-            TypedQuery<Role> allQuery = session.createQuery(all);
+            TypedQuery<Department> allQuery = session.createQuery(all);
 
             return allQuery.getResultList();
         }
     }
 
     @Override
-    public Role findOne(Integer id) {
+    public Department findOne(Integer id) {
         try (Session session = sessionFactory.openSession()) {
-            return session.find(Role.class, id);
+            return session.find(Department.class, id);
         }
     }
 
     @Override
-    public Role save(Role entity) {
+    public Department save(Department entity) {
         try (Session session = sessionFactory.openSession()) {
             session.saveOrUpdate(entity);
         }
@@ -56,7 +56,7 @@ public class RoleRepositoryImpl implements IRoleRepository {
     }
 
     @Override
-    public Role update(Role entity) {
+    public Department update(Department entity) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
@@ -68,9 +68,19 @@ public class RoleRepositoryImpl implements IRoleRepository {
 
     @Override
     public void deleteHard(Integer id) {
-        Role roleToDelete = findOne(id);
+        Department departmentToDelete = findOne(id);
         try (Session session = sessionFactory.openSession()) {
-            session.delete(roleToDelete);
+            session.delete(departmentToDelete);
+        }
+    }
+
+    @Override
+    public List<Department> findDepartmentByQuery(String departmentName) {
+        try (Session session = sessionFactory.openSession()) {
+            TypedQuery<Department> query = session.createQuery(
+                    "from Department where departmentName like :name");
+            query.setParameter("name", departmentName);
+            return query.getResultList();
         }
     }
 }

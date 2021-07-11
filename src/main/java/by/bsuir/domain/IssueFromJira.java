@@ -1,14 +1,10 @@
 package by.bsuir.domain;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Collections;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "issues_from_jira")

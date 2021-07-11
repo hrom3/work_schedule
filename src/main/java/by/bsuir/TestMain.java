@@ -2,7 +2,7 @@ package by.bsuir;
 
 import by.bsuir.domain.User;
 import by.bsuir.exception.NoSuchEntityException;
-import by.bsuir.repository.IUserRepository;
+import by.bsuir.repository.IJDBCUserRepository;
 import by.bsuir.util.UserGenerator;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;
@@ -15,8 +15,8 @@ public class TestMain  {
         AnnotationConfigApplicationContext annotationConfigApplicationContext =
                 new AnnotationConfigApplicationContext("by.bsuir");
 
-        IUserRepository userRepository =
-                annotationConfigApplicationContext.getBean(IUserRepository.class);
+        IJDBCUserRepository userRepository =
+                annotationConfigApplicationContext.getBean(IJDBCUserRepository.class);
 
         List<User> users = userRepository.findAll();
 

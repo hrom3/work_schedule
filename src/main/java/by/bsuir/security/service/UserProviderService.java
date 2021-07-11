@@ -1,13 +1,11 @@
 package by.bsuir.security.service;
 
-import by.bsuir.domain.Credential;
 import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.repository.ICredentialRepository;
-import by.bsuir.repository.IHibernateUserRepository;
-import by.bsuir.repository.IRoleRepository;
 import by.bsuir.repository.IUserRepository;
+import by.bsuir.repository.IRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,7 +21,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserProviderService implements UserDetailsService {
 
-    private final IHibernateUserRepository userRepository;
+    private final IUserRepository userRepository;
 
     private final IRoleRepository roleRepository;
 
