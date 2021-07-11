@@ -5,6 +5,7 @@ import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.repository.ICredentialRepository;
+import by.bsuir.repository.IHibernateUserRepository;
 import by.bsuir.repository.IRoleRepository;
 import by.bsuir.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserProviderService implements UserDetailsService {
 
-    private final IUserRepository userRepository;
+    private final IHibernateUserRepository userRepository;
 
     private final IRoleRepository roleRepository;
 
@@ -37,13 +38,12 @@ public class UserProviderService implements UserDetailsService {
 
             if (searchResult.isPresent()) {
                 User user = searchResult.get();
-                Credential credential = credentialRepository.findByUser(user);
                 return new org.springframework.security.core.userdetails.User(
-                        credential.getLogin(),
-                        credential.getPassword(),
+                        user.getCredential().getLogin(),
+                        user.getCredential().getPassword(),
 //                        ["ROLE_USER"]
                         AuthorityUtils.commaSeparatedStringToAuthorityList(
-                                roleRepository.getUserRoles(user)
+                                user.getRoles()
                                         .stream()
                                         .map(Role::getRoleName)
                                         .map(ESystemRoles::name)

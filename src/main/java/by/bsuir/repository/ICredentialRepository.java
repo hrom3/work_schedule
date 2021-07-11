@@ -8,4 +8,6 @@ public interface ICredentialRepository extends ICrudOperations<Long, Credential>
     Credential findByUser(User user);
 
     void saveUserCredentials(User user, Credential userCredential);
+
+    Credential findByLogin(String login);
 }

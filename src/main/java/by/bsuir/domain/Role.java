@@ -1,19 +1,21 @@
 package by.bsuir.domain;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Table(name = "role")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(exclude = {
+        "users"
+})
 public class Role {
 
     @Id
@@ -21,12 +23,13 @@ public class Role {
 
     @Column(name = "role_name")
     @Enumerated(EnumType.STRING)
-    private ESystemRoles roleName = ESystemRoles.ROLE_USER;
+    private ESystemRoles roleName;// = ESystemRoles.ROLE_USER;
 
-    @OneToMany(mappedBy = "role")
-    List<Role> roles;
-
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_role",
+            joinColumns = @JoinColumn(name = "id_role"),
+            inverseJoinColumns = @JoinColumn(name = "id_user")
+    )
+    @JsonIgnoreProperties("roles")
+    private Set<User> users = Collections.emptySet();
 }

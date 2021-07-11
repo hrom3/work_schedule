@@ -85,7 +85,7 @@ public class CredentialRepositoryImpl implements ICredentialRepository {
         try (Session session = sessionFactory.openSession()) {
             session.saveOrUpdate(entity);
         }
-            return entity;
+        return entity;
     }
 
     @Override
@@ -109,18 +109,33 @@ public class CredentialRepositoryImpl implements ICredentialRepository {
 
     @Override
     public Credential findByUser(User user) {
-        Long userId = user.getId();
-        try (Session session = sessionFactory.openSession()) {
-            Credential credential = session.byNaturalId(Credential.class)
-                    .using("idUser", userId)
-                    .load();
-            return credential;
-        }
+//        Long userId = user.getId();
+//        try (Session session = sessionFactory.openSession()) {
+//            Credential credential = session.byNaturalId(Credential.class)
+//                    .using("idUser", userId)
+//                    .load();
+//
+//          return  user.getCredential();
+//        }
+        return user.getCredential();
     }
 
     public void saveUserCredentials(User user, Credential userCredential) {
 
-        userCredential.setIdUser(user.getId());
-        save(userCredential);
+
+        //       userCredential.setIdUser(user.getId());
+        user.setCredential(userCredential);
+        try (Session session = sessionFactory.openSession()) {
+            session.saveOrUpdate(user);
+        }
+    }
+
+    public Credential findByLogin(String login) {
+        try (Session session = sessionFactory.openSession()) {
+            TypedQuery<Credential> query = session.createQuery(
+                    "from Credential where login like :login");
+            query.setParameter("login", login);
+            return query.getSingleResult();
+        }
     }
 }

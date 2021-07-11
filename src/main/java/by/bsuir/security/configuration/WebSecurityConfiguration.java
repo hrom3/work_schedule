@@ -31,7 +31,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final TokenUtils tokenUtils;
 
-    private  final PasswordEncoder noOpPasswordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Bean
     @Override

@@ -47,9 +47,9 @@ public class RegistrationController {
         generatedUser.setMiddleName(createRequest.getMiddleName());
         generatedUser.setEmail(createRequest.getEmail());
         generatedUser.setBirthDay(LocalDate.parse(createRequest.getBirthDay()));
-        generatedUser.setDepartmentId(createRequest.getDepartmentId());
-        generatedUser.setRateId(createRequest.getRateId());
-        generatedUser.setRoomId(createRequest.getRoomId());
+        //generatedUser.setDepartmentId(createRequest.getDepartmentId());
+        //generatedUser.setRateId(createRequest.getRateId());
+        //generatedUser.setRoomId(createRequest.getRoomId());
         generatedUser.setIsDeleted(false);
 
         Credential credentialForGeneratedUser = new Credential();

@@ -55,10 +55,10 @@ public class HibernateUserController {
         user.setMiddleName(createRequest.getMiddleName());
         user.setEmail(createRequest.getEmail());
         user.setBirthDay(LocalDate.parse(createRequest.getBirthDay()));
-        user.setDepartmentId(createRequest.getDepartmentId());
+        //user.setDepartmentId(createRequest.getDepartmentId());
         user.setChanged(new Timestamp(System.currentTimeMillis()));
-        user.setRateId(createRequest.getRateId());
-        user.setRoomId(createRequest.getRoomId());
+        //user.setRateId(createRequest.getRateId());
+        //user.setRoomId(createRequest.getRoomId());
 
         return  hibernateUserRepository.update(user);
     }

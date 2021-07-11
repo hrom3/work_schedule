@@ -1,11 +1,10 @@
 package by.bsuir.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
-import org.hibernate.annotations.NaturalId;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,29 +12,26 @@ import javax.persistence.*;
 @Table(name = "credential")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
+@EqualsAndHashCode(exclude = {"user"})
 public class Credential {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    @GeneratedValue(strategy=GenerationType.SEQUENCE)
     private Long id;
 
-    @NaturalId
-    @Column(name = "id_users")
-    private Long idUser;
-
-    @OneToOne(optional = false, mappedBy = "credential")
+    @OneToOne
+    @JoinColumn(name = "id_users")
+    @JsonBackReference
+    //@JsonIgnoreProperties("credential")
+    //@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class, property="@id")
     private User user;
 
     @Column
     private String login;
 
     @Column
+    @ToString.Exclude
     private String password;
-
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
 }
 
 

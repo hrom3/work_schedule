@@ -13,4 +13,6 @@ public interface IHibernateUserRepository extends ICrudOperations<Long, User> {
 
     List<User> findUsersByQuery(Integer limit, String name);
 
+    User findUserByLogin(String login);
+
 }

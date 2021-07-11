@@ -1,21 +1,20 @@
 package by.bsuir.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Table(name = "department")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+//@EqualsAndHashCode(exclude = {"users"})
 public class Department {
 
     @Id
@@ -24,7 +23,7 @@ public class Department {
     @Column(name = "department_name")
     private String departmentName;
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
+    //@OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
+    //@JsonManagedReference
+    //private Set<User> users = Collections.emptySet();
 }

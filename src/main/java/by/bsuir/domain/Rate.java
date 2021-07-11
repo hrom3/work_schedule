@@ -1,22 +1,23 @@
 package by.bsuir.domain;
 
-import lombok.AllArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.Collections;
+import java.util.Set;
 
 
 @Entity
 @Table(name = "rate")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode(exclude = {
+        "users"
+})
 public class Rate {
 
     @Id
@@ -31,8 +32,7 @@ public class Rate {
     @Column(name = "work_hour_short_day")
     private Integer workHourShortDay;
 
-
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
+    @OneToMany(mappedBy = "rate", fetch = FetchType.EAGER)
+    @JsonBackReference
+    private Set<User> users = Collections.emptySet();
 }

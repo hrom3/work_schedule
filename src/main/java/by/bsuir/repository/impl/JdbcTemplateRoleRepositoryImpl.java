@@ -31,7 +31,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Repository
-@Primary
 @RequiredArgsConstructor
 public class JdbcTemplateRoleRepositoryImpl implements IRoleRepository {
 

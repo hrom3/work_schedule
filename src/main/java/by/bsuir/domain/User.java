@@ -1,32 +1,32 @@
 package by.bsuir.domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"roles", "credential"})
+@EqualsAndHashCode(exclude = {"roles", "userWorkedTimes"})
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
     @Column
-    private String name;
+    private String surname;
 
     @Column
-    private String surname;
+    private String name;
 
     @Column(name = "middle_name")
     private String middleName;
@@ -35,11 +35,12 @@ public class User {
     private String email;
 
     @Column(name = "birth_day")
-//    private Date birthDay;
     private LocalDate birthDay;
 
-    @Column(name = "department_id")
-    private Integer departmentId;
+    @ManyToOne
+    @JoinColumn(name = "department_id")
+    @JsonManagedReference
+    private Department department;
 
     @Column
     private Timestamp created;
@@ -50,17 +51,32 @@ public class User {
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
-    @Column(name = "rate_id")
-    private Integer rateId;
+    @ManyToOne
+    @JoinColumn(name = "rate_id")
+    @JsonManagedReference
+    private Rate rate;
 
-    @Column(name = "room_id")
-    private Integer roomId;
+    @ManyToOne
+    @JoinColumn(name = "room_id")
+    @JsonManagedReference
+    private Room room;
 
-    @OneToOne
-    @JoinColumn(name = "credential_id")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonManagedReference
+    //@JsonIgnoreProperties("user")
+    //@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class, property="@id")
     private Credential credential;
 
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("users")
+    private Set<Role> roles = Collections.emptySet();
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+    @JsonIgnoreProperties("user")
+    private   Set<UserWorkedTime> userWorkedTimes = Collections.emptySet();
+
+
+    //public String getLogin() {return credential.getLogin();}
+
+    //public String getPassword() {return credential.getPassword();}
 }

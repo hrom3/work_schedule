@@ -1,13 +1,11 @@
 package by.bsuir.repository.impl;
 
-import by.bsuir.domain.Credential;
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.repository.columns.IUserColumns;
 import by.bsuir.repository.IUserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.annotation.Primary;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -40,12 +37,12 @@ public class JdbcTemplateUserRepository implements IUserRepository {
         user.setEmail(rs.getString(IUserColumns.EMAIL));
         user.setBirthDay((rs.getDate(IUserColumns.BIRTHDAY)).toLocalDate());
         //       user.setBirthDay((rs.getDate(IUserColumns.BIRTHDAY)));
-        user.setDepartmentId(rs.getInt(IUserColumns.DEPARTMENT_ID));
+       // user.setDepartmentId(rs.getInt(IUserColumns.DEPARTMENT_ID));
         user.setCreated(rs.getTimestamp(IUserColumns.CREATED));
         user.setChanged(rs.getTimestamp(IUserColumns.CHANGED));
         user.setIsDeleted(rs.getBoolean(IUserColumns.IS_DELETED));
-        user.setRateId(rs.getInt(IUserColumns.RATE_ID));
-        user.setRoomId(rs.getInt(IUserColumns.ROOM_ID));
+        //user.setRateId(rs.getInt(IUserColumns.RATE_ID));
+        //user.setRoomId(rs.getInt(IUserColumns.ROOM_ID));
         return user;
     }
 
@@ -286,12 +283,12 @@ public class JdbcTemplateUserRepository implements IUserRepository {
         params.addValue("middleName", entity.getMiddleName());
         params.addValue("email", entity.getEmail());
         params.addValue("birthDay", entity.getBirthDay());
-        params.addValue("departmentId", entity.getDepartmentId());
+        //params.addValue("departmentId", entity.getDepartmentId());
         params.addValue("created", entity.getCreated());
         params.addValue("changed", entity.getChanged());
         params.addValue("isDeleted", entity.getIsDeleted());
-        params.addValue("rateId", entity.getRateId());
-        params.addValue("roomId", entity.getRoomId());
+        //params.addValue("rateId", entity.getRateId());
+        //params.addValue("roomId", entity.getRoomId());
 
         return params;
     }

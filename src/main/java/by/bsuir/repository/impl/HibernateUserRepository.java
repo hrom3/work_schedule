@@ -1,7 +1,9 @@
 package by.bsuir.repository.impl;
 
+import by.bsuir.domain.Credential;
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
+import by.bsuir.repository.ICredentialRepository;
 import by.bsuir.repository.IHibernateUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.query.Query;
@@ -24,6 +26,8 @@ import java.util.Optional;
 public class HibernateUserRepository implements IHibernateUserRepository {
 
     private final SessionFactory sessionFactory;
+
+    private final ICredentialRepository credentialRepository;
 
     @Override
     public List<User> findAll() {
@@ -98,5 +102,10 @@ public class HibernateUserRepository implements IHibernateUserRepository {
             query.setParameter("name", name);
             return query.getResultList();
         }
+    }
+
+    public User findUserByLogin(String login) {
+        Credential credential = credentialRepository.findByLogin(login);
+        return  credential.getUser();
     }
 }

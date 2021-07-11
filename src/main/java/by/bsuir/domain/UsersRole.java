@@ -14,7 +14,6 @@ import javax.persistence.*;
 @Table(name = "users_role")
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 public class UsersRole {
 
     @Id
@@ -22,9 +21,6 @@ public class UsersRole {
 
     @Column(name = "id_user")
     private Long userId;
-
-    @Column(name = "id_role")
-    private Integer roleId;
 
     @ManyToOne
     @JoinColumn(name = "id_role", referencedColumnName = "id")

@@ -1,21 +1,20 @@
 package by.bsuir.domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.Collections;
+import java.util.Set;
 
 @Entity
 @Table(name = "issues_from_jira")
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+//@EqualsAndHashCode(exclude = {"userWorkedTimes"})
 public class IssueFromJira {
 
     @Id
@@ -30,8 +29,7 @@ public class IssueFromJira {
     @Column(name = "jira_issues_id")
     private Long jiraIssuesId;
 
-
-    public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.JSON_STYLE);
-    }
+    //@OneToMany
+    //@JsonManagedReference
+    //private Set<UserWorkedTime> userWorkedTimes = Collections.emptySet();
 }

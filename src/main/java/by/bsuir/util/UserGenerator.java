@@ -1,16 +1,17 @@
 package by.bsuir.util;
 
+import by.bsuir.domain.Department;
+import by.bsuir.domain.Rate;
+import by.bsuir.domain.Room;
 import by.bsuir.domain.User;
 import lombok.AllArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,15 +36,15 @@ public class UserGenerator {
         user.setMiddleName(RandomStringUtils.randomAlphabetic(5, 15));
         user.setEmail(RandomStringUtils.randomAlphabetic(5, 15)
                 .toLowerCase(Locale.ROOT) + "@bsuir.by");
-//        user.setBirthDay(new Date(RandomUtils.nextLong(0L, 946677600000L)));
         user.setBirthDay(LocalDate.ofInstant(Instant.ofEpochMilli
                         (RandomUtils.nextLong(0L, 946677600000L)),
                 ZoneId.systemDefault()));
-        user.setDepartmentId(RandomUtils.nextInt(1, 3));
+        //user.setBirthDay(new Date(RandomUtils.nextLong(0L, 946677600000L)));
+        user.setDepartment(new Department());
         user.setCreated(new Timestamp(System.currentTimeMillis()));
         user.setChanged(new Timestamp(System.currentTimeMillis()));
-        user.setRateId(RandomUtils.nextInt(1, 6));
-        user.setRoomId(RandomUtils.nextInt(1, 7));
+        user.setRate(new Rate());
+        user.setRoom(new Room());
         return user;
     }
 
