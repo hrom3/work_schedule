@@ -18,6 +18,23 @@ spring:
 security:
   secretKey: top_secret_key_hoho!
 
+---
+
 jwtconfig:
   secret: Top_secret12!!#@#
   expiration: 6_000_000
+
+---
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: work.schedule.test
+    password: test13580
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

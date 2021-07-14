@@ -22,7 +22,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
         WebSecurityConfiguration.class,
         PersistenceBeansConfiguration.class,
         SwaggerConfig.class,
-        SecurityConfig.class})
+        SecurityConfig.class
+})
 public class SpringBootStarter {
 
     public static void main(String[] args) {

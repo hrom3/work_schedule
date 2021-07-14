@@ -48,7 +48,9 @@ public class LoggingAspect {
         timer.start();
         Object proceed = joinPoint.proceed();
         timer.stop();
-        log.info("Method " + joinPoint.getSignature().getName() + " finished. \n \t\t Execute time =" + timer.getTotalTimeMillis() + " ms");
+        log.info("Method " + joinPoint.getSignature().getName() +
+                " finished. \n \t\t Execute time =" + timer.getTotalTimeMillis() +
+                " ms");
         return proceed;
     }
 }
