@@ -1,10 +1,9 @@
 package by.bsuir.aspect;
 
 import org.apache.log4j.Logger;
+import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Pointcut;
+import org.aspectj.lang.annotation.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -14,18 +13,22 @@ public class LoggingAspect {
 
     private static final Logger log = Logger.getLogger(LoggingAspect.class);
 
-//    @Before("aroundRepositoryPointcut()")
-//    public void logBefore(JoinPoint joinPoint) {
-//        log.info("Method " + joinPoint.getSignature().getName() + " start");
-//    }
-//
-//    @AfterReturning(pointcut = "aroundRepositoryPointcut()")
-//    public void doAccessCheck(JoinPoint joinPoint) {
-//        log.info("Method " + joinPoint.getSignature().getName() + " finished");
-//    }
+    @Before("emailSenderPointcut()")
+    public void logBefore(JoinPoint joinPoint) {
+        log.info("Method " + joinPoint.getSignature().getName() + " start");
+    }
+
+    @AfterReturning(pointcut = "emailSenderPointcut()")
+    public void doAccessCheck(JoinPoint joinPoint) {
+        log.info("Method " + joinPoint.getSignature().getName() + " finished");
+    }
 
     @Pointcut("execution(* by.bsuir.repository.impl.JdbcTemplateUserRepository.*(..))")
     public void aroundRepositoryPointcut() {
+    }
+
+    @Pointcut("execution(* by.bsuir.service.email.impl.EmailServiceImpl.*(..))")
+    public void emailSenderPointcut() {
     }
 
    /* @Around("aroundRepositoryPointcut()")

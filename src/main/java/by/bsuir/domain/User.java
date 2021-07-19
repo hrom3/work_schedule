@@ -51,6 +51,9 @@ public class User {
     @Column(name = "is_deleted")
     private Boolean isDeleted;
 
+    @Column(name = "is_confirmed")
+    private Boolean isConfirmed;
+
     @ManyToOne
     @JoinColumn(name = "rate_id")
     @JsonManagedReference
