@@ -1,5 +1,6 @@
 package by.bsuir.security.service;
 
+import by.bsuir.controller.exception.UnconfirmedUserException;
 import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
@@ -29,13 +30,18 @@ public class UserProviderService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String login)
-            throws UsernameNotFoundException {
+            throws UsernameNotFoundException, UnconfirmedUserException {
         try {
             Optional<User> searchResult = Optional.ofNullable(userRepository
                     .findUserByLogin(login));
 
             if (searchResult.isPresent()) {
                 User user = searchResult.get();
+//                if(!user.getIsConfirmed()) {
+//                    throw new UnconfirmedUserException(String.format
+//                            ("E-mail %s of  user is not confirmed by user '%s'.",
+//                                    user.getEmail(), login));
+//                }
                 return new org.springframework.security.core.userdetails.User(
                         user.getCredential().getLogin(),
                         user.getCredential().getPassword(),
@@ -51,6 +57,9 @@ public class UserProviderService implements UserDetailsService {
                 throw new UsernameNotFoundException(String.format
                         ("No user found with login '%s'.", login));
             }
+        } catch (UnconfirmedUserException ex) {
+            throw new UsernameNotFoundException(ex.getMessage());
+
         } catch (Exception e) {
             throw new UsernameNotFoundException("User with this login not found");
         }

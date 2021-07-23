@@ -16,7 +16,7 @@ import java.sql.Timestamp;
 public class ConfirmationData {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.SEQUENCE)
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
 
     @OneToOne

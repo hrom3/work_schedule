@@ -49,14 +49,14 @@ public class EmailRestController {
         return new ResponseEntity<>("Please check your inbox", HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Send confirmation email")
+    @ApiOperation(value = "Send confirmation email (for test)")
     @GetMapping(value = "/confirmation-email/{id}")
     public ResponseEntity sendConfirmationEmail(@PathVariable Long id) {
 
         User userToConfirmation = userRepository.findOne(id);
         String emailToConfirmation = userToConfirmation.getEmail();
         ConfirmationData confirmationDataGenerated =
-                confirmationDataGenerator.generate(/*userToConfirmation*/);
+                confirmationDataGenerator.generate(userToConfirmation);
         //TODO: save confirmationDataGenerated data
 
         String idFromConfirmationData = confirmationDataGenerated.getId().toString();

@@ -14,6 +14,7 @@ import java.sql.Timestamp;
 public class UserWorkedTime {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne

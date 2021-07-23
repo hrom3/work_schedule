@@ -23,7 +23,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
-
+//TODO: refactor
 @RestController
 @RequestMapping("/rest/users")
 @RequiredArgsConstructor
@@ -79,6 +79,7 @@ public class UserRestController {
 
         if (StringUtils.isNotBlank(secretKey) && secretKey.equals(config.getSecretKey())) {
             // return userRepository.findAll();
+
             return Collections.singletonList(userRepository.findUserByLogin(login));
 
         } else {

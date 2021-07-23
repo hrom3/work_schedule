@@ -1,6 +1,5 @@
 package by.bsuir.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
@@ -19,7 +18,7 @@ import java.util.Set;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column
@@ -76,10 +75,5 @@ public class User {
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("user")
-    private   Set<UserWorkedTime> userWorkedTimes = Collections.emptySet();
-
-
-    //public String getLogin() {return credential.getLogin();}
-
-    //public String getPassword() {return credential.getPassword();}
+    private Set<UserWorkedTime> userWorkedTimes = Collections.emptySet();
 }

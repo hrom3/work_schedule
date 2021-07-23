@@ -66,9 +66,10 @@ public class UserRepository implements IUserRepository {
     @Override
     public User update(User entity) {
         try (Session session = sessionFactory.openSession()) {
+            //Session session = sessionFactory.getCurrentSession();
             Transaction transaction = session.getTransaction();
             transaction.begin();
-            session.saveOrUpdate(entity);
+            session.merge(entity);
             transaction.commit();
             return entity;
         }
