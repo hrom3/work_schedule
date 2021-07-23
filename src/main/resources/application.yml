@@ -3,15 +3,15 @@ server:
 
 ---
 spring:
-#  flyway:
-#    enabled: true
-#    ignore-missing-migrations: true
-#    locations: classpath:/migration
-#    baseline-on-migrate: true
-#    baseline-description: Flyway Scripts
-#    url: ${spring.datasource.url}
-#    user: ${spring.datasource.username}
-#    password: ${spring.datasource.password}
+  flyway:
+    enabled: true
+    ignore-missing-migrations: true
+    locations: classpath:/migration
+    baseline-on-migrate: true
+    baseline-description: Flyway Scripts
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
   datasource:
     hikari:
       jdbc-url: "jdbc:postgresql://localhost:5432/work_time_report?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
