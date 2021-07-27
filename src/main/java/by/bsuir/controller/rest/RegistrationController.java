@@ -27,7 +27,7 @@ import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.util.*;
 
-@Api(description = "API-интерфейс, связанный с AreaController")
+@Api(description = "Регистрационный контроллер")
 @RestController
 @RequestMapping("/registration")
 @RequiredArgsConstructor
