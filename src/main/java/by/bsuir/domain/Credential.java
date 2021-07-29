@@ -1,9 +1,6 @@
 package by.bsuir.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,14 +13,21 @@ import javax.persistence.*;
 public class Credential {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator =  "credential_id"
+    )
+    @SequenceGenerator(
+            name = "credential_id",
+            sequenceName = "credential_id_seq",
+            initialValue = 5,
+            allocationSize = 1
+    )
     private Long id;
 
     @OneToOne
     @JoinColumn(name = "id_users")
     @JsonBackReference
-    //@JsonIgnoreProperties("credential")
-    //@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class, property="@id")
     private User user;
 
     @Column

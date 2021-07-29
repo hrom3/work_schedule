@@ -3,7 +3,12 @@ package by.bsuir.controller.rest;
 import by.bsuir.controller.exception.UnauthorizedException;
 import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.User;
+import by.bsuir.exception.NoSuchEntityException;
+import by.bsuir.repository.IDepartmentRepository;
 import by.bsuir.repository.IJDBCUserRepository;
+import by.bsuir.repository.IRateRepository;
+import by.bsuir.repository.IRoomsRepository;
+import by.bsuir.repository.springdata.IUserDataRepository;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.UserGenerator;
 import io.swagger.annotations.ApiImplicitParam;
@@ -13,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import by.bsuir.beans.SecurityConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -22,22 +28,36 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 //TODO: refactor
 @RestController
 @RequestMapping("/rest/users")
 @RequiredArgsConstructor
 public class UserRestController {
+
     private final IJDBCUserRepository userRepository;
+
     private final UserGenerator userGenerator;
+
     private final SecurityConfig config;
+
     private final PrincipalUtil principalUtil;
+
+    private final IUserDataRepository userDataRepository;
+
+    private final IDepartmentRepository departmentRepository;
+
+    private final IRateRepository rateRepository;
+
+    private final IRoomsRepository roomRepository;
+
 
     @ApiOperation(value = "Find all users")
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public List<User> findAll() {
-        return userRepository.findAll();
+        return userDataRepository.findAll();
     }
 
 
@@ -56,7 +76,7 @@ public class UserRestController {
 
 
         if (StringUtils.isNotBlank(secretKey) && secretKey.equals(config.getSecretKey())) {
-            return userRepository.findAll();
+            return userDataRepository.findAll();
         } else {
           throw new UnauthorizedException("Unable to authenticate Domain " +
                   "User for provided credentials.");
@@ -91,7 +111,12 @@ public class UserRestController {
     @GetMapping("/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public User findUserById(@PathVariable Long userId) {
-        return userRepository.findOne(userId);
+        Optional<User> searchResult = userDataRepository.findById(userId);
+        if (searchResult.isPresent()) {
+        return searchResult.get();
+        }  else {
+            throw new NoSuchEntityException("No such user with id:" + userId);
+        }
     }
 
     @GetMapping("/search")
@@ -129,10 +154,10 @@ public class UserRestController {
         user.setMiddleName(createRequest.getMiddleName());
         user.setEmail(createRequest.getEmail());
         user.setBirthDay(LocalDate.parse(createRequest.getBirthDay()));
-        //user.setDepartmentId(createRequest.getDepartmentId());
+        user.setDepartment(departmentRepository.findOne(createRequest.getDepartmentId()));
         user.setChanged(new Timestamp(System.currentTimeMillis()));
-        //user.setRateId(createRequest.getRateId());
-        //user.setRoomId(createRequest.getRoomId());
+        user.setRate(rateRepository.findOne(createRequest.getRateId()));
+        user.setRoom(roomRepository.findOne(createRequest.getRoomId()));
 
         return  userRepository.update(user);
     }

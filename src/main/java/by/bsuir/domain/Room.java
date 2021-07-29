@@ -1,13 +1,10 @@
 package by.bsuir.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.AllArgsConstructor;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -16,7 +13,6 @@ import java.util.Set;
 @Entity
 @Table(name = "rooms")
 @Data
-//@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = {
         "users"
@@ -24,6 +20,16 @@ import java.util.Set;
 public class Room {
 
     @Id
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator =  "room_id"
+    )
+    @SequenceGenerator(
+            name = "room_id",
+            sequenceName = "rooms_id_seq",
+            initialValue = 7,
+            allocationSize = 1
+    )
     private Integer id;
 
     @Column(name = "room_number")

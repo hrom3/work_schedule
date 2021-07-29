@@ -52,7 +52,10 @@ public class CredentialRepositoryImpl implements ICredentialRepository {
     @Override
     public Credential save(Credential entity) {
         try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
             session.saveOrUpdate(entity);
+            transaction.commit();
         }
         return entity;
     }
@@ -83,10 +86,13 @@ public class CredentialRepositoryImpl implements ICredentialRepository {
 
     public void saveUserCredentials(User user, Credential userCredential) {
 
-        //userCredential.setIdUser(user.getId());
         user.setCredential(userCredential);
         try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
             session.saveOrUpdate(user);
+            session.saveOrUpdate(userCredential);
+            transaction.commit();
         }
     }
 

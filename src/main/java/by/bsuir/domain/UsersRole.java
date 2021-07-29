@@ -1,8 +1,5 @@
 package by.bsuir.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.google.gson.JsonObject;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.builder.ToStringBuilder;

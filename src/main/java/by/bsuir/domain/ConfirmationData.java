@@ -1,11 +1,19 @@
 package by.bsuir.domain;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.OneToOne;
+import javax.persistence.JoinColumn;
+
 import java.sql.Timestamp;
 
 @Entity
@@ -21,7 +29,6 @@ public class ConfirmationData {
 
     @OneToOne
     @JoinColumn(name = "user_id")
-    //@JsonBackReference
     private User user;
 
     @Column

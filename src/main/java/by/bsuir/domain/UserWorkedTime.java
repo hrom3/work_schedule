@@ -14,7 +14,16 @@ import java.sql.Timestamp;
 public class UserWorkedTime {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator =  "user_worked_time_id"
+    )
+    @SequenceGenerator(
+            name = "user_worked_time_id",
+            sequenceName = "user_worked_time_id_seq",
+            initialValue = 5,
+            allocationSize = 1
+    )
     private Long id;
 
     @ManyToOne

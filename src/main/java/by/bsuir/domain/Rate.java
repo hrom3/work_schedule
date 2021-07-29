@@ -9,7 +9,6 @@ import javax.persistence.*;
 import java.util.Collections;
 import java.util.Set;
 
-
 @Entity
 @Table(name = "rate")
 @Data
@@ -20,6 +19,16 @@ import java.util.Set;
 public class Rate {
 
     @Id
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator =  "rate_id"
+    )
+    @SequenceGenerator(
+            name = "rate_id",
+            sequenceName = "rate_id_seq",
+            initialValue = 7,
+            allocationSize = 1
+    )
     private Integer id;
 
     @Column(name = "salary_rate")

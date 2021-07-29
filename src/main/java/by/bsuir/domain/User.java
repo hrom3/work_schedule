@@ -47,7 +47,7 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "department_id")
-    @JsonManagedReference
+    @JsonIgnoreProperties("users")
     private Department department;
 
     @Column

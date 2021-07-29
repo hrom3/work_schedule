@@ -19,11 +19,21 @@ import java.util.Set;
 public class Role {
 
     @Id
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator =  "role_id"
+    )
+    @SequenceGenerator(
+            name = "role_id",
+            sequenceName = "role_id_seq",
+            initialValue = 4,
+            allocationSize = 1
+    )
     private Integer id;
 
     @Column(name = "role_name")
     @Enumerated(EnumType.STRING)
-    private ESystemRoles roleName;// = ESystemRoles.ROLE_USER;
+    private ESystemRoles roleName;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_role",

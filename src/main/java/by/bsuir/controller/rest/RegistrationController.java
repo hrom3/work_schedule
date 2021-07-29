@@ -7,6 +7,7 @@ import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.repository.*;
 import by.bsuir.repository.springdata.IConfirmationDataRepository;
+import by.bsuir.repository.springdata.IUserDataRepository;
 import by.bsuir.service.email.IEmailService;
 import by.bsuir.service.email.impl.AbstractEmailContext;
 import by.bsuir.util.ConfirmationDataGenerator;
@@ -53,6 +54,8 @@ public class RegistrationController {
 
     private final IEmailService emailService;
 
+    private final IUserDataRepository userDataRepository;
+
     private final ConfirmationDataGenerator confirmationDataGenerator;
 
     private final UserGenerator userGenerator;
@@ -68,7 +71,6 @@ public class RegistrationController {
     public ResponseEntity createUser(@ModelAttribute UserCreateRequest createRequest) {
         //converter
         User generatedUser = userGenerator.generateLiteUser();
-        //User generatedUser = userGenerator.generate();
 
         generatedUser.setName(createRequest.getName());
         generatedUser.setSurname(createRequest.getSurname());
@@ -82,21 +84,20 @@ public class RegistrationController {
         generatedUser.setIsDeleted(false);
         generatedUser.setIsConfirmed(false);
 
-        List<Role> roles = roleRepository.findAll();
+        User savedUser = userDataRepository.save(generatedUser);
 
-        generatedUser.setRoles(new HashSet<>(roles));
+        userDataRepository.saveUserRole(savedUser.getId(), createRequest.getRoleId());
 
         Credential credentialForGeneratedUser = new Credential();
 
         credentialForGeneratedUser.setLogin(createRequest.getLogin());
         credentialForGeneratedUser.setPassword(passwordEncoder
                 .encode(createRequest.getPassword()));
-
-        User savedUser = userRepository.save(generatedUser);
-
         credentialForGeneratedUser.setUser(savedUser);
 
-        credentialRepository.saveUserCredentials(generatedUser, credentialForGeneratedUser);
+        credentialRepository.saveUserCredentials(savedUser, credentialForGeneratedUser);
+
+
 
         ConfirmationData confirmationDataGenerated = confirmationDataGenerator
                 .generate(savedUser);
@@ -104,14 +105,14 @@ public class RegistrationController {
         ConfirmationData savedConfirmationData = confirmationDataRepository
                 .save(confirmationDataGenerated);
 
-        AbstractEmailContext emailContext = new AbstractEmailContext();
+        //AbstractEmailContext emailContext = new AbstractEmailContext();
 
         //TODO: AddRole
         //TODO: create normal var
         String urlToConfirmPage = "http://localhost:8081/rest/confirm";
         String emailToConfirmation = savedConfirmationData.getUser().getEmail();
 
-        Map<String, Object> contextMap = new HashMap<>();
+          /*Map<String, Object> contextMap = new HashMap<>();
         contextMap.put("firstName", savedConfirmationData.getUser().getName());
         contextMap.put("verificationURL", urlToConfirmPage +
                 "?id=" + savedConfirmationData.getId() +
@@ -137,7 +138,7 @@ public class RegistrationController {
                     Arrays.toString(messagingException.getStackTrace()), messagingException);
             return new ResponseEntity<>("Unable to send email",
                     HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        }*/
         return new ResponseEntity<>("User "+
                 savedConfirmationData.getUser().getCredential().getLogin()
                 + " created. Please check your inbox " +
