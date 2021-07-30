@@ -21,6 +21,7 @@ import java.util.Optional;
 @Repository
 @Primary
 @RequiredArgsConstructor
+@Deprecated
 public class UserRepository implements IUserRepository {
 
     private final SessionFactory sessionFactory;
