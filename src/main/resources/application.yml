@@ -25,7 +25,7 @@ spring:
 ---
 
 security:
-  secretKey: top_secret_key_hoho!
+  secretKey: Secret-Key
 
 ---
 

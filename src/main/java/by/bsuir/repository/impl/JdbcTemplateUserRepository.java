@@ -22,6 +22,7 @@ import java.util.Objects;
 
 @Repository
 @RequiredArgsConstructor
+@Deprecated
 public class JdbcTemplateUserRepository implements IJDBCUserRepository {
 
     private final JdbcTemplate jdbcTemplate;
