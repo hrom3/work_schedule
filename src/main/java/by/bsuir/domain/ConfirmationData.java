@@ -5,14 +5,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.OneToOne;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
 import java.sql.Timestamp;
 
@@ -24,7 +17,14 @@ import java.sql.Timestamp;
 public class ConfirmationData {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator =  "confirmation_id_table_id"
+    )
+    @SequenceGenerator(
+            name = "confirmation_id_table_id",
+            sequenceName = "confirmation_id_table_id_seq"
+    )
     private Long id;
 
     @OneToOne
