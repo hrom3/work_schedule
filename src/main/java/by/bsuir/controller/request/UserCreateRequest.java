@@ -10,12 +10,13 @@ public class UserCreateRequest {
 
     @ApiParam(required = true)
     private String name;
+
     @ApiParam(required = true)
     private String surname;
 
     private String middleName;
 
-    @ApiParam(value = "example@gmail.com", required = true, allowEmptyValue = false)
+    @ApiParam(value = "example@gmail.com", required = true)
     private String email;
 
     @ApiParam(value = "format yyyy-MM-dd (2019-04-03)")

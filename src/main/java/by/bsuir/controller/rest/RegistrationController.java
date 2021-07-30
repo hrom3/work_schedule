@@ -3,7 +3,6 @@ package by.bsuir.controller.rest;
 import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.ConfirmationData;
 import by.bsuir.domain.Credential;
-import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.repository.*;
 import by.bsuir.repository.springdata.IConfirmationDataRepository;
@@ -38,11 +37,8 @@ public class RegistrationController {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final IUserRepository userRepository;
-
     private final ICredentialRepository credentialRepository;
 
-    private final IRoleRepository roleRepository;
 
     private final IDepartmentRepository departmentRepository;
 
@@ -97,22 +93,19 @@ public class RegistrationController {
 
         credentialRepository.saveUserCredentials(savedUser, credentialForGeneratedUser);
 
-
-
         ConfirmationData confirmationDataGenerated = confirmationDataGenerator
                 .generate(savedUser);
 
         ConfirmationData savedConfirmationData = confirmationDataRepository
                 .save(confirmationDataGenerated);
 
-        //AbstractEmailContext emailContext = new AbstractEmailContext();
+        AbstractEmailContext emailContext = new AbstractEmailContext();
 
-        //TODO: AddRole
         //TODO: create normal var
         String urlToConfirmPage = "http://localhost:8081/rest/confirm";
         String emailToConfirmation = savedConfirmationData.getUser().getEmail();
 
-          /*Map<String, Object> contextMap = new HashMap<>();
+        Map<String, Object> contextMap = new HashMap<>();
         contextMap.put("firstName", savedConfirmationData.getUser().getName());
         contextMap.put("verificationURL", urlToConfirmPage +
                 "?id=" + savedConfirmationData.getId() +
@@ -138,7 +131,7 @@ public class RegistrationController {
                     Arrays.toString(messagingException.getStackTrace()), messagingException);
             return new ResponseEntity<>("Unable to send email",
                     HttpStatus.INTERNAL_SERVER_ERROR);
-        }*/
+        }
         return new ResponseEntity<>("User "+
                 savedConfirmationData.getUser().getCredential().getLogin()
                 + " created. Please check your inbox " +

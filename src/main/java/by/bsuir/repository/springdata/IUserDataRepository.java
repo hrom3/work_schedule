@@ -12,16 +12,32 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.SQLException;
+import java.util.List;
+import java.util.Optional;
 
 public interface IUserDataRepository extends CrudRepository<User, Long>,
         PagingAndSortingRepository<User, Long>,
         JpaRepository<User, Long> {
 
-    @Transactional(propagation = Propagation.REQUIRED, isolation = Isolation.DEFAULT,
+    Optional<User> findUserByCredentialLogin(String login);
+
+    @Transactional(propagation = Propagation.REQUIRED,
+            isolation = Isolation.DEFAULT,
             rollbackFor = SQLException.class)
     @Modifying
     @Query(value = "insert into users_role(id_user, id_role) values " +
             "(:user_id, :role_id)", nativeQuery = true)
-    int saveUserRole(@Param("user_id") Long userId, @Param("role_id") Integer roleId);
+    int saveUserRole(@Param("user_id") Long userId,
+                     @Param("role_id") Integer roleId);
 
+    @Transactional(propagation = Propagation.REQUIRED,
+            isolation = Isolation.DEFAULT,
+            rollbackFor = SQLException.class)
+    @Modifying
+    @Query("update User u set u.isDeleted = false where u.id = :user_id")
+    int softDelete(@Param("user_id") Long userId);
+
+    @Query(value = "select * from users u where u.name like :query limit :limit",
+    nativeQuery = true)
+    List<User> findUsersByQuery(String query, Integer limit);
 }

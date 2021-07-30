@@ -4,16 +4,14 @@ import by.bsuir.controller.exception.UnauthorizedException;
 import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.User;
 import by.bsuir.exception.NoSuchEntityException;
-import by.bsuir.repository.IDepartmentRepository;
-import by.bsuir.repository.IJDBCUserRepository;
-import by.bsuir.repository.IRateRepository;
-import by.bsuir.repository.IRoomsRepository;
+import by.bsuir.repository.*;
 import by.bsuir.repository.springdata.IUserDataRepository;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.UserGenerator;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import by.bsuir.beans.SecurityConfig;
 import org.apache.commons.lang3.StringUtils;
@@ -36,8 +34,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserRestController {
 
-    private final IJDBCUserRepository userRepository;
-
     private final UserGenerator userGenerator;
 
     private final SecurityConfig config;
@@ -52,70 +48,74 @@ public class UserRestController {
 
     private final IRoomsRepository roomRepository;
 
-
     @ApiOperation(value = "Find all users")
-    @GetMapping
+    @GetMapping("/hello")
     @ResponseStatus(HttpStatus.OK)
     public List<User> findAll() {
         return userDataRepository.findAll();
     }
 
-
     @ApiOperation(value = "Find all users with Secret key and authenticate")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "Secret-Key", dataType = "string",
-                    paramType = "header", value = "Secret key for secret functionality"),
-            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
-                    dataType = "string", paramType = "header")
+            @ApiImplicitParam(name = "Secret-Key",
+                    dataType = "string",
+                    defaultValue = "Secret-Key!",
+                    paramType = "header",
+                    value = "Secret key for secret functionality"),
+            @ApiImplicitParam(name = "X-Auth-Token",
+                    value = "token", required = true,
+                    dataType = "string",
+                    paramType = "header")
     })
-    @GetMapping("/hello")
+    @GetMapping
     public List<User> securedFindAll(HttpServletRequest request,
                                      @ApiIgnore Principal principal) {
         String login = principalUtil.getUsername(principal);
         String secretKey = request.getHeader("Secret-Key");
 
 
-        if (StringUtils.isNotBlank(secretKey) && secretKey.equals(config.getSecretKey())) {
+        if (StringUtils.isNotBlank(secretKey) && secretKey.
+                equals(config.getSecretKey())) {
             return userDataRepository.findAll();
-        } else {
-          throw new UnauthorizedException("Unable to authenticate Domain " +
-                  "User for provided credentials.");
-        }
-    }
-
-    @ApiOperation(value = "Find user by token with Secret key")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Secret-Key", dataType = "string",
-                    paramType = "header", value = "Secret key for secret functionality"),
-            @ApiImplicitParam(name = "X-Auth-Token", value = "token", required = true,
-                    dataType = "string", paramType = "header")
-    })
-    @GetMapping("/hello/user")
-    public List<User> securedOneByToken(HttpServletRequest request,
-                                     @ApiIgnore Principal principal) {
-        String login = principalUtil.getUsername(principal);
-        String secretKey = request.getHeader("Secret-Key");
-
-
-        if (StringUtils.isNotBlank(secretKey) && secretKey.equals(config.getSecretKey())) {
-            // return userRepository.findAll();
-
-            return Collections.singletonList(userRepository.findUserByLogin(login));
-
         } else {
             throw new UnauthorizedException("Unable to authenticate Domain " +
                     "User for provided credentials.");
         }
     }
 
-    @GetMapping("/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public User findUserById(@PathVariable Long userId) {
-        Optional<User> searchResult = userDataRepository.findById(userId);
-        if (searchResult.isPresent()) {
-        return searchResult.get();
-        }  else {
-            throw new NoSuchEntityException("No such user with id:" + userId);
+    @ApiOperation(value = "Find user by token with Secret key")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "Secret-Key",
+                    dataType = "string",
+                    defaultValue = "Secret-Key!",
+                    paramType = "header",
+                    value = "Secret key for secret functionality"),
+            @ApiImplicitParam(name = "X-Auth-Token",
+                    value = "token",
+                    required = true,
+                    dataType = "string",
+                    paramType = "header")
+    })
+    @GetMapping("/user")
+    public User securedOneByToken(HttpServletRequest request,
+                                  @ApiIgnore Principal principal) {
+        String login = principalUtil.getUsername(principal);
+        String secretKey = request.getHeader("Secret-Key");
+
+
+        if (StringUtils.isNotBlank(secretKey) && secretKey.
+                equals(config.getSecretKey())) {
+
+            Optional<User> searchResult =
+                    userDataRepository.findUserByCredentialLogin(login);
+            if (searchResult.isPresent()) {
+                return searchResult.get();
+            } else {
+                throw new NoSuchEntityException("No such user with login:" + login);
+            }
+        } else {
+            throw new UnauthorizedException("Unable to authenticate Domain " +
+                    "User for provided credentials.");
         }
     }
 
@@ -123,31 +123,38 @@ public class UserRestController {
     @ResponseStatus(HttpStatus.OK)
     public List<User> userSearch(@RequestParam Integer limit,
                                  @RequestParam String query) {
-        return userRepository.findUsersByQuery(limit, query);
+        return userDataRepository.findUsersByQuery(query, limit);
     }
 
 
     @ApiOperation(value = "Create autogenerate users")
     @ApiImplicitParams({
-            @ApiImplicitParam( name = "usersCount", dataType = "integer",
+            @ApiImplicitParam(name = "usersCount", dataType = "integer",
                     paramType = "path", value = "Count of users for generate",
-            required = true, defaultValue = "10")
+                    required = true, defaultValue = "10")
     })
     @PostMapping("/generate/{usersCount}")
     @ResponseStatus(HttpStatus.CREATED)
     public List<User> generateUsers(@PathVariable("usersCount") Integer count) {
 //        throw new RuntimeException("Haha!");
-       List<User> generateUsers = userGenerator.generate(count);
-       userRepository.batchInsert(generateUsers);
+        List<User> generateUsers = userGenerator.generate(count);
+        userDataRepository.saveAll(generateUsers);
 
-       return userRepository.findAll();
+        return userDataRepository.findAll();
     }
 
     @PutMapping("/update/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public User updateUser(@PathVariable Long userId,
                            @ModelAttribute UserCreateRequest createRequest) {
-        User user = userRepository.findOne(userId);
+        Optional<User> searchResult =
+                userDataRepository.findById(userId);
+        User user;
+        if (searchResult.isPresent()) {
+            user = searchResult.get();
+        } else {
+            throw new NoSuchEntityException("No such user with login:" + userId);
+        }
 
         user.setName(createRequest.getName());
         user.setSurname(createRequest.getSurname());
@@ -158,20 +165,31 @@ public class UserRestController {
         user.setChanged(new Timestamp(System.currentTimeMillis()));
         user.setRate(rateRepository.findOne(createRequest.getRateId()));
         user.setRoom(roomRepository.findOne(createRequest.getRoomId()));
+        //user.setRoles(roleRepository.findOne(createRequest.getRoleId()));
 
-        return  userRepository.update(user);
+        return userDataRepository.save(user);
     }
 
     @DeleteMapping("/delete_hard/{userId}")
     public void deleteUserHard(@PathVariable Long userId) {
-        userRepository.deleteHard(userId);
+        userDataRepository.deleteById(userId);
     }
 
     @DeleteMapping("/delete/{userId}")
     public User deleteUser(@PathVariable Long userId) {
-        userRepository.delete(userId);
 
-        return userRepository.findOne(userId);
+        Optional<User> searchResult =
+                userDataRepository.findById(userId);
+        User user;
+        if (searchResult.isPresent()) {
+            user = searchResult.get();
+        } else {
+            throw new NoSuchEntityException("No such user with login:" + userId);
+        }
+
+        userDataRepository.softDelete(userId);
+
+        return user;
     }
 
 }
