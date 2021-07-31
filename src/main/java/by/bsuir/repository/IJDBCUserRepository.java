@@ -5,6 +5,11 @@ import by.bsuir.domain.User;
 
 import java.util.List;
 
+/**
+ * @deprecated (Use Spring Data Repositories)
+ */
+
+@Deprecated(since = "version 0.1.20210731")
 public interface IJDBCUserRepository extends ICrudOperations<Long, User> {
 
     List<User> findUsersByQuery(Integer limit, String query);
