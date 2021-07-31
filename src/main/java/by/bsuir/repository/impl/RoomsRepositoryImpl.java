@@ -15,9 +15,15 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+/**
+  * @deprecated (Use Spring Data Repositories)
+  */
+
+
 @Repository
 @Primary
 @RequiredArgsConstructor
+@Deprecated(since = "version 0.1.20210731")
 public class RoomsRepositoryImpl implements IRoomsRepository {
 
     private final SessionFactory sessionFactory;
