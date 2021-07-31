@@ -4,9 +4,9 @@ import by.bsuir.controller.exception.UnconfirmedUserException;
 import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
-import by.bsuir.repository.ICredentialRepository;
-import by.bsuir.repository.IUserRepository;
 import by.bsuir.repository.IRoleRepository;
+import by.bsuir.repository.springdata.ICredentialDataRepository;
+import by.bsuir.repository.springdata.IUserDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,26 +22,26 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class UserProviderService implements UserDetailsService {
 
-    private final IUserRepository userRepository;
+    private final IUserDataRepository userRepository;
 
     private final IRoleRepository roleRepository;
 
-    private final ICredentialRepository credentialRepository;
+    private final ICredentialDataRepository credentialRepository;
 
     @Override
     public UserDetails loadUserByUsername(String login)
             throws UsernameNotFoundException, UnconfirmedUserException {
         try {
-            Optional<User> searchResult = Optional.ofNullable(userRepository
-                    .findUserByLogin(login));
+            Optional<User> searchResult = userRepository
+                    .findUserByCredentialLogin(login);
 
             if (searchResult.isPresent()) {
                 User user = searchResult.get();
-//                if(!user.getIsConfirmed()) {
-//                    throw new UnconfirmedUserException(String.format
-//                            ("E-mail %s of  user is not confirmed by user '%s'.",
-//                                    user.getEmail(), login));
-//                }
+                if(!user.getIsConfirmed()) {
+                    throw new UnconfirmedUserException(String.format
+                            ("E-mail %s of  user is not confirmed by user '%s'.",
+                                    user.getEmail(), login));
+                }
                 return new org.springframework.security.core.userdetails.User(
                         user.getCredential().getLogin(),
                         user.getCredential().getPassword(),
