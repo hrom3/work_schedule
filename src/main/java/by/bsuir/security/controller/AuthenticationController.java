@@ -2,7 +2,7 @@ package by.bsuir.security.controller;
 
 import by.bsuir.controller.exception.UnconfirmedUserException;
 import by.bsuir.domain.User;
-import by.bsuir.repository.IUserRepository;
+import by.bsuir.repository.springdata.IUserDataRepository;
 import by.bsuir.security.requests.AuthRequest;
 import by.bsuir.security.requests.AuthResponse;
 import by.bsuir.security.utils.TokenUtils;
@@ -34,7 +34,7 @@ public class AuthenticationController {
 
     private final UserDetailsService userProvider;
 
-    private final IUserRepository userRepository;
+    private final IUserDataRepository userRepository;
 
     @ApiOperation(value = "Login user in system",
             notes = "Return Auth-Token with user login")
@@ -50,8 +50,8 @@ public class AuthenticationController {
 
         //TODO: take out in a separate method
         /*Check is e-mail confirmed*/
-        Optional<User> searchResult = Optional.ofNullable(userRepository
-                .findUserByLogin(request.getLogin()));
+        Optional<User> searchResult = userRepository.findUserByCredentialLogin
+                (request.getLogin());
         if (searchResult.isPresent()) {
             User user = searchResult.get();
             boolean isEmailConfirmed = user.getIsConfirmed();
