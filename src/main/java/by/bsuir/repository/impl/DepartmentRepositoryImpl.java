@@ -18,6 +18,7 @@ import java.util.List;
 @Repository
 @Primary
 @RequiredArgsConstructor
+@Deprecated
 public class DepartmentRepositoryImpl implements IDepartmentRepository {
 
     private final SessionFactory sessionFactory;

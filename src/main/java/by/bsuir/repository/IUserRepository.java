@@ -5,6 +5,7 @@ import by.bsuir.domain.User;
 import java.util.List;
 import java.util.Optional;
 
+@Deprecated
 public interface IUserRepository extends ICrudOperations<Long, User> {
 
     Optional<User> findById(Long id);

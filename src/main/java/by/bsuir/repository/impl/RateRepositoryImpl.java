@@ -18,6 +18,7 @@ import java.util.List;
 @Repository
 @Primary
 @RequiredArgsConstructor
+@Deprecated
 public class RateRepositoryImpl implements IRateRepository {
 
     private final SessionFactory sessionFactory;

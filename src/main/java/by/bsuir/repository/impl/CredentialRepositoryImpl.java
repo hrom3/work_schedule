@@ -20,6 +20,7 @@ import java.util.List;
 @Repository
 @Primary
 @RequiredArgsConstructor
+@Deprecated
 public class CredentialRepositoryImpl implements ICredentialRepository {
 
     private final SessionFactory sessionFactory;
@@ -84,6 +85,7 @@ public class CredentialRepositoryImpl implements ICredentialRepository {
         return user.getCredential();
     }
 
+    //TODO remove method to service
     public void saveUserCredentials(User user, Credential userCredential) {
 
         user.setCredential(userCredential);
