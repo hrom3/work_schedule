@@ -33,11 +33,21 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(UnconfirmedUserException.class)
     public ResponseEntity<ErrorMessage> handleUnconfirmedUserException(Exception e) {
-        /* Handles Unauthorized exceptions. Status code 401. */
+        /* Handles Unconfirmed user exceptions. Status code 423. */
         log.error(e.getMessage(), e);
         log.info(e.getMessage(), e);
         System.out.println(e.getMessage());
         return new ResponseEntity<>(new ErrorMessage(423L, e.getMessage()),
                 HttpStatus.LOCKED);
+    }
+
+    @ExceptionHandler(PresentEntityException.class)
+    public ResponseEntity<ErrorMessage> handlePresentDepartmentException(Exception e) {
+        /* Handles Present entity exceptions. Status code 200. */
+        log.error(e.getMessage(), e);
+        log.info(e.getMessage(), e);
+        System.out.println(e.getMessage());
+        return new ResponseEntity<>(new ErrorMessage(200L, e.getMessage()),
+                HttpStatus.OK);
     }
 }
