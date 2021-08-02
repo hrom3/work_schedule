@@ -21,6 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +54,7 @@ public class UserRestController {
     private final IRoomDataRepository roomRepository;
 
     private final IRoleDataRepository roleRepository;
+
 
     @ApiOperation(value = "Find all users")
     @GetMapping("/findAll")
@@ -155,9 +157,10 @@ public class UserRestController {
     }
 
     @GetMapping("/search_by_email")
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> userSearchByEmail(@RequestParam String query) {
-        return userDataRepository.findByEmailContainingIgnoreCase(query);
+    @JsonView(View.PublicView.class)
+    public ResponseEntity userSearchByEmail(@RequestParam String query) {
+        return new ResponseEntity<>(userDataRepository
+                .findByEmailContainingIgnoreCase(query), HttpStatus.OK);
     }
 
     @ApiOperation(value = "Create autogenerate users")
