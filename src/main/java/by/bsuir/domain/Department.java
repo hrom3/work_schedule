@@ -1,7 +1,9 @@
 package by.bsuir.domain;
 
+import by.bsuir.domain.viewhelper.View;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -28,12 +30,15 @@ public class Department {
             initialValue = 4,
             allocationSize = 1
     )
+    @JsonView(View.PublicView.class)
     private Integer id;
 
     @Column(name = "department_name")
+    @JsonView(View.PublicView.class)
     private String departmentName;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
     @JsonManagedReference
+    @JsonView(View.InternalView.class)
     private Set<User> users = Collections.emptySet();
 }
