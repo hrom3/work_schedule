@@ -2,12 +2,14 @@ package by.bsuir.controller.rest;
 
 import by.bsuir.controller.exception.UnauthorizedException;
 import by.bsuir.controller.request.UserCreateRequest;
-import by.bsuir.domain.User;
+import by.bsuir.domain.*;
+import by.bsuir.domain.viewhelper.View;
 import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.repository.*;
-import by.bsuir.repository.springdata.IUserDataRepository;
+import by.bsuir.repository.springdata.*;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.UserGenerator;
+import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -15,7 +17,11 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import by.bsuir.beans.SecurityConfig;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
@@ -24,9 +30,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 //TODO: refactor
 @RestController
@@ -42,15 +46,18 @@ public class UserRestController {
 
     private final IUserDataRepository userDataRepository;
 
-    private final IDepartmentRepository departmentRepository;
+    private final IDepartmentDataRepository departmentRepository;
 
-    private final IRateRepository rateRepository;
+    private final IRateDataRepository rateRepository;
 
-    private final IRoomsRepository roomRepository;
+    private final IRoomDataRepository roomRepository;
+
+    private final IRoleDataRepository roleRepository;
 
     @ApiOperation(value = "Find all users")
-    @GetMapping("/hello")
+    @GetMapping("/findAll")
     @ResponseStatus(HttpStatus.OK)
+    @JsonView(View.PublicView.class)
     public List<User> findAll() {
         return userDataRepository.findAll();
     }
@@ -107,7 +114,7 @@ public class UserRestController {
                 equals(config.getSecretKey())) {
 
             Optional<User> searchResult =
-                    userDataRepository.findUserByCredentialLogin(login);
+                    userDataRepository.findByCredentialLogin(login);
             if (searchResult.isPresent()) {
                 return searchResult.get();
             } else {
@@ -126,6 +133,32 @@ public class UserRestController {
         return userDataRepository.findUsersByQuery(query, limit);
     }
 
+    @GetMapping("/search_by_name")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> userSearchByName(@RequestParam String query) {
+        return userDataRepository.findByNameContainingIgnoreCase(query);
+    }
+
+    @GetMapping("/search_by_surname")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> userSearchBySurname(@RequestParam String query) {
+        return userDataRepository.findBySurnameContainingIgnoreCase(query);
+    }
+
+    @GetMapping("/search_by_surname_or_name")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> userSearchBySurname(@RequestParam String name,
+                                          @RequestParam String surname) {
+        return userDataRepository
+                .findBySurnameContainingIgnoreCaseOrNameContainingIgnoreCase
+                        (name, surname);
+    }
+
+    @GetMapping("/search_by_email")
+    @ResponseStatus(HttpStatus.OK)
+    public List<User> userSearchByEmail(@RequestParam String query) {
+        return userDataRepository.findByEmailContainingIgnoreCase(query);
+    }
 
     @ApiOperation(value = "Create autogenerate users")
     @ApiImplicitParams({
@@ -136,17 +169,29 @@ public class UserRestController {
     @PostMapping("/generate/{usersCount}")
     @ResponseStatus(HttpStatus.CREATED)
     public List<User> generateUsers(@PathVariable("usersCount") Integer count) {
-//        throw new RuntimeException("Haha!");
         List<User> generateUsers = userGenerator.generate(count);
-        userDataRepository.saveAll(generateUsers);
 
+        userDataRepository.saveAll(generateUsers);
         return userDataRepository.findAll();
     }
 
     @PutMapping("/update/{userId}")
     @ResponseStatus(HttpStatus.OK)
     public User updateUser(@PathVariable Long userId,
-                           @ModelAttribute UserCreateRequest createRequest) {
+                           @ModelAttribute UserCreateRequest createRequest,
+                           @ApiIgnore Principal principal) {
+
+        boolean isAdmin = principalUtil.getAuthorities(principal)
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN.toString()));
+
+        if (!isAdmin) {
+            throw new UnauthorizedException("Unable to authenticate Domain " +
+                    "User for provided credentials.");
+        }
+
+
         Optional<User> searchResult =
                 userDataRepository.findById(userId);
         User user;
@@ -156,16 +201,50 @@ public class UserRestController {
             throw new NoSuchEntityException("No such user with login:" + userId);
         }
 
+        Department department;
+        Optional<Department> searchDepResult = departmentRepository
+                .findById(createRequest.getDepartmentId());
+        if (searchDepResult.isPresent()) {
+            department = searchDepResult.get();
+        } else {
+            throw new NoSuchEntityException("No such room with id:"
+                    + createRequest.getDepartmentId());
+        }
+
+        Rate rate;
+        Optional<Rate> searchRateResult = rateRepository
+                .findById(createRequest.getRateId());
+        if (searchRateResult.isPresent()) {
+            rate = searchRateResult.get();
+        } else {
+            throw new NoSuchEntityException("No such rate with id:"
+                    + createRequest.getRateId());
+        }
+
+        Room room;
+        Optional<Room> searchRoomResult = roomRepository
+                .findById(createRequest.getRoomId());
+        if (searchRoomResult.isPresent()) {
+            room = searchRoomResult.get();
+        } else {
+            throw new NoSuchEntityException("No such room with id:"
+                    + createRequest.getRoomId());
+        }
+
+        Role foundRole = roleRepository.findById(createRequest.getRoleId()).get();
+        Set<Role> roles = new HashSet<>();
+        roles.add(foundRole);
+
         user.setName(createRequest.getName());
         user.setSurname(createRequest.getSurname());
         user.setMiddleName(createRequest.getMiddleName());
         user.setEmail(createRequest.getEmail());
         user.setBirthDay(LocalDate.parse(createRequest.getBirthDay()));
-        user.setDepartment(departmentRepository.findOne(createRequest.getDepartmentId()));
+        user.setDepartment(department);
         user.setChanged(new Timestamp(System.currentTimeMillis()));
-        user.setRate(rateRepository.findOne(createRequest.getRateId()));
-        user.setRoom(roomRepository.findOne(createRequest.getRoomId()));
-        //user.setRoles(roleRepository.findOne(createRequest.getRoleId()));
+        user.setRate(rate);
+        user.setRoom(room);
+        user.setRoles(roles);
 
         return userDataRepository.save(user);
     }
