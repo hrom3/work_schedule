@@ -39,7 +39,6 @@ public class RegistrationController {
 
     private final ICredentialRepository credentialRepository;
 
-
     private final IDepartmentRepository departmentRepository;
 
     private final IRateRepository rateRepository;
