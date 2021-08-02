@@ -50,7 +50,7 @@ public class AuthenticationController {
 
         //TODO: take out in a separate method
         /*Check is e-mail confirmed*/
-        Optional<User> searchResult = userRepository.findUserByCredentialLogin
+        Optional<User> searchResult = userRepository.findByCredentialLogin
                 (request.getLogin());
         if (searchResult.isPresent()) {
             User user = searchResult.get();
