@@ -1,6 +1,7 @@
 package by.bsuir.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -11,6 +12,7 @@ import java.sql.Timestamp;
 @Table(name = "user_worked_time")
 @Data
 @NoArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class UserWorkedTime {
 
     @Id
