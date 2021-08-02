@@ -24,16 +24,16 @@ public class UserProviderService implements UserDetailsService {
 
     private final IUserDataRepository userRepository;
 
-    private final IRoleRepository roleRepository;
+    //private final IRoleRepository roleRepository;
 
-    private final ICredentialDataRepository credentialRepository;
+    //private final ICredentialDataRepository credentialRepository;
 
     @Override
     public UserDetails loadUserByUsername(String login)
             throws UsernameNotFoundException, UnconfirmedUserException {
         try {
             Optional<User> searchResult = userRepository
-                    .findUserByCredentialLogin(login);
+                    .findByCredentialLogin(login);
 
             if (searchResult.isPresent()) {
                 User user = searchResult.get();
