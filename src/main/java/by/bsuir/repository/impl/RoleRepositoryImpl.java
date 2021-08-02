@@ -15,6 +15,11 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+/**
+ * @deprecated (Use Spring Data Repositories)
+ */
+
+@Deprecated(since = "version 0.1.20210731")
 @Repository
 @Primary
 @RequiredArgsConstructor
