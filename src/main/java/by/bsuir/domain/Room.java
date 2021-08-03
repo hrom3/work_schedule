@@ -1,7 +1,9 @@
 package by.bsuir.domain;
 
+import by.bsuir.domain.viewhelper.View;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -33,6 +35,7 @@ public class Room {
     private Integer id;
 
     @Column(name = "room_number")
+    @JsonView(View.PublicView.class)
     private String roomNumber;
 
     @OneToMany(mappedBy = "room", fetch = FetchType.EAGER)

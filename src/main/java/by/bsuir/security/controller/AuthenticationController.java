@@ -2,6 +2,7 @@ package by.bsuir.security.controller;
 
 import by.bsuir.controller.exception.UnconfirmedUserException;
 import by.bsuir.domain.User;
+import by.bsuir.controller.exception.NoSuchEntityException;
 import by.bsuir.repository.springdata.IUserDataRepository;
 import by.bsuir.security.requests.AuthRequest;
 import by.bsuir.security.requests.AuthResponse;
@@ -60,6 +61,9 @@ public class AuthenticationController {
                         ("E-mail %s is not confirmed by user '%s'.",
                                 user.getEmail(), request.getLogin()));
             }
+        } else {
+            throw new NoSuchEntityException(
+                    String.format ("User '%s' is not found.", request.getLogin()));
         }
         /*Check login and password*/
         Authentication authenticate = authenticationManager.authenticate(
@@ -80,6 +84,8 @@ public class AuthenticationController {
                         .token(tokenUtils.generateToken(userProvider
                                 .loadUserByUsername(request.getLogin())))
                         .build()
+
         );
+
     }
 }

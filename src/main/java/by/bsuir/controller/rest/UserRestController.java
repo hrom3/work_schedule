@@ -4,8 +4,7 @@ import by.bsuir.controller.exception.UnauthorizedException;
 import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.*;
 import by.bsuir.domain.viewhelper.View;
-import by.bsuir.exception.NoSuchEntityException;
-import by.bsuir.repository.*;
+import by.bsuir.controller.exception.NoSuchEntityException;
 import by.bsuir.repository.springdata.*;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.UserGenerator;
@@ -13,17 +12,13 @@ import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import by.bsuir.beans.SecurityConfig;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -58,34 +53,24 @@ public class UserRestController {
 
     @ApiOperation(value = "Find all users")
     @GetMapping("/findAll")
-    @ResponseStatus(HttpStatus.OK)
     @JsonView(View.PublicView.class)
-    public List<User> findAll() {
-        return userDataRepository.findAll();
+    public ResponseEntity<List<User>> findAll() {
+        return ResponseEntity.ok(userDataRepository.findAll());
     }
 
-    @ApiOperation(value = "Find all users with Secret key and authenticate")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Secret-Key",
-                    dataType = "string",
-                    defaultValue = "Secret-Key!",
-                    paramType = "header",
-                    value = "Secret key for secret functionality"),
-            @ApiImplicitParam(name = "X-Auth-Token",
-                    value = "token", required = true,
-                    dataType = "string",
-                    paramType = "header")
-    })
+    @ApiOperation(value = "Find all users by authenticate user")
+    @ApiImplicitParam(name = "X-Auth-Token",
+            value = "token", required = true,
+            dataType = "string",
+            paramType = "header")
     @GetMapping
-    public List<User> securedFindAll(HttpServletRequest request,
-                                     @ApiIgnore Principal principal) {
-        String login = principalUtil.getUsername(principal);
-        String secretKey = request.getHeader("Secret-Key");
+    public ResponseEntity<List<User>> securedFindAll(HttpServletRequest request,
+                                                     @ApiIgnore Principal principal) {
 
+        boolean isNoPrincipal = principalUtil.getUsername(principal).isEmpty();
 
-        if (StringUtils.isNotBlank(secretKey) && secretKey.
-                equals(config.getSecretKey())) {
-            return userDataRepository.findAll();
+        if (!isNoPrincipal) {
+            return ResponseEntity.ok(userDataRepository.findAll());
         } else {
             throw new UnauthorizedException("Unable to authenticate Domain " +
                     "User for provided credentials.");
@@ -93,96 +78,93 @@ public class UserRestController {
     }
 
     @ApiOperation(value = "Find user by token with Secret key")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "Secret-Key",
-                    dataType = "string",
-                    defaultValue = "Secret-Key!",
-                    paramType = "header",
-                    value = "Secret key for secret functionality"),
-            @ApiImplicitParam(name = "X-Auth-Token",
-                    value = "token",
-                    required = true,
-                    dataType = "string",
-                    paramType = "header")
-    })
+    @ApiImplicitParam(name = "X-Auth-Token",
+            value = "token", required = true,
+            dataType = "string",
+            paramType = "header")
     @GetMapping("/user")
-    public User securedOneByToken(HttpServletRequest request,
-                                  @ApiIgnore Principal principal) {
+    public ResponseEntity<User> securedOneByToken(@ApiIgnore Principal principal) {
         String login = principalUtil.getUsername(principal);
-        String secretKey = request.getHeader("Secret-Key");
 
-
-        if (StringUtils.isNotBlank(secretKey) && secretKey.
-                equals(config.getSecretKey())) {
-
-            Optional<User> searchResult =
-                    userDataRepository.findByCredentialLogin(login);
-            if (searchResult.isPresent()) {
-                return searchResult.get();
-            } else {
-                throw new NoSuchEntityException("No such user with login:" + login);
-            }
+        Optional<User> searchResult =
+                userDataRepository.findByCredentialLogin(login);
+        if (searchResult.isPresent()) {
+            return ResponseEntity.ok(searchResult.get());
         } else {
-            throw new UnauthorizedException("Unable to authenticate Domain " +
-                    "User for provided credentials.");
+            throw new NoSuchEntityException("No such user with login:" + login);
         }
     }
 
     @GetMapping("/search")
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> userSearch(@RequestParam Integer limit,
-                                 @RequestParam String query) {
-        return userDataRepository.findUsersByQuery(query, limit);
+    public ResponseEntity<List<User>> userSearch(@RequestParam Integer limit,
+                                                 @RequestParam String name) {
+        return ResponseEntity.ok(userDataRepository.findUsersByQueryName(name, limit));
     }
 
     @GetMapping("/search_by_name")
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> userSearchByName(@RequestParam String query) {
-        return userDataRepository.findByNameContainingIgnoreCase(query);
+    public ResponseEntity<List<User>> userSearchByName(@RequestParam String query) {
+        return ResponseEntity.ok(userDataRepository.findByNameContainingIgnoreCase(query));
     }
 
     @GetMapping("/search_by_surname")
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> userSearchBySurname(@RequestParam String query) {
-        return userDataRepository.findBySurnameContainingIgnoreCase(query);
+    public ResponseEntity<List<User>> userSearchBySurname(@RequestParam String query) {
+        return ResponseEntity.ok(userDataRepository.findBySurnameContainingIgnoreCase(query));
     }
 
     @GetMapping("/search_by_surname_or_name")
-    @ResponseStatus(HttpStatus.OK)
-    public List<User> userSearchBySurname(@RequestParam String name,
-                                          @RequestParam String surname) {
-        return userDataRepository
+    public ResponseEntity<List<User>> userSearchBySurname(@RequestParam String name,
+                                                          @RequestParam String surname) {
+        return ResponseEntity.ok(userDataRepository
                 .findBySurnameContainingIgnoreCaseOrNameContainingIgnoreCase
-                        (name, surname);
+                        (name, surname));
     }
 
     @GetMapping("/search_by_email")
     @JsonView(View.PublicView.class)
-    public ResponseEntity userSearchByEmail(@RequestParam String query) {
-        return new ResponseEntity<>(userDataRepository
-                .findByEmailContainingIgnoreCase(query), HttpStatus.OK);
+    public ResponseEntity<List<User>> userSearchByEmail(@RequestParam String query) {
+        return ResponseEntity.ok(userDataRepository
+                .findByEmailContainingIgnoreCase(query));
     }
 
     @ApiOperation(value = "Create autogenerate users")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "usersCount", dataType = "integer",
-                    paramType = "path", value = "Count of users for generate",
-                    required = true, defaultValue = "10")
+//            @ApiImplicitParam(name = "usersCount", dataType = "integer",
+//                    paramType = "path", value = "Count of users for generate",
+//                    required = true, defaultValue = "10"),
+            @ApiImplicitParam(name = "X-Auth-Token",
+                    value = "token", required = true,
+                    dataType = "string",
+                    paramType = "header")
     })
     @PostMapping("/generate/{usersCount}")
-    @ResponseStatus(HttpStatus.CREATED)
-    public List<User> generateUsers(@PathVariable("usersCount") Integer count) {
-        List<User> generateUsers = userGenerator.generate(count);
+    public ResponseEntity<List<User>> generateUsers(@PathVariable Integer usersCount,
+                                                    @ApiIgnore Principal principal) {
+
+        boolean isAdmin = principalUtil.getAuthorities(principal)
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN.toString()));
+
+        if (!isAdmin) {
+            throw new UnauthorizedException("Unable to authenticate Domain " +
+                    "User for provided credentials.");
+        }
+
+        List<User> generateUsers = userGenerator.generate(usersCount);
 
         userDataRepository.saveAll(generateUsers);
-        return userDataRepository.findAll();
+        return new ResponseEntity<>(userDataRepository.findAll(), HttpStatus.CREATED);
     }
 
+    @ApiOperation(value = "Update user")
+    @ApiImplicitParam(name = "X-Auth-Token",
+            value = "token", required = true,
+            dataType = "string",
+            paramType = "header")
     @PutMapping("/update/{userId}")
-    @ResponseStatus(HttpStatus.OK)
-    public User updateUser(@PathVariable Long userId,
-                           @ModelAttribute UserCreateRequest createRequest,
-                           @ApiIgnore Principal principal) {
+    public ResponseEntity<User> updateUser(@PathVariable Long userId,
+                                           @ModelAttribute UserCreateRequest createRequest,
+                                           @ApiIgnore Principal principal) {
 
         boolean isAdmin = principalUtil.getAuthorities(principal)
                 .stream()
@@ -249,16 +231,46 @@ public class UserRestController {
         user.setRoom(room);
         user.setRoles(roles);
 
-        return userDataRepository.save(user);
+        return ResponseEntity.ok(userDataRepository.save(user));
     }
 
     @DeleteMapping("/delete_hard/{userId}")
-    public void deleteUserHard(@PathVariable Long userId) {
+    @ApiImplicitParam(name = "X-Auth-Token",
+            value = "token", required = true,
+            dataType = "string",
+            paramType = "header")
+    public void deleteUserHard(@PathVariable Long userId,
+                               @ApiIgnore Principal principal) {
+
+        boolean isAdmin = principalUtil.getAuthorities(principal)
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN.toString()));
+
+        if (!isAdmin) {
+            throw new UnauthorizedException("Unable to authenticate Domain " +
+                    "User for provided credentials.");
+        }
         userDataRepository.deleteById(userId);
     }
 
     @DeleteMapping("/delete/{userId}")
-    public User deleteUser(@PathVariable Long userId) {
+    @ApiImplicitParam(name = "X-Auth-Token",
+            value = "token", required = true,
+            dataType = "string",
+            paramType = "header")
+    public ResponseEntity<User> deleteUser(@PathVariable Long userId,
+                                           @ApiIgnore Principal principal) {
+
+        boolean isAdmin = principalUtil.getAuthorities(principal)
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN.toString()));
+
+        if (!isAdmin) {
+            throw new UnauthorizedException("Unable to authenticate Domain " +
+                    "User for provided credentials.");
+        }
 
         Optional<User> searchResult =
                 userDataRepository.findById(userId);
@@ -271,7 +283,7 @@ public class UserRestController {
 
         userDataRepository.softDelete(userId);
 
-        return user;
+        return ResponseEntity.ok(user);
     }
 
 }

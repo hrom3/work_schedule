@@ -13,7 +13,6 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorMessage> handleOthersException(Exception e) {
-        /* Handles all other exceptions. Status code 500. */
         log.error(e.getMessage(), e);
         log.info(e.getMessage(), e);
         System.out.println(e.getMessage());
@@ -23,7 +22,6 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorMessage> handleUnauthorizedException(Exception e) {
-        /* Handles Unauthorized exceptions. Status code 401. */
         log.error(e.getMessage(), e);
         log.info(e.getMessage(), e);
         System.out.println(e.getMessage());
@@ -33,7 +31,6 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(UnconfirmedUserException.class)
     public ResponseEntity<ErrorMessage> handleUnconfirmedUserException(Exception e) {
-        /* Handles Unconfirmed user exceptions. Status code 423. */
         log.error(e.getMessage(), e);
         log.info(e.getMessage(), e);
         System.out.println(e.getMessage());
@@ -43,11 +40,21 @@ public class DefaultExceptionHandler {
 
     @ExceptionHandler(PresentEntityException.class)
     public ResponseEntity<ErrorMessage> handlePresentDepartmentException(Exception e) {
-        /* Handles Present entity exceptions. Status code 200. */
         log.error(e.getMessage(), e);
         log.info(e.getMessage(), e);
         System.out.println(e.getMessage());
         return new ResponseEntity<>(new ErrorMessage(200L, e.getMessage()),
                 HttpStatus.OK);
     }
+
+    @ExceptionHandler(NoSuchEntityException.class)
+    public ResponseEntity<ErrorMessage> handleNoSuchEntityException(Exception e) {
+        log.error(e.getMessage(), e);
+        log.info(e.getMessage(), e);
+        System.out.println(e.getMessage());
+        return new ResponseEntity<>(new ErrorMessage(404L, e.getMessage()),
+                HttpStatus.NOT_FOUND);
+    }
 }
+
+

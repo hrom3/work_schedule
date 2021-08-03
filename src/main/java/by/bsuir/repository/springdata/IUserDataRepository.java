@@ -37,9 +37,9 @@ public interface IUserDataRepository extends CrudRepository<User, Long>,
     @Query("update User u set u.isDeleted = false where u.id = :user_id")
     int softDelete(@Param("user_id") Long userId);
 
-    @Query(value = "select * from users u where u.name like :query limit :limit",
+    @Query(value = "select * from users u where u.name like :name limit :limit",
             nativeQuery = true)
-    List<User> findUsersByQuery(String query, Integer limit);
+    List<User> findUsersByQueryName(String name, Integer limit);
 
     List<User> findByNameContainingIgnoreCase(String query);
 

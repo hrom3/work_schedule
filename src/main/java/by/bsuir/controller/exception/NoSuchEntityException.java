@@ -1,4 +1,4 @@
-package by.bsuir.exception;
+package by.bsuir.controller.exception;
 
 public class NoSuchEntityException extends RuntimeException {
 

@@ -1,6 +1,8 @@
 package by.bsuir.domain;
 
+import by.bsuir.domain.viewhelper.View;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -33,6 +35,7 @@ public class Role {
 
     @Column(name = "role_name")
     @Enumerated(EnumType.STRING)
+    @JsonView(View.PublicView.class)
     private ESystemRoles roleName;
 
     @ManyToMany(fetch = FetchType.EAGER)

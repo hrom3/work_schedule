@@ -2,7 +2,7 @@ package by.bsuir.repository.impl;
 
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
-import by.bsuir.exception.NoSuchEntityException;
+import by.bsuir.controller.exception.NoSuchEntityException;
 import by.bsuir.repository.columns.IUserColumns;
 import by.bsuir.repository.IJDBCUserRepository;
 import lombok.RequiredArgsConstructor;
