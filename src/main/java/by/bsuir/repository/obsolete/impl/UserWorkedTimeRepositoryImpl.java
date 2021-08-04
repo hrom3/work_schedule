@@ -1,7 +1,7 @@
-package by.bsuir.repository.impl;
+package by.bsuir.repository.obsolete.impl;
 
-import by.bsuir.domain.Rate;
-import by.bsuir.repository.IRateRepository;
+import by.bsuir.domain.UserWorkedTime;
+import by.bsuir.repository.obsolete.IUserWorkedTimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,38 +18,37 @@ import java.util.List;
 @Repository
 @Primary
 @RequiredArgsConstructor
-@Deprecated
-public class RateRepositoryImpl implements IRateRepository {
+public class UserWorkedTimeRepositoryImpl implements IUserWorkedTimeRepository {
 
     private final SessionFactory sessionFactory;
 
     @Override
-    public List<Rate> findAll() {
+    public List<UserWorkedTime> findAll() {
         try (Session session = sessionFactory.openSession()) {
 
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Rate> criteriaBuilderQuery = criteriaBuilder
-                    .createQuery(Rate.class);
-            Root<Rate> hibernateRateRoot = criteriaBuilderQuery
-                    .from(Rate.class);
-            CriteriaQuery<Rate> all = criteriaBuilderQuery
-                    .select(hibernateRateRoot);
+            CriteriaQuery<UserWorkedTime> criteriaBuilderQuery = criteriaBuilder
+                    .createQuery(UserWorkedTime.class);
+            Root<UserWorkedTime> hibernateUserWorkedTimeRoot = criteriaBuilderQuery
+                    .from(UserWorkedTime.class);
+            CriteriaQuery<UserWorkedTime> all = criteriaBuilderQuery
+                    .select(hibernateUserWorkedTimeRoot);
 
-            TypedQuery<Rate> allQuery = session.createQuery(all);
+            TypedQuery<UserWorkedTime> allQuery = session.createQuery(all);
 
             return allQuery.getResultList();
         }
     }
 
     @Override
-    public Rate findOne(Integer id) {
+    public UserWorkedTime findOne(Long id) {
         try (Session session = sessionFactory.openSession()) {
-            return session.find(Rate.class, id);
+            return session.find(UserWorkedTime.class, id);
         }
     }
 
     @Override
-    public Rate save(Rate entity) {
+    public UserWorkedTime save(UserWorkedTime entity) {
         try (Session session = sessionFactory.openSession()) {
             session.saveOrUpdate(entity);
         }
@@ -57,7 +56,7 @@ public class RateRepositoryImpl implements IRateRepository {
     }
 
     @Override
-    public Rate update(Rate entity) {
+    public UserWorkedTime update(UserWorkedTime entity) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
@@ -68,8 +67,8 @@ public class RateRepositoryImpl implements IRateRepository {
     }
 
     @Override
-    public void deleteHard(Integer id) {
-        Rate departmentToDelete = findOne(id);
+    public void deleteHard(Long id) {
+        UserWorkedTime departmentToDelete = findOne(id);
         try (Session session = sessionFactory.openSession()) {
             session.delete(departmentToDelete);
         }

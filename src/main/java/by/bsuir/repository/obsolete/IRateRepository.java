@@ -1,4 +1,4 @@
-package by.bsuir.repository;
+package by.bsuir.repository.obsolete;
 
 import by.bsuir.domain.Rate;
 

@@ -1,4 +1,4 @@
-package by.bsuir.repository.columns;
+package by.bsuir.repository.obsolete.columns;
 
 public interface IUserColumns {
 

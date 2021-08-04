@@ -1,7 +1,7 @@
-package by.bsuir.repository.impl;
+package by.bsuir.repository.obsolete.impl;
 
-import by.bsuir.domain.UserWorkedTime;
-import by.bsuir.repository.IUserWorkedTimeRepository;
+import by.bsuir.domain.Room;
+import by.bsuir.repository.obsolete.IRoomsRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,40 +15,46 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+/**
+  * @deprecated (Use Spring Data Repositories)
+  */
+
+
 @Repository
 @Primary
 @RequiredArgsConstructor
-public class UserWorkedTimeRepositoryImpl implements IUserWorkedTimeRepository {
+@Deprecated(since = "version 0.1.20210731")
+public class RoomsRepositoryImpl implements IRoomsRepository {
 
     private final SessionFactory sessionFactory;
 
     @Override
-    public List<UserWorkedTime> findAll() {
+    public List<Room> findAll() {
         try (Session session = sessionFactory.openSession()) {
 
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<UserWorkedTime> criteriaBuilderQuery = criteriaBuilder
-                    .createQuery(UserWorkedTime.class);
-            Root<UserWorkedTime> hibernateUserWorkedTimeRoot = criteriaBuilderQuery
-                    .from(UserWorkedTime.class);
-            CriteriaQuery<UserWorkedTime> all = criteriaBuilderQuery
-                    .select(hibernateUserWorkedTimeRoot);
+            CriteriaQuery<Room> criteriaBuilderQuery = criteriaBuilder
+                    .createQuery(Room.class);
+            Root<Room> hibernateRoomRoot = criteriaBuilderQuery
+                    .from(Room.class);
+            CriteriaQuery<Room> all = criteriaBuilderQuery
+                    .select(hibernateRoomRoot);
 
-            TypedQuery<UserWorkedTime> allQuery = session.createQuery(all);
+            TypedQuery<Room> allQuery = session.createQuery(all);
 
             return allQuery.getResultList();
         }
     }
 
     @Override
-    public UserWorkedTime findOne(Long id) {
+    public Room findOne(Integer id) {
         try (Session session = sessionFactory.openSession()) {
-            return session.find(UserWorkedTime.class, id);
+            return session.find(Room.class, id);
         }
     }
 
     @Override
-    public UserWorkedTime save(UserWorkedTime entity) {
+    public Room save(Room entity) {
         try (Session session = sessionFactory.openSession()) {
             session.saveOrUpdate(entity);
         }
@@ -56,7 +62,7 @@ public class UserWorkedTimeRepositoryImpl implements IUserWorkedTimeRepository {
     }
 
     @Override
-    public UserWorkedTime update(UserWorkedTime entity) {
+    public Room update(Room entity) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
@@ -67,8 +73,8 @@ public class UserWorkedTimeRepositoryImpl implements IUserWorkedTimeRepository {
     }
 
     @Override
-    public void deleteHard(Long id) {
-        UserWorkedTime departmentToDelete = findOne(id);
+    public void deleteHard(Integer id) {
+        Room departmentToDelete = findOne(id);
         try (Session session = sessionFactory.openSession()) {
             session.delete(departmentToDelete);
         }

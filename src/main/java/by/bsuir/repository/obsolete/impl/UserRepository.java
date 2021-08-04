@@ -1,9 +1,9 @@
-package by.bsuir.repository.impl;
+package by.bsuir.repository.obsolete.impl;
 
 import by.bsuir.domain.Credential;
 import by.bsuir.domain.User;
-import by.bsuir.repository.ICredentialRepository;
-import by.bsuir.repository.IUserRepository;
+import by.bsuir.repository.obsolete.ICredentialRepository;
+import by.bsuir.repository.obsolete.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

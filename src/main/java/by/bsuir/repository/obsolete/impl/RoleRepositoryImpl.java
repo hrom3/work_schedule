@@ -1,7 +1,7 @@
-package by.bsuir.repository.impl;
+package by.bsuir.repository.obsolete.impl;
 
-import by.bsuir.domain.IssueFromJira;
-import by.bsuir.repository.IIssueFromJiraRepository;
+import by.bsuir.domain.Role;
+import by.bsuir.repository.obsolete.IRoleRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,40 +15,45 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
+/**
+ * @deprecated (Use Spring Data Repositories)
+ */
+
+@Deprecated(since = "version 0.1.20210731")
 @Repository
 @Primary
 @RequiredArgsConstructor
-public class IssueFromJiraRepositoryImpl implements IIssueFromJiraRepository {
+public class RoleRepositoryImpl implements IRoleRepository {
 
     private final SessionFactory sessionFactory;
 
     @Override
-    public List<IssueFromJira> findAll() {
+    public List<Role> findAll() {
         try (Session session = sessionFactory.openSession()) {
 
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<IssueFromJira> criteriaBuilderQuery = criteriaBuilder
-                    .createQuery(IssueFromJira.class);
-            Root<IssueFromJira> hibernateIssueFromJiraRoot =
-                    criteriaBuilderQuery.from(IssueFromJira.class);
-            CriteriaQuery<IssueFromJira> all = criteriaBuilderQuery
-                    .select(hibernateIssueFromJiraRoot);
+            CriteriaQuery<Role> criteriaBuilderQuery = criteriaBuilder
+                    .createQuery(Role.class);
+            Root<Role> hibernateRoleRoot = criteriaBuilderQuery
+                    .from(Role.class);
+            CriteriaQuery<Role> all = criteriaBuilderQuery
+                    .select(hibernateRoleRoot);
 
-            TypedQuery<IssueFromJira> allQuery = session.createQuery(all);
+            TypedQuery<Role> allQuery = session.createQuery(all);
 
             return allQuery.getResultList();
         }
     }
 
     @Override
-    public IssueFromJira findOne(Long id) {
+    public Role findOne(Integer id) {
         try (Session session = sessionFactory.openSession()) {
-            return session.find(IssueFromJira.class, id);
+            return session.find(Role.class, id);
         }
     }
 
     @Override
-    public IssueFromJira save(IssueFromJira entity) {
+    public Role save(Role entity) {
         try (Session session = sessionFactory.openSession()) {
             session.saveOrUpdate(entity);
         }
@@ -56,7 +61,7 @@ public class IssueFromJiraRepositoryImpl implements IIssueFromJiraRepository {
     }
 
     @Override
-    public IssueFromJira update(IssueFromJira entity) {
+    public Role update(Role entity) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
@@ -67,10 +72,10 @@ public class IssueFromJiraRepositoryImpl implements IIssueFromJiraRepository {
     }
 
     @Override
-    public void deleteHard(Long id) {
-        IssueFromJira departmentToDelete = findOne(id);
+    public void deleteHard(Integer id) {
+        Role roleToDelete = findOne(id);
         try (Session session = sessionFactory.openSession()) {
-            session.delete(departmentToDelete);
+            session.delete(roleToDelete);
         }
     }
 }

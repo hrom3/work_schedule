@@ -1,7 +1,7 @@
-package by.bsuir.repository.impl;
+package by.bsuir.repository.obsolete.impl;
 
-import by.bsuir.domain.Room;
-import by.bsuir.repository.IRoomsRepository;
+import by.bsuir.domain.Rate;
+import by.bsuir.repository.obsolete.IRateRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -15,46 +15,41 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
 
-/**
-  * @deprecated (Use Spring Data Repositories)
-  */
-
-
 @Repository
 @Primary
 @RequiredArgsConstructor
-@Deprecated(since = "version 0.1.20210731")
-public class RoomsRepositoryImpl implements IRoomsRepository {
+@Deprecated
+public class RateRepositoryImpl implements IRateRepository {
 
     private final SessionFactory sessionFactory;
 
     @Override
-    public List<Room> findAll() {
+    public List<Rate> findAll() {
         try (Session session = sessionFactory.openSession()) {
 
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Room> criteriaBuilderQuery = criteriaBuilder
-                    .createQuery(Room.class);
-            Root<Room> hibernateRoomRoot = criteriaBuilderQuery
-                    .from(Room.class);
-            CriteriaQuery<Room> all = criteriaBuilderQuery
-                    .select(hibernateRoomRoot);
+            CriteriaQuery<Rate> criteriaBuilderQuery = criteriaBuilder
+                    .createQuery(Rate.class);
+            Root<Rate> hibernateRateRoot = criteriaBuilderQuery
+                    .from(Rate.class);
+            CriteriaQuery<Rate> all = criteriaBuilderQuery
+                    .select(hibernateRateRoot);
 
-            TypedQuery<Room> allQuery = session.createQuery(all);
+            TypedQuery<Rate> allQuery = session.createQuery(all);
 
             return allQuery.getResultList();
         }
     }
 
     @Override
-    public Room findOne(Integer id) {
+    public Rate findOne(Integer id) {
         try (Session session = sessionFactory.openSession()) {
-            return session.find(Room.class, id);
+            return session.find(Rate.class, id);
         }
     }
 
     @Override
-    public Room save(Room entity) {
+    public Rate save(Rate entity) {
         try (Session session = sessionFactory.openSession()) {
             session.saveOrUpdate(entity);
         }
@@ -62,7 +57,7 @@ public class RoomsRepositoryImpl implements IRoomsRepository {
     }
 
     @Override
-    public Room update(Room entity) {
+    public Rate update(Rate entity) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
@@ -74,7 +69,7 @@ public class RoomsRepositoryImpl implements IRoomsRepository {
 
     @Override
     public void deleteHard(Integer id) {
-        Room departmentToDelete = findOne(id);
+        Rate departmentToDelete = findOne(id);
         try (Session session = sessionFactory.openSession()) {
             session.delete(departmentToDelete);
         }

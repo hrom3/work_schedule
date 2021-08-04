@@ -1,7 +1,7 @@
-package by.bsuir.repository.impl;
+package by.bsuir.repository.obsolete.impl;
 
-import by.bsuir.domain.Department;
-import by.bsuir.repository.IDepartmentRepository;
+import by.bsuir.domain.IssueFromJira;
+import by.bsuir.repository.obsolete.IIssueFromJiraRepository;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -18,38 +18,37 @@ import java.util.List;
 @Repository
 @Primary
 @RequiredArgsConstructor
-@Deprecated
-public class DepartmentRepositoryImpl implements IDepartmentRepository {
+public class IssueFromJiraRepositoryImpl implements IIssueFromJiraRepository {
 
     private final SessionFactory sessionFactory;
 
     @Override
-    public List<Department> findAll() {
+    public List<IssueFromJira> findAll() {
         try (Session session = sessionFactory.openSession()) {
 
             CriteriaBuilder criteriaBuilder = session.getCriteriaBuilder();
-            CriteriaQuery<Department> criteriaBuilderQuery = criteriaBuilder
-                    .createQuery(Department.class);
-            Root<Department> hibernateDepartmentRoot = criteriaBuilderQuery
-                    .from(Department.class);
-            CriteriaQuery<Department> all = criteriaBuilderQuery
-                    .select(hibernateDepartmentRoot);
+            CriteriaQuery<IssueFromJira> criteriaBuilderQuery = criteriaBuilder
+                    .createQuery(IssueFromJira.class);
+            Root<IssueFromJira> hibernateIssueFromJiraRoot =
+                    criteriaBuilderQuery.from(IssueFromJira.class);
+            CriteriaQuery<IssueFromJira> all = criteriaBuilderQuery
+                    .select(hibernateIssueFromJiraRoot);
 
-            TypedQuery<Department> allQuery = session.createQuery(all);
+            TypedQuery<IssueFromJira> allQuery = session.createQuery(all);
 
             return allQuery.getResultList();
         }
     }
 
     @Override
-    public Department findOne(Integer id) {
+    public IssueFromJira findOne(Long id) {
         try (Session session = sessionFactory.openSession()) {
-            return session.find(Department.class, id);
+            return session.find(IssueFromJira.class, id);
         }
     }
 
     @Override
-    public Department save(Department entity) {
+    public IssueFromJira save(IssueFromJira entity) {
         try (Session session = sessionFactory.openSession()) {
             session.saveOrUpdate(entity);
         }
@@ -57,7 +56,7 @@ public class DepartmentRepositoryImpl implements IDepartmentRepository {
     }
 
     @Override
-    public Department update(Department entity) {
+    public IssueFromJira update(IssueFromJira entity) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
@@ -68,20 +67,10 @@ public class DepartmentRepositoryImpl implements IDepartmentRepository {
     }
 
     @Override
-    public void deleteHard(Integer id) {
-        Department departmentToDelete = findOne(id);
+    public void deleteHard(Long id) {
+        IssueFromJira departmentToDelete = findOne(id);
         try (Session session = sessionFactory.openSession()) {
             session.delete(departmentToDelete);
-        }
-    }
-
-    @Override
-    public List<Department> findDepartmentByQuery(String departmentName) {
-        try (Session session = sessionFactory.openSession()) {
-            TypedQuery<Department> query = session.createQuery(
-                    "from Department where departmentName like :name");
-            query.setParameter("name", departmentName);
-            return query.getResultList();
         }
     }
 }

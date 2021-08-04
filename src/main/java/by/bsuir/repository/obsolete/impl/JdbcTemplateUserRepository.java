@@ -1,10 +1,10 @@
-package by.bsuir.repository.impl;
+package by.bsuir.repository.obsolete.impl;
 
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.controller.exception.NoSuchEntityException;
-import by.bsuir.repository.columns.IUserColumns;
-import by.bsuir.repository.IJDBCUserRepository;
+import by.bsuir.repository.obsolete.columns.IUserColumns;
+import by.bsuir.repository.obsolete.IJDBCUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
