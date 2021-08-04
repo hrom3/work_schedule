@@ -12,17 +12,20 @@ import java.util.Collection;
 public class PrincipalUtil {
 
     public String getUsername(Principal principal) {
-        Object castedPrincipal = ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        Object castedPrincipal = ((UsernamePasswordAuthenticationToken) principal)
+                .getPrincipal();
         return ((User) castedPrincipal).getUsername();
     }
 
     public String getPassword(Principal principal) {
-        Object castedPrincipal = ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        Object castedPrincipal = ((UsernamePasswordAuthenticationToken) principal)
+                .getPrincipal();
         return ((User) castedPrincipal).getPassword();
     }
 
     public Collection<GrantedAuthority> getAuthorities(Principal principal) {
-        Object castedPrincipal = ((UsernamePasswordAuthenticationToken) principal).getPrincipal();
+        Object castedPrincipal = ((UsernamePasswordAuthenticationToken) principal)
+                .getPrincipal();
         return ((User) castedPrincipal).getAuthorities();
     }
 }
