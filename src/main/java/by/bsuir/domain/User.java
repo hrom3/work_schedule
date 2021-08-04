@@ -1,10 +1,7 @@
 package by.bsuir.domain;
 
 import by.bsuir.domain.viewhelper.View;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import lombok.*;
 
 import javax.persistence.*;
@@ -19,6 +16,9 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = {"roles", "userWorkedTimes"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonPropertyOrder({ "id", "surname", "name", "middleName", "credential",
+        "birthDay", "email", "department", "room", "roles", "rate",
+        "created", "changed", "isDeleted", "isConfirmed"})
 public class User {
 
     @Id
@@ -53,6 +53,7 @@ public class User {
 
     @Column(name = "birth_day")
     @JsonView(View.PublicView.class)
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate birthDay;
 
     @ManyToOne
