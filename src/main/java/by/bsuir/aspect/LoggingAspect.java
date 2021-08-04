@@ -23,9 +23,10 @@ public class LoggingAspect {
         log.info("Method " + joinPoint.getSignature().getName() + " finished");
     }
 
-    @Pointcut("execution(* by.bsuir.repository.impl.JdbcTemplateUserRepository.*(..))")
+    @Pointcut("execution(* by.bsuir.repository.obsolete.impl.JdbcTemplateUserRepository.*(..))")
     public void aroundRepositoryPointcut() {
     }
+
 
     @Pointcut("execution(* by.bsuir.service.email.impl.EmailServiceImpl.*(..))")
     public void emailSenderPointcut() {
