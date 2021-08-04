@@ -2,7 +2,7 @@ package by.bsuir.controller.rest;
 
 import by.bsuir.domain.ConfirmationData;
 import by.bsuir.domain.User;
-import by.bsuir.repository.IUserRepository;
+import by.bsuir.repository.obsolete.IUserRepository;
 import by.bsuir.service.email.IEmailService;
 import by.bsuir.service.email.impl.AbstractEmailContext;
 import by.bsuir.util.ConfirmationDataGenerator;

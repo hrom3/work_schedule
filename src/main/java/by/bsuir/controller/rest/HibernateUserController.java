@@ -2,7 +2,7 @@ package by.bsuir.controller.rest;
 
 import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.User;
-import by.bsuir.repository.IUserRepository;
+import by.bsuir.repository.obsolete.IUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

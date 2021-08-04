@@ -1,30 +1,24 @@
 package by.bsuir.controller.rest;
 
-
+import by.bsuir.controller.exception.NoSuchEntityException;
 import by.bsuir.controller.exception.PresentEntityException;
 import by.bsuir.controller.exception.UnauthorizedException;
 import by.bsuir.controller.request.DepartmentCreateRequest;
 import by.bsuir.domain.Department;
 import by.bsuir.domain.ESystemRoles;
-import by.bsuir.domain.Role;
-import by.bsuir.domain.User;
 import by.bsuir.domain.viewhelper.View;
 import by.bsuir.repository.springdata.IDepartmentDataRepository;
-import by.bsuir.repository.springdata.IUserDataRepository;
-import by.bsuir.security.utils.PrincipalUtils;
+import by.bsuir.security.utils.PrincipalUtil;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -36,9 +30,7 @@ public class DepartmentRestController {
 
     private final IDepartmentDataRepository departmentRepository;
 
-    private final PrincipalUtils principalUtils;
-
-    private final IUserDataRepository userRepository;
+    private final PrincipalUtil principalUtil;
 
     @GetMapping
     @ApiOperation(value = "Find all departments")
@@ -55,8 +47,21 @@ public class DepartmentRestController {
                 findByDepartmentNameContainingIgnoreCase(query));
     }
 
+    @GetMapping("/search/{id}")
+    @ApiOperation(value = "Find department by id")
+    @JsonView(View.PublicView.class)
+    public ResponseEntity<Department> findOneById(@PathVariable Integer id) {
 
-    @ApiOperation(value = "Create department and authenticate")
+        Optional<Department> foundDepartment = departmentRepository.findById(id);
+
+        if (foundDepartment.isPresent()) {
+            return ResponseEntity.ok(foundDepartment.get());
+        } else {
+            throw new NoSuchEntityException("No such department with id:" + id);
+        }
+    }
+
+    @ApiOperation(value = "Create department. Role_Admin only")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-Auth-Token",
                     value = "token", required = true,
@@ -64,18 +69,11 @@ public class DepartmentRestController {
                     paramType = "header")
     })
     @PostMapping("/create")
-    public Department createDepartment(DepartmentCreateRequest createDepartmentRequest,
-                                       @ApiIgnore Principal principal) {
+    public ResponseEntity<Department> createDepartment(
+            DepartmentCreateRequest createDepartmentRequest,
+            @ApiIgnore Principal principal) {
 
-//            String login = principalUtils.getUsername(principal);
-//            User user = userRepository.findByCredentialLogin(login).get();
-//
-//            boolean isAdmin = user
-//                    .getRoles()
-//                    .stream()
-//                    .map(Role::getRoleName)
-//                    .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN));
-        boolean isAdmin = principalUtils.getAuthorities(principal)
+        boolean isAdmin = principalUtil.getAuthorities(principal)
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN.toString()));
@@ -94,10 +92,70 @@ public class DepartmentRestController {
 
             newDepartment.setDepartmentName(createDepartmentRequest.getDepartmentName());
 
-            return departmentRepository.save(newDepartment);
+            return ResponseEntity.ok(departmentRepository.save(newDepartment));
         } else {
-            throw new UnauthorizedException("Unable to authenticate Domain " +
-                    "User for provided credentials.");
+            throw new UnauthorizedException
+                    ("Insufficient permissions to perform the operation");
         }
     }
+
+    @ApiOperation(value = "Update department. Role_Admin only")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "X-Auth-Token",
+                    value = "token", required = true,
+                    dataType = "string",
+                    paramType = "header")
+    })
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Department> updateDepartment(
+            DepartmentCreateRequest createDepartmentRequest,
+            @PathVariable Integer id,
+            @ApiIgnore Principal principal) {
+
+        boolean isAdmin = principalUtil.getAuthorities(principal)
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN.toString()));
+
+        if (isAdmin) {
+
+            Optional<Department> foundDepartment = departmentRepository.findById(id);
+
+            if (foundDepartment.isEmpty()) {
+                throw new NoSuchEntityException("No such department with id:" + id);
+            }
+
+            Department updatedDepartment = foundDepartment.get();
+
+            updatedDepartment.setDepartmentName(createDepartmentRequest.getDepartmentName());
+
+            return ResponseEntity.ok(departmentRepository.save(updatedDepartment));
+        } else {
+            throw new UnauthorizedException
+                    ("Insufficient permissions to perform the operation");
+        }
+    }
+
+    @ApiOperation(value = "Hard delete departmentby Id")
+    @DeleteMapping("/delete_hard/{id}")
+    @ApiImplicitParam(name = "X-Auth-Token",
+            value = "token", required = true,
+            dataType = "string",
+            paramType = "header")
+    public void deleteUserHard(@PathVariable Integer id,
+                               @ApiIgnore Principal principal) {
+
+        boolean isAdmin = principalUtil.getAuthorities(principal)
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN.toString()));
+
+        if (!isAdmin) {
+            throw new UnauthorizedException
+                    ("Insufficient permissions to perform the operation");
+        }
+        departmentRepository.deleteById(id);
+    }
+
+
 }

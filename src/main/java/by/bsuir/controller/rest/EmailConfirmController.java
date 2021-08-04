@@ -4,7 +4,7 @@ import by.bsuir.controller.exception.UnconfirmedUserException;
 import by.bsuir.controller.request.EmailConfirmRequest;
 import by.bsuir.domain.ConfirmationData;
 import by.bsuir.domain.User;
-import by.bsuir.repository.IUserRepository;
+import by.bsuir.repository.obsolete.IUserRepository;
 import by.bsuir.repository.springdata.IConfirmationDataRepository;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 @RestController
