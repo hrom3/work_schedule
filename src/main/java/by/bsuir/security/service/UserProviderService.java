@@ -4,8 +4,6 @@ import by.bsuir.controller.exception.UnconfirmedUserException;
 import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
-import by.bsuir.repository.IRoleRepository;
-import by.bsuir.repository.springdata.ICredentialDataRepository;
 import by.bsuir.repository.springdata.IUserDataRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -23,10 +21,6 @@ import java.util.stream.Collectors;
 public class UserProviderService implements UserDetailsService {
 
     private final IUserDataRepository userRepository;
-
-    //private final IRoleRepository roleRepository;
-
-    //private final ICredentialDataRepository credentialRepository;
 
     @Override
     public UserDetails loadUserByUsername(String login)
