@@ -9,6 +9,7 @@ import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.viewhelper.View;
 import by.bsuir.repository.springdata.IDepartmentDataRepository;
 import by.bsuir.security.utils.PrincipalUtil;
+import by.bsuir.util.MyMessages;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -94,8 +95,7 @@ public class DepartmentRestController {
 
             return ResponseEntity.ok(departmentRepository.save(newDepartment));
         } else {
-            throw new UnauthorizedException
-                    ("Insufficient permissions to perform the operation");
+            throw new UnauthorizedException(MyMessages.BAD_PERMISSIONS);
         }
     }
 

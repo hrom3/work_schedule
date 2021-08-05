@@ -1,15 +1,13 @@
 package by.bsuir.controller.rest;
 
+import by.bsuir.controller.exception.NoSuchEntityException;
 import by.bsuir.controller.request.UserCreateRequest;
-import by.bsuir.domain.ConfirmationData;
-import by.bsuir.domain.Credential;
-import by.bsuir.domain.User;
+import by.bsuir.domain.*;
 import by.bsuir.repository.obsolete.ICredentialRepository;
 import by.bsuir.repository.obsolete.IDepartmentRepository;
 import by.bsuir.repository.obsolete.IRateRepository;
 import by.bsuir.repository.obsolete.IRoomsRepository;
-import by.bsuir.repository.springdata.IConfirmationDataRepository;
-import by.bsuir.repository.springdata.IUserDataRepository;
+import by.bsuir.repository.springdata.*;
 import by.bsuir.service.email.IEmailService;
 import by.bsuir.service.email.impl.AbstractEmailContext;
 import by.bsuir.util.ConfirmationDataGenerator;
@@ -30,7 +28,7 @@ import javax.mail.MessagingException;
 import java.time.LocalDate;
 import java.util.*;
 
-@Api(description = "Регистрационный контроллер")
+@Api(value = "Registration controller")
 @RestController
 @RequestMapping("/registration")
 @RequiredArgsConstructor
@@ -40,13 +38,13 @@ public class RegistrationController {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final ICredentialRepository credentialRepository;
+    private final ICredentialDataRepository credentialRepository;
 
-    private final IDepartmentRepository departmentRepository;
+    private final IDepartmentDataRepository departmentRepository;
 
-    private final IRateRepository rateRepository;
+    private final IRateDataRepository rateRepository;
 
-    private final IRoomsRepository roomRepository;
+    private final IRoomDataRepository roomRepository;
 
     private final IConfirmationDataRepository confirmationDataRepository;
 
@@ -66,34 +64,77 @@ public class RegistrationController {
                     "com/questions/37405244/how-to-change-the-response-status-code-for-" +
                     "successful-operation-in-swagger")
     })
-    public ResponseEntity createUser(@ModelAttribute UserCreateRequest createRequest) {
+    public ResponseEntity<String> createUser(@ModelAttribute UserCreateRequest createRequest) {
         //converter
         User generatedUser = userGenerator.generateLiteUser();
+
+        Department department;
+        Optional<Department> searchDepResult = departmentRepository
+                .findById(createRequest.getDepartmentId());
+        if (searchDepResult.isPresent()) {
+            department = searchDepResult.get();
+        } else {
+            throw new NoSuchEntityException("No such room with id:"
+                    + createRequest.getDepartmentId());
+        }
+
+        Rate rate;
+        Optional<Rate> searchRateResult = rateRepository
+                .findById(createRequest.getRateId());
+        if (searchRateResult.isPresent()) {
+            rate = searchRateResult.get();
+        } else {
+            throw new NoSuchEntityException("No such rate with id:"
+                    + createRequest.getRateId());
+        }
+
+        Room room;
+        Optional<Room> searchRoomResult = roomRepository
+                .findById(createRequest.getRoomId());
+        if (searchRoomResult.isPresent()) {
+            room = searchRoomResult.get();
+        } else {
+            throw new NoSuchEntityException("No such room with id:"
+                    + createRequest.getRoomId());
+        }
+
+       /* Role foundRole = roleRepository.findById(createRequest.getRoleId()).get();
+        Set<Role> roles = new HashSet<>();
+        roles.add(foundRole);*/
 
         generatedUser.setName(createRequest.getName());
         generatedUser.setSurname(createRequest.getSurname());
         generatedUser.setMiddleName(createRequest.getMiddleName());
         generatedUser.setEmail(createRequest.getEmail());
         generatedUser.setBirthDay(LocalDate.parse(createRequest.getBirthDay()));
-        generatedUser.setDepartment(departmentRepository
-                .findOne(createRequest.getDepartmentId()));
-        generatedUser.setRate(rateRepository.findOne(createRequest.getRateId()));
-        generatedUser.setRoom(roomRepository.findOne(createRequest.getRoomId()));
+        generatedUser.setDepartment(department);
+        generatedUser.setRate(rate);
+        generatedUser.setRoom(room);
         generatedUser.setIsDeleted(false);
         generatedUser.setIsConfirmed(false);
 
-        User savedUser = userDataRepository.save(generatedUser);
-
-        userDataRepository.saveUserRole(savedUser.getId(), createRequest.getRoleId());
 
         Credential credentialForGeneratedUser = new Credential();
 
         credentialForGeneratedUser.setLogin(createRequest.getLogin());
         credentialForGeneratedUser.setPassword(passwordEncoder
                 .encode(createRequest.getPassword()));
+
+
+        User savedUser = userDataRepository.save(generatedUser);
+
+        userDataRepository.saveUserRole(savedUser.getId(), 2);
+
+        /*Credential credentialForGeneratedUser = new Credential();*/
+//
+//        credentialForGeneratedUser.setLogin(createRequest.getLogin());
+//        credentialForGeneratedUser.setPassword(passwordEncoder
+//                .encode(createRequest.getPassword()));
         credentialForGeneratedUser.setUser(savedUser);
 
-        credentialRepository.saveUserCredentials(savedUser, credentialForGeneratedUser);
+        credentialRepository.save(credentialForGeneratedUser);
+
+        savedUser.setCredential(credentialForGeneratedUser);
 
         ConfirmationData confirmationDataGenerated = confirmationDataGenerator
                 .generate(savedUser);
@@ -126,17 +167,17 @@ public class RegistrationController {
             log.error("Error while sending out email to " +
                     emailToConfirmation + " {}" +
                     Arrays.toString(mailException.getStackTrace()), mailException);
-            return new ResponseEntity<>("Unable to send email",
+            return new ResponseEntity("Unable to send email",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         } catch (MessagingException messagingException) {
             log.error("Error while sending out message " +
                     Arrays.toString(messagingException.getStackTrace()), messagingException);
-            return new ResponseEntity<>("Unable to send email",
+            return new ResponseEntity("Unable to send email",
                     HttpStatus.INTERNAL_SERVER_ERROR);
         }
-        return new ResponseEntity<>("User "+
+        return new ResponseEntity("User "+
                 savedConfirmationData.getUser().getCredential().getLogin()
                 + " created. Please check your inbox " +
-                emailToConfirmation, HttpStatus.CREATED);
+                emailToConfirmation, HttpStatus.OK);
     }
 }

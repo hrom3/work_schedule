@@ -4,12 +4,11 @@ import by.bsuir.controller.exception.UnconfirmedUserException;
 import by.bsuir.controller.request.EmailConfirmRequest;
 import by.bsuir.domain.ConfirmationData;
 import by.bsuir.domain.User;
-import by.bsuir.repository.obsolete.IUserRepository;
 import by.bsuir.repository.springdata.IConfirmationDataRepository;
+import by.bsuir.repository.springdata.IUserDataRepository;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,13 +21,13 @@ public class EmailConfirmController {
 
     private static final Logger log = Logger.getLogger(EmailConfirmController.class);
 
-    private final IUserRepository userRepository;
+    private final IUserDataRepository userRepository;
 
     private final IConfirmationDataRepository confirmationDataRepository;
 
     @GetMapping
     @ApiOperation(value = "Confirm user in system")
-    public ResponseEntity confirmUser(@ModelAttribute EmailConfirmRequest
+    public ResponseEntity<String> confirmUser(@ModelAttribute EmailConfirmRequest
                                               confirmRequest) {
         Long id = confirmRequest.getId();
         String uuid = confirmRequest.getUuid();
@@ -56,18 +55,16 @@ public class EmailConfirmController {
 
             boolean isUserConfirmed = userToConfirm.getIsConfirmed();
             if (isUserConfirmed) {
-                return new ResponseEntity<>(String.format
+                return ResponseEntity.ok(String.format
                         ("User %s was already confirmed",
-                                userToConfirm.getCredential().getLogin()),
-                        HttpStatus.OK);
+                                userToConfirm.getCredential().getLogin()));
 
             } else {
                 userToConfirm.setIsConfirmed(true);
-                userRepository.update(userToConfirm);
-                return new ResponseEntity<>(String.format
+                userRepository.save(userToConfirm);
+                return ResponseEntity.ok(String.format
                         ("User %s has confirmed e-mail",
-                                userToConfirm.getCredential().getLogin()),
-                        HttpStatus.CREATED);
+                                userToConfirm.getCredential().getLogin()));
             }
 
         } else {

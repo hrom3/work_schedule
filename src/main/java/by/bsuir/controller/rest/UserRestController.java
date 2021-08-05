@@ -2,11 +2,13 @@ package by.bsuir.controller.rest;
 
 import by.bsuir.controller.exception.UnauthorizedException;
 import by.bsuir.controller.request.UserCreateRequest;
+import by.bsuir.controller.request.UserUpdateRequest;
 import by.bsuir.domain.*;
 import by.bsuir.domain.viewhelper.View;
 import by.bsuir.controller.exception.NoSuchEntityException;
 import by.bsuir.repository.springdata.*;
 import by.bsuir.security.utils.PrincipalUtil;
+import by.bsuir.util.MyMessages;
 import by.bsuir.util.UserGenerator;
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiImplicitParam;
@@ -91,7 +93,7 @@ public class UserRestController {
         if (searchResult.isPresent()) {
             return ResponseEntity.ok(searchResult.get());
         } else {
-            throw new NoSuchEntityException("No such user with login:" + login);
+            throw new NoSuchEntityException(MyMessages.NO_SUCH_USER + login);
         }
     }
 
@@ -150,8 +152,7 @@ public class UserRestController {
                 .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN.toString()));
 
         if (!isAdmin) {
-            throw new UnauthorizedException
-                    ("Insufficient permissions to perform the operation");
+            throw new UnauthorizedException(MyMessages.BAD_PERMISSIONS);
         }
 
         //TODO: refactor userGenerator.class
@@ -168,7 +169,7 @@ public class UserRestController {
             paramType = "header")
     @PutMapping("/update/{userId}")
     public ResponseEntity<User> updateUser(@PathVariable Long userId,
-                                           @ModelAttribute UserCreateRequest createRequest,
+                                           @ModelAttribute UserUpdateRequest createRequest,
                                            @ApiIgnore Principal principal) {
 
         boolean isAdmin = principalUtil.getAuthorities(principal)
@@ -188,7 +189,7 @@ public class UserRestController {
         if (searchResult.isPresent()) {
             user = searchResult.get();
         } else {
-            throw new NoSuchEntityException("No such user with login:" + userId);
+            throw new NoSuchEntityException(MyMessages.NO_SUCH_USER_ID + userId);
         }
 
         Department department;
@@ -254,8 +255,7 @@ public class UserRestController {
                 .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN.toString()));
 
         if (!isAdmin) {
-            throw new UnauthorizedException
-                    ("Insufficient permissions to perform the operation");
+            throw new UnauthorizedException(MyMessages.BAD_PERMISSIONS);
         }
         userDataRepository.deleteById(userId);
     }
@@ -275,8 +275,7 @@ public class UserRestController {
                 .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN.toString()));
 
         if (!isAdmin) {
-            throw new UnauthorizedException
-                    ("Insufficient permissions to perform the operation");
+            throw new UnauthorizedException(MyMessages.BAD_PERMISSIONS);
         }
 
         Optional<User> searchResult =
@@ -285,7 +284,7 @@ public class UserRestController {
         if (searchResult.isPresent()) {
             user = searchResult.get();
         } else {
-            throw new NoSuchEntityException("No such user with login:" + userId);
+            throw new NoSuchEntityException(MyMessages.NO_SUCH_USER_ID + userId);
         }
         userDataRepository.softDelete(userId);
 
@@ -306,7 +305,7 @@ public class UserRestController {
                 userDataRepository.findByCredentialLogin(login);
 
         if (searchResult.isEmpty()) {
-            throw new NoSuchEntityException("No such user with login:" + login);
+            throw new NoSuchEntityException(MyMessages.NO_SUCH_USER + login);
         }
         userDataRepository.softDelete(searchResult.get().getId());
         return ResponseEntity.ok("User has deleted");

@@ -1,8 +1,8 @@
 package by.bsuir;
 
 import by.bsuir.domain.User;
-import by.bsuir.exception.NoSuchEntityException;
-import by.bsuir.repository.IJDBCUserRepository;
+import by.bsuir.controller.exception.NoSuchEntityException;
+import by.bsuir.repository.obsolete.IJDBCUserRepository;
 import by.bsuir.util.UserGenerator;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.dao.IncorrectResultSizeDataAccessException;

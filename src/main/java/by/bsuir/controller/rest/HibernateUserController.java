@@ -1,4 +1,4 @@
-package by.bsuir.controller.rest;
+/*package by.bsuir.controller.rest;
 
 import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.domain.User;
@@ -73,4 +73,4 @@ public class HibernateUserController {
 
 
 
-}
+}*/

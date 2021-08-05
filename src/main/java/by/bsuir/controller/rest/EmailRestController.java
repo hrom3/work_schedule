@@ -1,11 +1,13 @@
 package by.bsuir.controller.rest;
 
+import by.bsuir.controller.exception.NoSuchEntityException;
 import by.bsuir.domain.ConfirmationData;
 import by.bsuir.domain.User;
-import by.bsuir.repository.obsolete.IUserRepository;
+import by.bsuir.repository.springdata.IUserDataRepository;
 import by.bsuir.service.email.IEmailService;
 import by.bsuir.service.email.impl.AbstractEmailContext;
 import by.bsuir.util.ConfirmationDataGenerator;
+import by.bsuir.util.MyMessages;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.apache.log4j.Logger;
@@ -18,6 +20,7 @@ import javax.mail.MessagingException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 
 @RestController
@@ -29,7 +32,7 @@ public class EmailRestController {
 
     private final IEmailService emailService;
 
-    private final IUserRepository userRepository;
+    private final IUserDataRepository userRepository;
 
     private final ConfirmationDataGenerator confirmationDataGenerator;
 
@@ -53,7 +56,14 @@ public class EmailRestController {
     @GetMapping(value = "/confirmation-email/{id}")
     public ResponseEntity sendConfirmationEmail(@PathVariable Long id) {
 
-        User userToConfirmation = userRepository.findOne(id);
+        Optional<User> searchResult =
+                userRepository.findById(id);
+        User userToConfirmation;
+        if (searchResult.isPresent()) {
+            userToConfirmation = searchResult.get();
+        } else {
+            throw new NoSuchEntityException(MyMessages.NO_SUCH_USER + id);
+        }
         String emailToConfirmation = userToConfirmation.getEmail();
         ConfirmationData confirmationDataGenerated =
                 confirmationDataGenerator.generate(userToConfirmation);
