@@ -8,7 +8,8 @@ import by.bsuir.repository.springdata.IConfirmationDataRepository;
 import by.bsuir.repository.springdata.IUserDataRepository;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +20,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EmailConfirmController {
 
-    private static final Logger log = Logger.getLogger(EmailConfirmController.class);
+    private static final Logger log = LoggerFactory.getLogger(EmailConfirmController.class);
 
     private final IUserDataRepository userRepository;
 
@@ -28,16 +29,19 @@ public class EmailConfirmController {
     @GetMapping
     @ApiOperation(value = "Confirm user in system")
     public ResponseEntity<String> confirmUser(@ModelAttribute EmailConfirmRequest
-                                              confirmRequest) {
+                                                      confirmRequest) {
         Long id = confirmRequest.getId();
         String uuid = confirmRequest.getUuid();
+        if (id == null || uuid == null) {
+            log.info("Confirmation request invalid");
+            throw new UnconfirmedUserException("Confirmation request invalid");
+        }
 
-        Optional<ConfirmationData> resultSet =
-                confirmationDataRepository.findById(id);
+            Optional<ConfirmationData> resultSet =
+                    confirmationDataRepository.findById(id);
 
         if (resultSet.isEmpty()) {
-            log.info("Confirmation request invalid resultSet.isEmpty id =" +
-                    id);
+            log.info("Confirmation request invalid id = {0}", id);
             throw new UnconfirmedUserException("Confirmation request invalid");
         }
 
@@ -73,7 +77,4 @@ public class EmailConfirmController {
         }
 
     }
-
-
-
 }

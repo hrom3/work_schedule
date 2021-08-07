@@ -47,3 +47,13 @@ spring:
           auth: true
           starttls:
             enable: true
+
+---
+
+email:
+  sender:
+    settings:
+      url-to-confirm-page: "http://localhost:8081/rest/confirm"
+      from-email: blablabla@mail.mmm
+      subject: "Verify your email"
+      template: creat_account_email
