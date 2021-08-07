@@ -16,6 +16,7 @@ import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import by.bsuir.beans.SecurityConfig;
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,8 +38,6 @@ import java.util.*;
 public class UserRestController {
 
     private final UserGenerator userGenerator;
-
-    private final SecurityConfig config;
 
     private final PrincipalUtil principalUtil;
 
@@ -146,7 +145,8 @@ public class UserRestController {
             (@PathVariable Integer usersCount,
              @ApiIgnore Principal principal) {
 
-        boolean isAdmin = principalUtil.getAuthorities(principal)
+        boolean isAdmin;
+        isAdmin = principalUtil.getAuthorities(principal)
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .anyMatch(role -> role.equals(ESystemRoles.ROLE_ADMIN.toString()));
@@ -155,11 +155,24 @@ public class UserRestController {
             throw new UnauthorizedException(MyMessages.BAD_PERMISSIONS);
         }
 
-        //TODO: refactor userGenerator.class
         List<User> generateUsers = userGenerator.generate(usersCount);
+        Set<Role> roles = new HashSet<>();
+        roles.add(roleRepository.findById(3).get());
 
-        userDataRepository.saveAll(generateUsers);
-        return new ResponseEntity<>(userDataRepository.findAll(), HttpStatus.CREATED);
+        for (User user: generateUsers) {
+            user.setDepartment(departmentRepository.findById(RandomUtils
+                    .nextInt(1,3)).get());
+            user.setRate(rateRepository.findById(RandomUtils.nextInt(1,7)).get());
+            user.setRoom(roomRepository.findById(RandomUtils.nextInt(1,6)).get());
+            user.setRoles(roles);
+            userDataRepository.save(user);
+            for (Role role: roles) {
+                userDataRepository.saveUserRole(user.getId(),role.getId());
+            }
+        }
+        List<User> all = userDataRepository.findAll();
+
+        return ResponseEntity.ok(all);
     }
 
     @ApiOperation(value = "Update user")

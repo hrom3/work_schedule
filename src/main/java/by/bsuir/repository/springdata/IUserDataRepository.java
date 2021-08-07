@@ -19,7 +19,9 @@ public interface IUserDataRepository extends CrudRepository<User, Long>,
         PagingAndSortingRepository<User, Long>,
         JpaRepository<User, Long> {
 
+
     Optional<User> findByCredentialLogin(String login);
+
 
     @Transactional(propagation = Propagation.REQUIRED,
             isolation = Isolation.DEFAULT,
@@ -30,6 +32,7 @@ public interface IUserDataRepository extends CrudRepository<User, Long>,
     int saveUserRole(@Param("user_id") Long userId,
                      @Param("role_id") Integer roleId);
 
+
     @Transactional(propagation = Propagation.REQUIRED,
             isolation = Isolation.DEFAULT,
             rollbackFor = SQLException.class)
@@ -37,16 +40,21 @@ public interface IUserDataRepository extends CrudRepository<User, Long>,
     @Query("update User u set u.isDeleted = false where u.id = :user_id")
     int softDelete(@Param("user_id") Long userId);
 
+
     @Query(value = "select * from users u where u.name like :name limit :limit",
             nativeQuery = true)
     List<User> findUsersByQueryName(String name, Integer limit);
 
+
     List<User> findByNameContainingIgnoreCase(String query);
+
 
     List<User> findBySurnameContainingIgnoreCase(String query);
 
+
     List<User> findBySurnameContainingIgnoreCaseOrNameContainingIgnoreCase
             (String surname, String name);
+
 
     List<User> findByEmailContainingIgnoreCase(String query);
 
