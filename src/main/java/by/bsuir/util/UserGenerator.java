@@ -1,10 +1,8 @@
 package by.bsuir.util;
 
-import by.bsuir.domain.Department;
-import by.bsuir.domain.Rate;
-import by.bsuir.domain.Room;
-import by.bsuir.domain.User;
-import lombok.AllArgsConstructor;
+import by.bsuir.domain.*;
+import lombok.NoArgsConstructor;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
@@ -13,13 +11,12 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 @Service
-@AllArgsConstructor
+@NoArgsConstructor
 public class UserGenerator {
+
 
     public List<User> generate(int count) {
         List<User> result = new ArrayList<>();
@@ -28,6 +25,7 @@ public class UserGenerator {
         }
         return result;
     }
+
 
     public User generate() {
         User user = new User();
@@ -39,12 +37,10 @@ public class UserGenerator {
         user.setBirthDay(LocalDate.ofInstant(Instant.ofEpochMilli
                         (RandomUtils.nextLong(0L, 946677600000L)),
                 ZoneId.systemDefault()));
-        //user.setBirthDay(new Date(RandomUtils.nextLong(0L, 946677600000L)));
-        user.setDepartment(new Department());
         user.setCreated(new Timestamp(System.currentTimeMillis()));
         user.setChanged(new Timestamp(System.currentTimeMillis()));
-        user.setRate(new Rate());
-        user.setRoom(new Room());
+        user.setIsDeleted(RandomUtils.nextBoolean());
+        user.setIsConfirmed(RandomUtils.nextBoolean());
         return user;
     }
 

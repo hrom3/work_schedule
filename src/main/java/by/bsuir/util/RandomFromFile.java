@@ -65,7 +65,7 @@ public class RandomFromFile {
 
     public static String[] surNames() {
         String filePath = "h:" + File.separator + "disk d"
-                + File.separator + "repository" + File.separator + "studentsdemo"
+                + File.separator + "repository" + File.separator + "work_schedule"
                 + File.separator + "src" + File.separator + "main"
                 + File.separator + "resources"
                 + File.separator + "russian_surnames.txt";
@@ -77,7 +77,7 @@ public class RandomFromFile {
 
     public static String[] names() {
         String filePath = "h:" + File.separator + "disk d"
-                + File.separator + "repository" + File.separator + "studentsdemo"
+                + File.separator + "repository" + File.separator + "work_schedule"
                 + File.separator + "src" + File.separator + "main"
                 + File.separator + "resources" + File.separator + "names.txt";
         String data = readAllBytes(filePath);
