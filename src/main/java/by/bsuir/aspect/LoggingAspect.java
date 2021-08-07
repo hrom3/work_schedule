@@ -1,9 +1,10 @@
 package by.bsuir.aspect;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
@@ -11,7 +12,7 @@ import org.springframework.util.StopWatch;
 @Aspect
 public class LoggingAspect {
 
-    private static final Logger log = Logger.getLogger(LoggingAspect.class);
+    private static final Logger log = LoggerFactory.getLogger(LoggingAspect.class);
 
     @Before("emailSenderPointcut()")
     public void logBefore(JoinPoint joinPoint) {
