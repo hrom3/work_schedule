@@ -1,7 +1,12 @@
 package by.bsuir.beans;
 
 import by.bsuir.repository.RepositoryUtils;
+import by.bsuir.repository.springdata.IDepartmentDataRepository;
+import by.bsuir.repository.springdata.IRateDataRepository;
+import by.bsuir.repository.springdata.IRoleDataRepository;
+import by.bsuir.repository.springdata.IRoomDataRepository;
 import by.bsuir.util.ConfirmationDataGenerator;
+import by.bsuir.util.ConverterDateTimeStamp;
 import by.bsuir.util.RandomFromFile;
 import by.bsuir.util.UserGenerator;
 import org.springframework.context.annotation.Bean;
@@ -42,6 +47,11 @@ public class AppBeans {
     @Bean
     public RepositoryUtils getRepositoryUtils() {
         return new RepositoryUtils();
+    }
+
+    @Bean
+    public ConverterDateTimeStamp converterDateTimeStamp() {
+        return new ConverterDateTimeStamp();
     }
 
 }
