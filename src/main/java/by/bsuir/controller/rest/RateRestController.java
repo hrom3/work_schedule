@@ -90,7 +90,7 @@ public class RateRestController {
                     paramType = "header")
     })
     @PostMapping("/update/{id}")
-    public ResponseEntity<Rate> updateDepartment(
+    public ResponseEntity<Rate> updateRate(
             RateCreateRequest createRateRequest,
             @PathVariable Integer id,
             @ApiIgnore Principal principal) {
@@ -125,7 +125,7 @@ public class RateRestController {
             value = "token", required = true,
             dataType = "string",
             paramType = "header")
-    public void deleteUserHard(@PathVariable Integer id,
+    public void deleteRateHard(@PathVariable Integer id,
                                @ApiIgnore Principal principal) {
 
         boolean isAdmin = principalUtil.getAuthorities(principal)
