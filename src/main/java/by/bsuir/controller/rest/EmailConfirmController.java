@@ -6,6 +6,7 @@ import by.bsuir.domain.ConfirmationData;
 import by.bsuir.domain.User;
 import by.bsuir.repository.springdata.IConfirmationDataRepository;
 import by.bsuir.repository.springdata.IUserDataRepository;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
+@Api(value = "Email confirmation controller")
 @RestController
 @RequestMapping("/rest/confirm")
 @RequiredArgsConstructor
@@ -33,7 +35,6 @@ public class EmailConfirmController {
         Long id = confirmRequest.getId();
         String uuid = confirmRequest.getUuid();
         if (id == null || uuid == null) {
-            log.info("Confirmation request invalid");
             throw new UnconfirmedUserException("Confirmation request invalid");
         }
 
@@ -41,17 +42,16 @@ public class EmailConfirmController {
                     confirmationDataRepository.findById(id);
 
         if (resultSet.isEmpty()) {
-            log.info("Confirmation request invalid id = {0}", id);
-            throw new UnconfirmedUserException("Confirmation request invalid");
+            throw new UnconfirmedUserException("Confirmation request invalid" + id);
         }
 
         ConfirmationData confirmationData = resultSet.get();
         long currentTimeMillis = System.currentTimeMillis();
         if (confirmationData.getDueDate().getTime() - currentTimeMillis < 0) {
-            log.info("Confirmation time expired id =" + id + " currentTime " +
-                    currentTimeMillis + " confirmation due date " +
+            throw new UnconfirmedUserException("Confirmation time expired id ="
+                    + id + " currentTime " + currentTimeMillis +
+                    " confirmation due date " +
                     confirmationData.getDueDate().getTime());
-            throw new UnconfirmedUserException("Confirmation time expired");
         }
 
         if (confirmationData.getUuid().equals(uuid)) {
@@ -72,8 +72,8 @@ public class EmailConfirmController {
             }
 
         } else {
-            log.info("Confirmation UUID invalid. Id =" + id);
-            throw new UnconfirmedUserException("Confirmation UUID invalid");
+            throw new UnconfirmedUserException("Confirmation UUID invalid. " +
+                    "Id = " + id);
         }
 
     }

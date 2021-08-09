@@ -11,6 +11,7 @@ import by.bsuir.repository.springdata.IDepartmentDataRepository;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.MyMessages;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -24,6 +25,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+@Api(value = "Department controller")
 @RestController
 @RequestMapping("/rest/department")
 @RequiredArgsConstructor
@@ -136,7 +138,7 @@ public class DepartmentRestController {
         }
     }
 
-    @ApiOperation(value = "Hard delete departmentby Id")
+    @ApiOperation(value = "Hard delete department by Id. Role_Admin only")
     @DeleteMapping("/delete_hard/{id}")
     @ApiImplicitParam(name = "X-Auth-Token",
             value = "token", required = true,

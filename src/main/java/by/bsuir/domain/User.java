@@ -32,7 +32,7 @@ public class User {
             initialValue = 5,
             allocationSize = 1
     )
-    @JsonView(View.PublicView.class)
+    @JsonView(View.ExtendedPublicView.class)
     private Long id;
 
     @Column
@@ -44,15 +44,15 @@ public class User {
     private String name;
 
     @Column(name = "middle_name")
-    @JsonView(View.PublicView.class)
+    @JsonView(View.ExtendedPublicView.class)
     private String middleName;
 
     @Column
-    @JsonView(View.PublicView.class)
+    @JsonView(View.ExtendedPublicView.class)
     private String email;
 
     @Column(name = "birth_day")
-    @JsonView(View.PublicView.class)
+    @JsonView(View.ExtendedPublicView.class)
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
     private LocalDate birthDay;
 
@@ -63,19 +63,19 @@ public class User {
     private Department department;
 
     @Column
-    @JsonView(View.PublicView.class)
+    @JsonView(View.InternalView.class)
     private Timestamp created;
 
     @Column
-    @JsonView(View.PublicView.class)
+    @JsonView(View.InternalView.class)
     private Timestamp changed;
 
     @Column(name = "is_deleted")
-    @JsonView(View.PublicView.class)
+    @JsonView(View.InternalView.class)
     private Boolean isDeleted;
 
     @Column(name = "is_confirmed")
-    @JsonView(View.PublicView.class)
+    @JsonView(View.InternalView.class)
     private Boolean isConfirmed;
 
     @ManyToOne
@@ -92,18 +92,17 @@ public class User {
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
-    @JsonView(View.PublicView.class)
-    //@JsonIgnoreProperties("user")
-    //@JsonIdentityInfo(generator= ObjectIdGenerators.UUIDGenerator.class, property="@id")
+    @JsonView(View.ExtendedPublicView.class)
     private Credential credential;
 
     @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("users")
-    @JsonView(View.PublicView.class)
+    @JsonView(View.ExtendedPublicView.class)
     private Set<Role> roles = Collections.emptySet();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
     @JsonIgnoreProperties("user")
-    @JsonView(View.PublicView.class)
+    //@JsonBackReference
+    @JsonView(View.ExtendedPublicView.class)
     private Set<UserWorkedTime> userWorkedTimes = Collections.emptySet();
 }

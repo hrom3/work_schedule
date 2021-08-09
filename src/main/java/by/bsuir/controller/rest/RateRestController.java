@@ -10,6 +10,7 @@ import by.bsuir.repository.springdata.IRateDataRepository;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.MyMessages;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -23,6 +24,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+@Api(value = "Employees rate controller")
 @RestController
 @RequestMapping("/rest/rate")
 @RequiredArgsConstructor
@@ -33,14 +35,14 @@ public class RateRestController {
     private final PrincipalUtil principalUtil;
 
     @GetMapping
-    @ApiOperation(value = "Find all rate")
+    @ApiOperation(value = "Find all rate of Employees")
     @JsonView(View.PublicView.class)
     public ResponseEntity<List<Rate>> findAll() {
         return ResponseEntity.ok(rateRepository.findAll());
     }
 
     @GetMapping("/search/{id}")
-    @ApiOperation(value = "Find rate by id")
+    @ApiOperation(value = "Find employees rate by id")
     @JsonView(View.PublicView.class)
     public ResponseEntity<Rate> findById(@PathVariable Integer id) {
 
@@ -53,7 +55,7 @@ public class RateRestController {
         }
     }
 
-    @ApiOperation(value = "Create rate. Role_Admin only")
+    @ApiOperation(value = "Create employees rate. Role_Admin only")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-Auth-Token",
                     value = "token", required = true,
@@ -82,7 +84,7 @@ public class RateRestController {
         }
     }
 
-    @ApiOperation(value = "Update rate by ID. Role_Admin only")
+    @ApiOperation(value = "Update employees rate by ID. Role_Admin only")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "X-Auth-Token",
                     value = "token", required = true,
@@ -119,7 +121,7 @@ public class RateRestController {
         }
     }
 
-    @ApiOperation(value = "Hard delete rate by Id")
+    @ApiOperation(value = "Hard delete employees rate by Id")
     @DeleteMapping("/delete_hard/{id}")
     @ApiImplicitParam(name = "X-Auth-Token",
             value = "token", required = true,

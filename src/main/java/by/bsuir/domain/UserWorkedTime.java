@@ -1,9 +1,7 @@
 package by.bsuir.domain;
 
 import by.bsuir.domain.viewhelper.View;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -33,7 +31,8 @@ public class UserWorkedTime {
 
     @ManyToOne
     @JoinColumn(name = "id_users")
-    @JsonBackReference
+    @JsonView(View.ExtendedPublicView.class)
+    @JsonIgnoreProperties("user")
     private User user;
 
     @Column

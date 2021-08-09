@@ -11,6 +11,7 @@ import by.bsuir.repository.springdata.IRoomDataRepository;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.MyMessages;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +26,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
+@Api(value = "Organization room controller")
 @RestController
 @RequestMapping("/rest/room")
 @RequiredArgsConstructor
@@ -128,7 +130,7 @@ public class RoomRestController {
         }
     }
 
-    @ApiOperation(value = "Hard delete room by Id")
+    @ApiOperation(value = "Hard delete room by Id. Role_Admin only")
     @DeleteMapping("/delete_hard/{id}")
     @ApiImplicitParam(name = "X-Auth-Token",
             value = "token", required = true,

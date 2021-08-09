@@ -14,6 +14,10 @@ public class ConverterDateTimeStamp {
         return Timestamp.valueOf(LocalDateTime.of(date, time));
     }
 
+    public @NotNull Timestamp converterDateToTimeStamp(LocalDate date) {
+        return Timestamp.valueOf(LocalDateTime.of(date, LocalTime.of(0, 0)));
+    }
+
     //  Timestamp to LocalDateTime
     public LocalDateTime converterTimeStampToLocalDataTime(@NotNull Timestamp timestamp) {
         return timestamp.toLocalDateTime();

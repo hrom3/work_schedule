@@ -10,6 +10,7 @@ import by.bsuir.service.email.IEmailService;
 import by.bsuir.service.email.impl.AbstractEmailContext;
 import by.bsuir.util.ConfirmationDataGenerator;
 import by.bsuir.util.MyMessages;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -25,7 +26,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-
+@Api(value = "Email controller for tests only")
 @RestController
 @RequestMapping("/rest/email")
 @RequiredArgsConstructor
@@ -43,19 +44,24 @@ public class EmailRestController {
 
     private final EmailProperties emailProperties;
 
-    @ApiOperation(value = "Send email")
+    @ApiOperation(value = "Send email (for test)")
     @GetMapping(value = "/simple-email")
     public ResponseEntity<String> sendSimpleEmail(@RequestParam String email) {
 
         try {
-            emailService.sendSimpleEmail(email, "Welcome", "This is a welcome email for your!!");
+            emailService.sendSimpleEmail(email,
+                    "Welcome",
+                    "This is a welcome email for your!!");
         } catch (MailException mailException) {
             log.error("Error while sending out email..{}" +
-                    Arrays.toString(mailException.getStackTrace()), mailException);
-            return new ResponseEntity<>("Unable to send email", HttpStatus.INTERNAL_SERVER_ERROR);
+                    Arrays.toString(mailException.getStackTrace()),
+                    mailException);
+            return new ResponseEntity<>("Unable to send email",
+                    HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        return new ResponseEntity<>("Please check your inbox", HttpStatus.OK);
+        return new ResponseEntity<>("Please check your inbox",
+                HttpStatus.OK);
     }
 
     @ApiOperation(value = "Send confirmation email (for test)")
@@ -70,6 +76,7 @@ public class EmailRestController {
         } else {
             throw new NoSuchEntityException(MyMessages.NO_SUCH_USER + id);
         }
+
         String emailToConfirmation = userToConfirmation.getEmail();
         ConfirmationData confirmationDataGenerated =
                 confirmationDataGenerator.generate(userToConfirmation);

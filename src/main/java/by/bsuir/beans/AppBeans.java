@@ -5,10 +5,7 @@ import by.bsuir.repository.springdata.IDepartmentDataRepository;
 import by.bsuir.repository.springdata.IRateDataRepository;
 import by.bsuir.repository.springdata.IRoleDataRepository;
 import by.bsuir.repository.springdata.IRoomDataRepository;
-import by.bsuir.util.ConfirmationDataGenerator;
-import by.bsuir.util.ConverterDateTimeStamp;
-import by.bsuir.util.RandomFromFile;
-import by.bsuir.util.UserGenerator;
+import by.bsuir.util.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -50,8 +47,13 @@ public class AppBeans {
     }
 
     @Bean
-    public ConverterDateTimeStamp converterDateTimeStamp() {
+    public ConverterDateTimeStamp getConverterDateTimeStamp() {
         return new ConverterDateTimeStamp();
+    }
+
+    @Bean
+    public WorkTimeHelper getWorkTimeHelper() {
+        return new WorkTimeHelper();
     }
 
 }

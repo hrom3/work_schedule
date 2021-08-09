@@ -10,9 +10,6 @@ import java.util.List;
 @AllArgsConstructor
 public class RoleCreateRequest {
 
-//    @ApiParam(required = true)
-//    private long userId;
-
     @ApiParam(value = "1 - ADMIN; 2 - USER; 3 - MODERATOR", required = true)
     private List<Integer> roleIds;
 

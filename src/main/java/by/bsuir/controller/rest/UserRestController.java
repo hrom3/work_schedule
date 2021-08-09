@@ -1,37 +1,34 @@
 package by.bsuir.controller.rest;
 
 import by.bsuir.controller.exception.UnauthorizedException;
-import by.bsuir.controller.request.UserCreateRequest;
 import by.bsuir.controller.request.UserUpdateRequest;
 import by.bsuir.domain.*;
 import by.bsuir.domain.viewhelper.View;
 import by.bsuir.controller.exception.NoSuchEntityException;
+import by.bsuir.repository.RepositoryUtils;
 import by.bsuir.repository.springdata.*;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.MyMessages;
 import by.bsuir.util.UserGenerator;
 import com.fasterxml.jackson.annotation.JsonView;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import by.bsuir.beans.SecurityConfig;
 import org.apache.commons.lang3.RandomUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.*;
 
 //TODO: refactor
+@Api(value = "Employees controller")
 @RestController
 @RequestMapping("/rest/users")
 @RequiredArgsConstructor
@@ -51,22 +48,25 @@ public class UserRestController {
 
     private final IRoleDataRepository roleRepository;
 
+    private final RepositoryUtils repositoryUtils;
 
-    @ApiOperation(value = "Find all users")
+
+    @ApiOperation(value = "Find all employees")
     @GetMapping("/findAll")
     @JsonView(View.PublicView.class)
     public ResponseEntity<List<User>> findAll() {
         return ResponseEntity.ok(userDataRepository.findAll());
     }
 
-    @ApiOperation(value = "Find all users by authenticate user")
+
+    @ApiOperation(value = "Find all employees by authenticate user")
     @ApiImplicitParam(name = "X-Auth-Token",
             value = "token", required = true,
             dataType = "string",
             paramType = "header")
+    @JsonView(View.InternalView.class)
     @GetMapping
-    public ResponseEntity<List<User>> securedFindAll(HttpServletRequest request,
-                                                     @ApiIgnore Principal principal) {
+    public ResponseEntity<List<User>> securedFindAll(@ApiIgnore Principal principal) {
 
         boolean isNoPrincipal = principalUtil.getUsername(principal).isEmpty();
 
@@ -78,11 +78,13 @@ public class UserRestController {
         }
     }
 
-    @ApiOperation(value = "Find user by token")
+
+    @ApiOperation(value = "Find employee by token")
     @ApiImplicitParam(name = "X-Auth-Token",
             value = "token", required = true,
             dataType = "string",
             paramType = "header")
+    @JsonView(View.InternalView.class)
     @GetMapping("/user")
     public ResponseEntity<User> securedOneByToken(@ApiIgnore Principal principal) {
         String login = principalUtil.getUsername(principal);
@@ -96,6 +98,9 @@ public class UserRestController {
         }
     }
 
+
+    @ApiOperation(value = "Find employee by name with limit")
+    @JsonView(View.PublicView.class)
     @GetMapping("/search")
     public ResponseEntity<List<User>> userSearch(@RequestParam Integer limit,
                                                  @RequestParam String name) {
@@ -103,18 +108,27 @@ public class UserRestController {
                 (userDataRepository.findUsersByQueryName(name, limit));
     }
 
+
+    @ApiOperation(value = "Find employee by name query")
+    @JsonView(View.PublicView.class)
     @GetMapping("/search_by_name")
     public ResponseEntity<List<User>> userSearchByName(@RequestParam String query) {
         return ResponseEntity.ok
                 (userDataRepository.findByNameContainingIgnoreCase(query));
     }
 
+
+    @ApiOperation(value = "Find employee by surname query")
+    @JsonView(View.PublicView.class)
     @GetMapping("/search_by_surname")
     public ResponseEntity<List<User>> userSearchBySurname(@RequestParam String query) {
         return ResponseEntity.ok
                 (userDataRepository.findBySurnameContainingIgnoreCase(query));
     }
 
+
+    @ApiOperation(value = "Find employee by name or surname query")
+    @JsonView(View.PublicView.class)
     @GetMapping("/search_by_surname_or_name")
     public ResponseEntity<List<User>> userSearchBySurname(@RequestParam String name,
                                                           @RequestParam String surname) {
@@ -123,6 +137,8 @@ public class UserRestController {
                         (name, surname));
     }
 
+
+    @ApiOperation(value = "Find employee by email")
     @GetMapping("/search_by_email")
     @JsonView(View.PublicView.class)
     public ResponseEntity<List<User>> userSearchByEmail(@RequestParam String query) {
@@ -130,11 +146,12 @@ public class UserRestController {
                 .findByEmailContainingIgnoreCase(query));
     }
 
+
     @ApiOperation(value = "Create autogenerate users")
     @ApiImplicitParams({
-//            @ApiImplicitParam(name = "usersCount", dataType = "integer",
-//                    paramType = "path", value = "Count of users for generate",
-//                    required = true, defaultValue = "10"),
+            @ApiImplicitParam(name = "usersCount", dataType = "integer",
+                    paramType = "path", value = "Count of users for generate",
+                    required = true, defaultValue = "10"),
             @ApiImplicitParam(name = "X-Auth-Token",
                     value = "token", required = true,
                     dataType = "string",
@@ -159,23 +176,21 @@ public class UserRestController {
         Set<Role> roles = new HashSet<>();
         roles.add(roleRepository.findById(3).get());
 
-        for (User user: generateUsers) {
+        for (User user : generateUsers) {
             user.setDepartment(departmentRepository.findById(RandomUtils
-                    .nextInt(1,3)).get());
-            user.setRate(rateRepository.findById(RandomUtils.nextInt(1,7)).get());
-            user.setRoom(roomRepository.findById(RandomUtils.nextInt(1,6)).get());
+                    .nextInt(1, 3)).get());
+            user.setRate(rateRepository.findById(RandomUtils.nextInt(1, 7)).get());
+            user.setRoom(roomRepository.findById(RandomUtils.nextInt(1, 6)).get());
             user.setRoles(roles);
             userDataRepository.save(user);
-            for (Role role: roles) {
-                userDataRepository.saveUserRole(user.getId(),role.getId());
+            for (Role role : roles) {
+                userDataRepository.saveUserRole(user.getId(), role.getId());
             }
         }
-        List<User> all = userDataRepository.findAll();
-
-        return ResponseEntity.ok(all);
+        return ResponseEntity.ok(userDataRepository.findAll());
     }
 
-    @ApiOperation(value = "Update user")
+    @ApiOperation(value = "Update employee")
     @ApiImplicitParam(name = "X-Auth-Token",
             value = "token", required = true,
             dataType = "string",
@@ -195,7 +210,6 @@ public class UserRestController {
                     "User for provided credentials.");
         }
 
-
         Optional<User> searchResult =
                 userDataRepository.findById(userId);
         User user;
@@ -205,39 +219,18 @@ public class UserRestController {
             throw new NoSuchEntityException(MyMessages.NO_SUCH_USER_ID + userId);
         }
 
-        Department department;
-        Optional<Department> searchDepResult = departmentRepository
-                .findById(createRequest.getDepartmentId());
-        if (searchDepResult.isPresent()) {
-            department = searchDepResult.get();
-        } else {
-            throw new NoSuchEntityException("No such room with id:"
-                    + createRequest.getDepartmentId());
-        }
+        Department department = repositoryUtils.findDepartmentById(
+                departmentRepository, createRequest.getDepartmentId());
 
-        Rate rate;
-        Optional<Rate> searchRateResult = rateRepository
-                .findById(createRequest.getRateId());
-        if (searchRateResult.isPresent()) {
-            rate = searchRateResult.get();
-        } else {
-            throw new NoSuchEntityException("No such rate with id:"
-                    + createRequest.getRateId());
-        }
+        Rate rate = repositoryUtils.findRateById(rateRepository,
+                createRequest.getRateId());
 
-        Room room;
-        Optional<Room> searchRoomResult = roomRepository
-                .findById(createRequest.getRoomId());
-        if (searchRoomResult.isPresent()) {
-            room = searchRoomResult.get();
-        } else {
-            throw new NoSuchEntityException("No such room with id:"
-                    + createRequest.getRoomId());
-        }
+        Room room = repositoryUtils.findRoomById(roomRepository,
+                createRequest.getRoomId());
 
         Role foundRole = roleRepository.findById(createRequest.getRoleId()).get();
-        Set<Role> roles = new HashSet<>();
-        roles.add(foundRole);
+        Set<Role> userRoles = user.getRoles();
+        //Set<Role> roles = Set.copyOf(roleRepository.findAllById(createRequest.getRoleIds()));
 
         user.setName(createRequest.getName());
         user.setSurname(createRequest.getSurname());
@@ -248,9 +241,14 @@ public class UserRestController {
         user.setChanged(new Timestamp(System.currentTimeMillis()));
         user.setRate(rate);
         user.setRoom(room);
-        user.setRoles(roles);
+        //user.setRoles(roles);
 
-        return ResponseEntity.ok(userDataRepository.save(user));
+        userDataRepository.save(user);
+
+        if (!userRoles.contains(foundRole)) {
+            userDataRepository.saveUserRole(user.getId(), foundRole.getId());
+        }
+        return ResponseEntity.ok(user);
     }
 
     @ApiOperation(value = "Hard delete user by Id")
@@ -273,7 +271,7 @@ public class UserRestController {
         userDataRepository.deleteById(userId);
     }
 
-    @ApiOperation(value = "Soft delete user by Id")
+    @ApiOperation(value = "Soft delete employee by Id")
     @DeleteMapping("/delete_soft/{user_id}")
     @ApiImplicitParam(name = "X-Auth-Token",
             value = "token", required = true,
@@ -304,7 +302,7 @@ public class UserRestController {
         return ResponseEntity.ok(user);
     }
 
-    @ApiOperation(value = "Soft delete user by token")
+    @ApiOperation(value = "Soft delete employee by token")
     @DeleteMapping("/delete_soft")
     @ApiImplicitParam(name = "X-Auth-Token",
             value = "token", required = true,
