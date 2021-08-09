@@ -1,7 +1,9 @@
 package by.bsuir.domain;
 
+import by.bsuir.domain.viewhelper.View;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,6 +18,7 @@ import java.sql.Timestamp;
 public class UserWorkedTime {
 
     @Id
+    @JsonView(View.PublicView.class)
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
             generator =  "user_worked_time_id"
@@ -34,12 +37,15 @@ public class UserWorkedTime {
     private User user;
 
     @Column
+    @JsonView(View.PublicView.class)
     private String work;
 
     @Column(name = "start_time")
+    @JsonView(View.PublicView.class)
     private Timestamp startTime;
 
     @Column(name = "end_time")
+    @JsonView(View.PublicView.class)
     private Timestamp endTime;
 
     @ManyToOne

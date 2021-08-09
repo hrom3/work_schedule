@@ -14,19 +14,25 @@ public interface IUserWorkedTimeDataRepository extends
         PagingAndSortingRepository<UserWorkedTime, Long>,
         JpaRepository<UserWorkedTime, Long> {
 
-    List<UserWorkedTime> findAllByUserId(Long userid);
+    List<UserWorkedTime> findByUserId(Long userid);
 
-    List<UserWorkedTime> findAllByStartTimeAndEndTimeOrderByStartTime(Timestamp startTime, Timestamp endTime);
+    List<UserWorkedTime> findByUserIdAndStartTimeAndEndTime
+            (Long userId, Timestamp startTime, Timestamp endTime);
 
-    List<UserWorkedTime> findAllByStartTimeAfterOrderByStartTime(Timestamp startTime);
+    List<UserWorkedTime> findByUserIdAndStartTimeAfterOrderByStartTime
+            (Long userId, Timestamp startTime);
 
-    List<UserWorkedTime> findAllByStartTimeAfter(Timestamp startTime);
+    List<UserWorkedTime> findByUserIdAndStartTimeAfter
+            (Long userId, Timestamp startTime);
 
-    List<UserWorkedTime> findAllByStartTimeBetween(Timestamp time1, Timestamp time2);
+    List<UserWorkedTime> findByUserIdAndStartTimeBetween
+            (Long userId, Timestamp time1, Timestamp time2);
 
-    List<UserWorkedTime> findAllByStartTimeBefore(Timestamp startTime);
+    List<UserWorkedTime> findByUserIdAndStartTimeBefore
+            (Long userId, Timestamp startTime);
 
-    List<UserWorkedTime> findAllByIssueFromJira(IssueFromJira issue);
+    List<UserWorkedTime> findByIssueFromJira
+            (IssueFromJira issue);
 
 
 }

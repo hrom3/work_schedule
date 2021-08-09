@@ -5,5 +5,6 @@ public class MyMessages {
     = "Insufficient permissions to perform the operation";
     public static final String NO_SUCH_USER_ID = "No such user with id: ";
     public static final String NO_SUCH_USER = "No such user with login: ";
+    public static final String NO_SUCH_WORK = "No such work with id: ";
 }
 
