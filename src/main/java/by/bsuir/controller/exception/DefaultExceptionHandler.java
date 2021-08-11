@@ -18,9 +18,10 @@ public class DefaultExceptionHandler {
         log.error(e.getMessage(), e);
         log.info(e.getMessage(), e);
         System.out.println(e.getMessage());
-        return new ResponseEntity<>(new ErrorMessage(2L, e.getMessage()),
-                HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ErrorMessage(401L, e.getMessage()),
+                HttpStatus.UNAUTHORIZED);
     }
+
 
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<ErrorMessage> handleUnauthorizedException(Exception e) {

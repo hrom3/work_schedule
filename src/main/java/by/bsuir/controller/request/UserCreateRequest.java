@@ -35,9 +35,8 @@ public class UserCreateRequest {
             allowableValues = "range[1, 7]")
     private Integer roomId;
 
-    /*@ApiParam(value = "1 - ADMIN; 2 - USER; 3 - MODERATOR",
-            defaultValue = "2", allowableValues = "range[1, 3]")
-    private Integer roleId;*/
+    //@ApiParam(value = "1 - ADMIN; 2 - USER; 3 - MODERATOR", defaultValue = "2", allowableValues = "range[1, 3]")
+    //private Integer roleId;
 
     @ApiParam(value = "must be unique", required = true, allowEmptyValue = false)
     private String login;

@@ -19,17 +19,17 @@ public class UserWorkedTimeRequest {
             required = true)
     @JsonFormat(pattern = "HH:mm")
     private LocalTime startTime;
-    //private String startTime;
+
 
     @ApiParam(value = "format HH:mm (17:00)",
             required = true)
     @JsonFormat(pattern = "HH:mm")
     private LocalTime endTime;
-    //private String endTime;
+
 
     @ApiParam(value = "Description of work", required = true)
     private String work;
 
-    @ApiParam(value = "Format of issue QTC-10235")
+    @ApiParam(value = "Format of issue like QTC-10235")
     private String issueName;
 }
