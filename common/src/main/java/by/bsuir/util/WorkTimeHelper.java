@@ -14,10 +14,9 @@ public class WorkTimeHelper {
 
     public boolean isItTheSameDay(@NotNull Timestamp timestamp1,
                                   @NotNull Timestamp timestamp2) {
-        return timestamp1.toLocalDateTime().getDayOfMonth() ==  timestamp2
+        return timestamp1.toLocalDateTime().getDayOfMonth() == timestamp2
                 .toLocalDateTime().getDayOfMonth();
     }
-
 
 
 }

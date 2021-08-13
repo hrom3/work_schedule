@@ -2,6 +2,7 @@ package by.bsuir.repository.obsolete.impl;
 
 import by.bsuir.domain.Room;
 import by.bsuir.repository.obsolete.IRoomsRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,8 +17,8 @@ import javax.persistence.criteria.Root;
 import java.util.List;
 
 /**
-  * @deprecated (Use Spring Data Repositories)
-  */
+ * @deprecated (Use Spring Data Repositories)
+ */
 
 
 @Repository

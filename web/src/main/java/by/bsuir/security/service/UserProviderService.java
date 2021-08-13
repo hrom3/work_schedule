@@ -1,10 +1,11 @@
 package by.bsuir.security.service;
 
-import by.bsuir.exception.UnconfirmedUserException;
 import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
+import by.bsuir.exception.UnconfirmedUserException;
 import by.bsuir.repository.springdata.IUserDataRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -31,7 +32,7 @@ public class UserProviderService implements UserDetailsService {
 
             if (searchResult.isPresent()) {
                 User user = searchResult.get();
-                if(!user.getIsConfirmed()) {
+                if (!user.getIsConfirmed()) {
                     throw new UnconfirmedUserException(String.format
                             ("E-mail %s of  user is not confirmed by user '%s'.",
                                     user.getEmail(), login));
@@ -45,7 +46,7 @@ public class UserProviderService implements UserDetailsService {
                                         .stream()
                                         .map(Role::getRoleName)
                                         .map(ESystemRoles::name)
-                                        .collect(Collectors.joining( ", ")))
+                                        .collect(Collectors.joining(", ")))
                 );
             } else {
                 throw new UsernameNotFoundException(String.format

@@ -1,18 +1,22 @@
 package by.bsuir.controller.rest;
 
-import by.bsuir.exception.UnconfirmedUserException;
 import by.bsuir.controller.request.EmailConfirmRequest;
 import by.bsuir.domain.ConfirmationData;
 import by.bsuir.domain.User;
+import by.bsuir.exception.UnconfirmedUserException;
 import by.bsuir.repository.springdata.IConfirmationDataRepository;
 import by.bsuir.repository.springdata.IUserDataRepository;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Optional;
 
@@ -38,8 +42,8 @@ public class EmailConfirmController {
             throw new UnconfirmedUserException("Confirmation request invalid");
         }
 
-            Optional<ConfirmationData> resultSet =
-                    confirmationDataRepository.findById(id);
+        Optional<ConfirmationData> resultSet =
+                confirmationDataRepository.findById(id);
 
         if (resultSet.isEmpty()) {
             throw new UnconfirmedUserException("Confirmation request invalid" + id);

@@ -1,6 +1,7 @@
 package by.bsuir.service.email.impl;
 
 import by.bsuir.service.email.IEmailService;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
@@ -12,7 +13,6 @@ import org.thymeleaf.context.Context;
 import org.thymeleaf.spring3.SpringTemplateEngine;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;

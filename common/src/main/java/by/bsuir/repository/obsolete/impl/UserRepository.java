@@ -4,6 +4,7 @@ import by.bsuir.domain.Credential;
 import by.bsuir.domain.User;
 import by.bsuir.repository.obsolete.ICredentialRepository;
 import by.bsuir.repository.obsolete.IUserRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -53,7 +54,7 @@ public class UserRepository implements IUserRepository {
 
     @Override
     public Optional<User> findById(Long id) {
-            return Optional.of(findOne(id));
+        return Optional.of(findOne(id));
     }
 
     @Override
@@ -109,6 +110,6 @@ public class UserRepository implements IUserRepository {
 
     public User findUserByLogin(String login) {
         Credential credential = credentialRepository.findByLogin(login);
-        return  credential.getUser();
+        return credential.getUser();
     }
 }

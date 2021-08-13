@@ -1,19 +1,19 @@
 package by.bsuir.repository;
 
-import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.domain.Department;
 import by.bsuir.domain.Rate;
 import by.bsuir.domain.Room;
+import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.repository.springdata.IDepartmentDataRepository;
 import by.bsuir.repository.springdata.IRateDataRepository;
 import by.bsuir.repository.springdata.IRoomDataRepository;
+
 import lombok.RequiredArgsConstructor;
 
 import java.util.Optional;
 
 @RequiredArgsConstructor
 public class RepositoryUtils {
-
 
 
     public Department findDepartmentById(

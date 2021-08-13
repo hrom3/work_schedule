@@ -12,7 +12,7 @@ public class AbstractEmailContext {
     private String from;
     private String to;
     private String subject;
-//    private String email;
+    //    private String email;
 //    private String attachment;
 //    private String fromDisplayName;
 //    private String emailLanguage;

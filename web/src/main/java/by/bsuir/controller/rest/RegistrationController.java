@@ -2,13 +2,21 @@ package by.bsuir.controller.rest;
 
 import by.bsuir.beans.EmailProperties;
 import by.bsuir.controller.request.UserCreateRequest;
-import by.bsuir.domain.*;
+import by.bsuir.domain.ConfirmationData;
+import by.bsuir.domain.Credential;
+import by.bsuir.domain.User;
 import by.bsuir.repository.RepositoryUtils;
-import by.bsuir.repository.springdata.*;
+import by.bsuir.repository.springdata.IConfirmationDataRepository;
+import by.bsuir.repository.springdata.ICredentialDataRepository;
+import by.bsuir.repository.springdata.IDepartmentDataRepository;
+import by.bsuir.repository.springdata.IRateDataRepository;
+import by.bsuir.repository.springdata.IRoomDataRepository;
+import by.bsuir.repository.springdata.IUserDataRepository;
 import by.bsuir.service.email.IEmailService;
 import by.bsuir.service.email.impl.AbstractEmailContext;
 import by.bsuir.util.ConfirmationDataGenerator;
 import by.bsuir.util.UserGenerator;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
@@ -20,11 +28,16 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 @Api(value = "Registration controller")
 @RestController
@@ -94,7 +107,7 @@ public class RegistrationController {
         credentialForGeneratedUser.setPassword(passwordEncoder.encode(
                 createRequest.getPassword()));
 
-       userDataRepository.save(generatedUser);
+        userDataRepository.save(generatedUser);
 
         userDataRepository.saveUserRole(generatedUser.getId(), 2);
 

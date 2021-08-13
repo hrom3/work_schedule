@@ -2,6 +2,7 @@ package by.bsuir.repository.obsolete.impl;
 
 import by.bsuir.domain.UserWorkedTime;
 import by.bsuir.repository.obsolete.IUserWorkedTimeRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

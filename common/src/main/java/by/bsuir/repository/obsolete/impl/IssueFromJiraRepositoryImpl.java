@@ -2,6 +2,7 @@ package by.bsuir.repository.obsolete.impl;
 
 import by.bsuir.domain.IssueFromJira;
 import by.bsuir.repository.obsolete.IIssueFromJiraRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

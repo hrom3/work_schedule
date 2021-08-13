@@ -1,8 +1,8 @@
 package by.bsuir.util;
 
-import by.bsuir.domain.*;
-import lombok.NoArgsConstructor;
+import by.bsuir.domain.User;
 
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,9 @@ import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 @Service
 @NoArgsConstructor

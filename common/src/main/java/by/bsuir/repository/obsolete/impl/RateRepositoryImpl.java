@@ -2,6 +2,7 @@ package by.bsuir.repository.obsolete.impl;
 
 import by.bsuir.domain.Rate;
 import by.bsuir.repository.obsolete.IRateRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
