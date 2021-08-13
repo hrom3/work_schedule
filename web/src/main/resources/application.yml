@@ -1,0 +1,56 @@
+spring:
+
+  flyway:
+    enabled: true
+    ignore-missing-migrations: true
+    locations: classpath:/migration
+    baseline-on-migrate: true
+    baseline-description: Flyway Scripts
+    url: ${spring.datasource.url}
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+
+  datasource:
+    hikari:
+      jdbc-url: "jdbc:postgresql://localhost:5432/work_time_report?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+      maximum-pool-size: 10
+      driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: postgres
+    url: "jdbc:postgresql://localhost:5432/work_time_report?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+    driver-class-name: org.postgresql.Driver
+
+    # mail server config to send emails
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: work.schedule.test
+    password: test13580
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
+# server port
+server:
+  port: 8081
+
+# security key
+security:
+  secretKey: Secret-Key
+
+# JWT token
+jwtconfig:
+  secret: Top_secret12!!#@#
+  expiration: 6_000_000
+
+# URL to confirm email
+email:
+  sender:
+    settings:
+      url-to-confirm-page: "http://localhost:8081/rest/confirm"
+      from-email: blablabla@mail.mmm
+      subject: "Verify your email"
+      template: creat_account_email

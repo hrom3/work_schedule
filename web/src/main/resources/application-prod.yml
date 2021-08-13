@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    include: default
+
+  datasource:
+    hikari:
+      jdbc-url: "jdbc:postgresql://localhost:5432/work_time_report?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+      maximum-pool-size: 5
+    username: postgres
+    password: postgres
+    url: "jdbc:postgresql://localhost:5432/work_time_report?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+
+# JWT token
+jwtconfig:
+  secret: Top_secret12!!#@#
+  expiration: 600_000_000
