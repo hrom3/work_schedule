@@ -1,10 +1,31 @@
 package by.bsuir.domain;
 
 import by.bsuir.domain.viewhelper.View;
-import com.fasterxml.jackson.annotation.*;
-import lombok.*;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonView;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -16,7 +37,7 @@ import java.util.Set;
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = {"roles", "userWorkedTimes"})
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({ "id", "surname", "name", "middleName", "credential",
+@JsonPropertyOrder({"id", "surname", "name", "middleName", "credential",
         "birthDay", "email", "department", "room", "roles", "rate",
         "created", "changed", "isDeleted", "isConfirmed"})
 public class User {
@@ -24,7 +45,7 @@ public class User {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator =  "users_id"
+            generator = "users_id"
     )
     @SequenceGenerator(
             name = "users_id",

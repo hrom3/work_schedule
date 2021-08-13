@@ -21,7 +21,7 @@ public interface IJDBCUserRepository extends ICrudOperations<Long, User> {
     void saveUserRoles(User user, List<Role> roles);
 
     User findByLoginAndPassword(String login, String password);
-    
+
     User findUserByLogin(String login);
 
 }

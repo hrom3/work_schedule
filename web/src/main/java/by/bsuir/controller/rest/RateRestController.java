@@ -1,14 +1,15 @@
 package by.bsuir.controller.rest;
 
-import by.bsuir.exception.NoSuchEntityException;
-import by.bsuir.exception.UnauthorizedException;
 import by.bsuir.controller.request.RateCreateRequest;
 import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.Rate;
 import by.bsuir.domain.viewhelper.View;
+import by.bsuir.exception.NoSuchEntityException;
+import by.bsuir.exception.UnauthorizedException;
 import by.bsuir.repository.springdata.IRateDataRepository;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.MyMessages;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -17,7 +18,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;

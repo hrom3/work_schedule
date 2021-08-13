@@ -3,8 +3,9 @@ package by.bsuir.repository.obsolete.impl;
 import by.bsuir.domain.Role;
 import by.bsuir.domain.User;
 import by.bsuir.exception.NoSuchEntityException;
-import by.bsuir.repository.obsolete.columns.IUserColumns;
 import by.bsuir.repository.obsolete.IJDBCUserRepository;
+import by.bsuir.repository.obsolete.columns.IUserColumns;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -38,7 +39,7 @@ public class JdbcTemplateUserRepository implements IJDBCUserRepository {
         user.setEmail(rs.getString(IUserColumns.EMAIL));
         user.setBirthDay((rs.getDate(IUserColumns.BIRTHDAY)).toLocalDate());
         //       user.setBirthDay((rs.getDate(IUserColumns.BIRTHDAY)));
-       // user.setDepartmentId(rs.getInt(IUserColumns.DEPARTMENT_ID));
+        // user.setDepartmentId(rs.getInt(IUserColumns.DEPARTMENT_ID));
         user.setCreated(rs.getTimestamp(IUserColumns.CREATED));
         user.setChanged(rs.getTimestamp(IUserColumns.CHANGED));
         user.setIsDeleted(rs.getBoolean(IUserColumns.IS_DELETED));
@@ -206,8 +207,8 @@ public class JdbcTemplateUserRepository implements IJDBCUserRepository {
 
             batchParams.add(params);
         }
-            namedParameterJdbcTemplate.batchUpdate(createQuery,
-                    batchParams.toArray(new MapSqlParameterSource[0]));
+        namedParameterJdbcTemplate.batchUpdate(createQuery,
+                batchParams.toArray(new MapSqlParameterSource[0]));
 
     }
 

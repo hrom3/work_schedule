@@ -1,4 +1,3 @@
-
 public class Users {
 
     private Long id;
@@ -12,7 +11,7 @@ public class Users {
 
 public class FindUserFriends {
 
-    public  List<Users> findFriends(Users user, int level) {
+    public List<Users> findFriends(Users user, int level) {
 
         ArrayList<Users> friendsUser = new ArrayList<>();
 
@@ -23,7 +22,7 @@ public class FindUserFriends {
     }
 
     public void friendsOfUser(Users user, int level, Set<Users> addedUser,
-                                     List<Users> friendsUser) {
+                              List<Users> friendsUser) {
 
         addedUser.add(user);
 
@@ -44,4 +43,4 @@ public class FindUserFriends {
             friendsOfUser(user_tmp, level, addedUser, friendsUser);
         }
     }
- }
+}

@@ -25,5 +25,4 @@ public class EmailProperties {
     private String template;
 
 
-
 }

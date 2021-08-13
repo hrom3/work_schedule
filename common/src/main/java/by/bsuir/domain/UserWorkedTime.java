@@ -1,11 +1,23 @@
 package by.bsuir.domain;
 
 import by.bsuir.domain.viewhelper.View;
-import com.fasterxml.jackson.annotation.*;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.sql.Timestamp;
 
 @Entity
@@ -19,7 +31,7 @@ public class UserWorkedTime {
     @JsonView(View.PublicView.class)
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator =  "user_worked_time_id"
+            generator = "user_worked_time_id"
     )
     @SequenceGenerator(
             name = "user_worked_time_id",

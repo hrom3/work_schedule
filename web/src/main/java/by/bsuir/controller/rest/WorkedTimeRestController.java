@@ -1,21 +1,21 @@
 package by.bsuir.controller.rest;
 
-import by.bsuir.exception.DateAndTimeException;
-import by.bsuir.exception.NoSuchEntityException;
-import by.bsuir.exception.UnauthorizedException;
 import by.bsuir.controller.request.UserWorkedTimeRequest;
 import by.bsuir.controller.request.UserWorkedTimeResponse;
 import by.bsuir.domain.ESystemRoles;
-
 import by.bsuir.domain.User;
 import by.bsuir.domain.UserWorkedTime;
 import by.bsuir.domain.viewhelper.View;
+import by.bsuir.exception.DateAndTimeException;
+import by.bsuir.exception.NoSuchEntityException;
+import by.bsuir.exception.UnauthorizedException;
 import by.bsuir.repository.springdata.IUserDataRepository;
 import by.bsuir.repository.springdata.IUserWorkedTimeDataRepository;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.ConverterDateTimeStamp;
 import by.bsuir.util.MyMessages;
 import by.bsuir.util.WorkTimeHelper;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
@@ -23,7 +23,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
@@ -328,9 +333,9 @@ public class WorkedTimeRestController {
 
         Long workedTimeInDay = 0L;
 
-        for(UserWorkedTime workedTime: searchResultWorkToChange) {
+        for (UserWorkedTime workedTime : searchResultWorkToChange) {
 
-            if(workedTime.getEndTime().before(workedTime.getStartTime())) {
+            if (workedTime.getEndTime().before(workedTime.getStartTime())) {
                 throw new DateAndTimeException("Start time must be before end time");
             }
             workedTimeInDay += workedTime.getEndTime().getTime()

@@ -1,14 +1,22 @@
 package by.bsuir.domain;
 
 import by.bsuir.domain.viewhelper.View;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.SequenceGenerator;
+import javax.persistence.Table;
 import java.util.Collections;
 import java.util.Set;
 
@@ -24,7 +32,7 @@ public class Room {
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator =  "room_id"
+            generator = "room_id"
     )
     @SequenceGenerator(
             name = "room_id",

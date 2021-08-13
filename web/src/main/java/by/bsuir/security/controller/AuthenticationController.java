@@ -1,12 +1,13 @@
 package by.bsuir.security.controller;
 
-import by.bsuir.exception.UnconfirmedUserException;
 import by.bsuir.domain.User;
 import by.bsuir.exception.NoSuchEntityException;
+import by.bsuir.exception.UnconfirmedUserException;
 import by.bsuir.repository.springdata.IUserDataRepository;
 import by.bsuir.security.requests.AuthRequest;
 import by.bsuir.security.requests.AuthResponse;
 import by.bsuir.security.utils.TokenUtils;
+
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
@@ -63,7 +64,7 @@ public class AuthenticationController {
             }
         } else {
             throw new NoSuchEntityException(
-                    String.format ("User '%s' is not found.", request.getLogin()));
+                    String.format("User '%s' is not found.", request.getLogin()));
         }
         /*Check login and password*/
         Authentication authenticate = authenticationManager.authenticate(

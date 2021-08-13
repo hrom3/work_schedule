@@ -2,6 +2,7 @@ package by.bsuir.security.configuration;
 
 import by.bsuir.security.filter.AuthenticationTokenFilter;
 import by.bsuir.security.utils.TokenUtils;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +17,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -42,7 +42,7 @@ public class WebSecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureAuthentication(AuthenticationManagerBuilder authenticationManagerBuilder,
                                         PasswordEncoder passwordEncoder)
-        throws Exception {
+            throws Exception {
         authenticationManagerBuilder
                 .userDetailsService(userProvider)
                 .passwordEncoder(passwordEncoder);

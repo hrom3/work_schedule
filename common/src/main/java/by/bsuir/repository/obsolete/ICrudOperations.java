@@ -5,7 +5,8 @@ import java.util.List;
 /**
  * Generic interface for CRUD operations
  * CRUD = Create Read Update Delete
- * @param <K>  - primary key of object
+ *
+ * @param <K> - primary key of object
  * @param <T> - object type
  */
 

@@ -1,15 +1,25 @@
 package by.bsuir.controller.rest;
 
-import by.bsuir.exception.UnauthorizedException;
 import by.bsuir.controller.request.UserUpdateRequest;
-import by.bsuir.domain.*;
+import by.bsuir.domain.Department;
+import by.bsuir.domain.ESystemRoles;
+import by.bsuir.domain.Rate;
+import by.bsuir.domain.Role;
+import by.bsuir.domain.Room;
+import by.bsuir.domain.User;
 import by.bsuir.domain.viewhelper.View;
 import by.bsuir.exception.NoSuchEntityException;
+import by.bsuir.exception.UnauthorizedException;
 import by.bsuir.repository.RepositoryUtils;
-import by.bsuir.repository.springdata.*;
+import by.bsuir.repository.springdata.IDepartmentDataRepository;
+import by.bsuir.repository.springdata.IRateDataRepository;
+import by.bsuir.repository.springdata.IRoleDataRepository;
+import by.bsuir.repository.springdata.IRoomDataRepository;
+import by.bsuir.repository.springdata.IUserDataRepository;
 import by.bsuir.security.utils.PrincipalUtil;
 import by.bsuir.util.MyMessages;
 import by.bsuir.util.UserGenerator;
+
 import com.fasterxml.jackson.annotation.JsonView;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -19,13 +29,24 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.RandomUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 //TODO: refactor
 @Api(value = "Employees controller")

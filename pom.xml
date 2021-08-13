@@ -34,10 +34,13 @@
         <jsp_api>2.3.3</jsp_api>
         <swagger.version>2.9.2</swagger.version>
         <jwt.version>0.9.1</jwt.version>
+        <thymeleaf.version>3.0.10.RELEASE</thymeleaf.version>
+        <jetbrains.version>20.1.0</jetbrains.version>
     </properties>
 
     <dependencies>
 
+        <!--                 Spring-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -100,17 +103,6 @@
             <artifactId>flyway-core</artifactId>
         </dependency>
 
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-thymeleaf</artifactId>-->
-<!--        </dependency>-->
-
-
-        <dependency>
-            <groupId>org.thymeleaf</groupId>
-            <artifactId>thymeleaf-spring3</artifactId>
-            <version>3.0.10.RELEASE</version>
-        </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
@@ -120,7 +112,6 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-core</artifactId>
-<!--            <version>${hibernate.version}</version>-->
         </dependency>
 
         <dependency>
@@ -131,7 +122,12 @@
         <dependency>
             <groupId>net.sf.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-<!--            <version>2.10.6</version>-->
+        </dependency>
+
+        <dependency>
+            <groupId>org.thymeleaf</groupId>
+            <artifactId>thymeleaf-spring3</artifactId>
+            <version>${thymeleaf.version}</version>
         </dependency>
 
         <dependency>
@@ -161,13 +157,13 @@
             <artifactId>gson</artifactId>
         </dependency>
 
-<!--                 API, java.xml.bind module-->
+        <!--                 API, java.xml.bind module-->
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
 
-<!--                 Runtime, com.sun.xml.bind module-->
+        <!--                 Runtime, com.sun.xml.bind module-->
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
@@ -218,22 +214,8 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>20.1.0</version>
+            <version>${jetbrains.version}</version>
         </dependency>
-
-        <!--
-               <dependency>
-                   <groupId>com.zaxxer</groupId>
-                   <artifactId>HikariCP</artifactId>
-                   <version>3.4.5</version>
-               </dependency>
-        -->
-
-<!--        <dependency>-->
-<!--            <groupId>javax.inject</groupId>-->
-<!--            <artifactId>javax.inject</artifactId>-->
-<!--             <version>1</version>-->
-<!--        </dependency>-->
 
     </dependencies>
 

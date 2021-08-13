@@ -2,6 +2,7 @@ package by.bsuir.repository.obsolete.impl;
 
 import by.bsuir.domain.Role;
 import by.bsuir.repository.obsolete.IRoleRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

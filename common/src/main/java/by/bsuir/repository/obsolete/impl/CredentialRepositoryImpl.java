@@ -3,6 +3,7 @@ package by.bsuir.repository.obsolete.impl;
 import by.bsuir.domain.Credential;
 import by.bsuir.domain.User;
 import by.bsuir.repository.obsolete.ICredentialRepository;
+
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
