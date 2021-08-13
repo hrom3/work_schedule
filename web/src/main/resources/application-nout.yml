@@ -1,0 +1,21 @@
+spring:
+  profiles:
+    include: default
+
+  datasource:
+    hikari:
+      jdbc-url: "jdbc:postgresql://192.168.1.26:5432/work_time_report?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+    username: postgres
+    password: postgres
+    url: "jdbc:postgresql://192.168.1.26:5432/work_time_report?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"
+
+# server port
+server:
+  port: 8080
+
+# JWT token
+jwtconfig:
+  secret: Top_secret12!!#@#
+  expiration: 6_000_000
+
+
