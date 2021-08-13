@@ -99,22 +99,22 @@ create table type_of_calendar_days
 
 alter table type_of_calendar_days owner to postgres;
 
-create table "production calendar"
+create table production_calendar
 (
     id bigserial not null
-        constraint "production calendar_pk"
+        constraint production_calendar_pk
             primary key,
     date date not null,
     id_type_of_prod_calendar_day integer not null
-        constraint "production calendar_type_of_calendar_days_id_fk"
+        constraint production_calendar_type_of_calendar_days_id_fk
             references type_of_calendar_days,
     description varchar(50)
 );
 
-alter table "production calendar" owner to postgres;
+alter table production_calendar owner to postgres;
 
-create unique index "production calendar_id_uindex"
-    on "production calendar" (id);
+create unique index production_calendar_id_uindex
+    on production_calendar (id);
 
 create unique index type_of_calendar_days_id_uindex
     on type_of_calendar_days (id);

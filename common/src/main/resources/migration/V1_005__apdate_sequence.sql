@@ -1,0 +1,15 @@
+ALTER SEQUENCE role_id_seq RESTART WITH 4;
+
+ALTER SEQUENCE department_id_seq RESTART WITH 4;
+
+ALTER SEQUENCE rate_id_seq RESTART WITH 7;
+
+ALTER SEQUENCE rooms_id_seq RESTART WITH 8;
+
+ALTER SEQUENCE users_id_seq RESTART WITH 7;
+
+ALTER SEQUENCE user_worked_time_id_seq RESTART WITH 10;
+
+ALTER SEQUENCE users_role_id_seq RESTART WITH 9;
+
+ALTER SEQUENCE credential_id_seq RESTART WITH 5;
