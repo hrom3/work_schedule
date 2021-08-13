@@ -54,7 +54,7 @@ public class PersistenceBeansConfiguration {
     private Properties getAdditionalProperties() {
         Properties properties = new Properties();
 
-        // See: application.properties
+
         properties.put("hibernate.show_sql", "true");
         properties.put("current_session_context_class", "org.springframework.orm.hibernate5.SpringSessionContext");
         return properties;
