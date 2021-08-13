@@ -4,6 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
          https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <modules>
+        <module>common</module>
+        <module>web</module>
+    </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -15,7 +19,7 @@
     <artifactId>work_schedule</artifactId>
     <version>0.1.20210731</version>
 
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
 
     <name>work_schedule</name>
     <description>First project on Spring</description>
