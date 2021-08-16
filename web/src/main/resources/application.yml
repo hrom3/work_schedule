@@ -52,5 +52,5 @@ email:
     settings:
       url-to-confirm-page: "http://localhost:8081/rest/confirm"
       from-email: blablabla@mail.mmm
-      subject: "Verify your email"
+      subject: "Do not replay. Verify your email"
       template: creat_account_email

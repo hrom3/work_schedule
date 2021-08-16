@@ -9,13 +9,13 @@ import java.util.Random;
 
 public class RandomFromFile {
 
-    static private String[] names;
+    private static String[] names;
 
-    static private String[] surNames;
+    private static String[] surNames;
 
-    static private String[] nicks;
+    private static String[] nicks;
 
-    final static private Random rnd = new Random();
+    private static final Random rnd = new Random();
 
     public RandomFromFile() {
 

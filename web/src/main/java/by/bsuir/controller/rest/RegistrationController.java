@@ -24,12 +24,14 @@ import io.swagger.annotations.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -47,17 +49,17 @@ public class RegistrationController {
 
     private static final Logger log = LoggerFactory.getLogger(RegistrationController.class);
 
-    private final PasswordEncoder passwordEncoder;
+   // private final PasswordEncoder passwordEncoder;
 
     private final ICredentialDataRepository credentialRepository;
 
-    private final IDepartmentDataRepository departmentRepository;
+    //private final IDepartmentDataRepository departmentRepository;
 
-    private final IRateDataRepository rateRepository;
+    //private final IRateDataRepository rateRepository;
 
-    private final IRoomDataRepository roomRepository;
+    //private final IRoomDataRepository roomRepository;
 
-    private final RepositoryUtils repositoryUtils;
+    //private final RepositoryUtils repositoryUtils;
 
     private final IConfirmationDataRepository confirmationDataRepository;
 
@@ -67,9 +69,11 @@ public class RegistrationController {
 
     private final ConfirmationDataGenerator confirmationDataGenerator;
 
-    private final UserGenerator userGenerator;
+    //private final UserGenerator userGenerator;
 
     private final EmailProperties emailProperties;
+
+    public final ConversionService conversionService;
 
     @PostMapping
     @ApiOperation(value = "Create user in system")
@@ -81,41 +85,39 @@ public class RegistrationController {
     })
     public ResponseEntity<String> createUser(@ModelAttribute UserCreateRequest createRequest) {
         //converter
-        User generatedUser = userGenerator.generateLiteUser();
+        //User generatedUser = userGenerator.generateLiteUser();
 
-       /* Role foundRole = roleRepository.findById(createRequest.getRoleId()).get();
-        Set<Role> roles = new HashSet<>();
-        roles.add(foundRole);*/
+        //generatedUser.setName(createRequest.getName());
+       // generatedUser.setSurname(createRequest.getSurname());
+       // generatedUser.setMiddleName(createRequest.getMiddleName());
+       // generatedUser.setEmail(createRequest.getEmail());
+       // generatedUser.setBirthDay(LocalDate.parse(createRequest.getBirthDay()));
+       // generatedUser.setDepartment(repositoryUtils.findDepartmentById(
+        //        departmentRepository, createRequest.getDepartmentId()));
+       // generatedUser.setRate(repositoryUtils.findRateById(
+       //         rateRepository, createRequest.getRateId()));
+       // generatedUser.setRoom(repositoryUtils.findRoomById(
+       //         roomRepository, createRequest.getRoomId()));
+     //   generatedUser.setIsDeleted(false);
+       // generatedUser.setIsConfirmed(false);
 
-        generatedUser.setName(createRequest.getName());
-        generatedUser.setSurname(createRequest.getSurname());
-        generatedUser.setMiddleName(createRequest.getMiddleName());
-        generatedUser.setEmail(createRequest.getEmail());
-        generatedUser.setBirthDay(LocalDate.parse(createRequest.getBirthDay()));
-        generatedUser.setDepartment(repositoryUtils.findDepartmentById(
-                departmentRepository, createRequest.getDepartmentId()));
-        generatedUser.setRate(repositoryUtils.findRateById(
-                rateRepository, createRequest.getRateId()));
-        generatedUser.setRoom(repositoryUtils.findRoomById(
-                roomRepository, createRequest.getRoomId()));
-        generatedUser.setIsDeleted(false);
-        generatedUser.setIsConfirmed(false);
+       // Credential credentialForGeneratedUser = new Credential();
 
-        Credential credentialForGeneratedUser = new Credential();
+      //  credentialForGeneratedUser.setLogin(createRequest.getLogin());
+      //  credentialForGeneratedUser.setPassword(passwordEncoder.encode(
+      //          createRequest.getPassword()));
 
-        credentialForGeneratedUser.setLogin(createRequest.getLogin());
-        credentialForGeneratedUser.setPassword(passwordEncoder.encode(
-                createRequest.getPassword()));
+        User generatedUser = conversionService.convert(createRequest, User.class);
 
         userDataRepository.save(generatedUser);
 
         userDataRepository.saveUserRole(generatedUser.getId(), 2);
 
-        credentialForGeneratedUser.setUser(generatedUser);
+        //credentialForGeneratedUser.setUser(generatedUser);
 
-        credentialRepository.save(credentialForGeneratedUser);
+        //credentialRepository.save(credentialForGeneratedUser);
 
-        generatedUser.setCredential(credentialForGeneratedUser);
+        //generatedUser.setCredential(credentialForGeneratedUser);
 
         ConfirmationData confirmationData = confirmationDataGenerator
                 .generate(generatedUser);

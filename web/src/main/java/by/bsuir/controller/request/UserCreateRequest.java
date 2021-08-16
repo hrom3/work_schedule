@@ -3,9 +3,11 @@ package by.bsuir.controller.request;
 import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
+//@AllArgsConstructor
+//@NoArgsConstructor
 public class UserCreateRequest {
 
     @ApiParam(required = true)
