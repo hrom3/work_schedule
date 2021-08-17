@@ -5,7 +5,7 @@ import by.bsuir.controller.request.UserWorkedTimeResponse;
 import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.User;
 import by.bsuir.domain.UserWorkedTime;
-import by.bsuir.domain.viewhelper.View;
+import by.bsuir.service.viewhelper.View;
 import by.bsuir.exception.DateAndTimeException;
 import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.exception.UnauthorizedException;

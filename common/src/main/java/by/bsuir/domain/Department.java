@@ -1,6 +1,6 @@
 package by.bsuir.domain;
 
-import by.bsuir.domain.viewhelper.View;
+import by.bsuir.service.viewhelper.View;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;

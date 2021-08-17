@@ -1,4 +1,4 @@
-package by.bsuir.domain.viewhelper;
+package by.bsuir.service.viewhelper;
 
 public class View {
     public static class PublicView {

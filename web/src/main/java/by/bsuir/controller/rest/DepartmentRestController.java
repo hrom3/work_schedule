@@ -3,7 +3,7 @@ package by.bsuir.controller.rest;
 import by.bsuir.controller.request.DepartmentCreateRequest;
 import by.bsuir.domain.Department;
 import by.bsuir.domain.ESystemRoles;
-import by.bsuir.domain.viewhelper.View;
+import by.bsuir.service.viewhelper.View;
 import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.exception.PresentEntityException;
 import by.bsuir.exception.UnauthorizedException;

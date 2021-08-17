@@ -3,7 +3,7 @@ package by.bsuir.controller.rest;
 import by.bsuir.controller.request.RateCreateRequest;
 import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.Rate;
-import by.bsuir.domain.viewhelper.View;
+import by.bsuir.service.viewhelper.View;
 import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.exception.UnauthorizedException;
 import by.bsuir.repository.springdata.IRateDataRepository;
