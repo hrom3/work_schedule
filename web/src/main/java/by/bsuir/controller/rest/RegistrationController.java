@@ -71,6 +71,7 @@ public class RegistrationController {
 
     private final EmailProperties emailProperties;
 
+
     @PostMapping
     @ApiOperation(value = "Create user in system")
     @ApiResponses(value = {
