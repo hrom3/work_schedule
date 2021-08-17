@@ -54,3 +54,8 @@ email:
       from-email: blablabla@mail.mmm
       subject: "Verify your email"
       template: creat_account_email
+
+# lifetime of confirm UUID
+confirmramtion:
+  email:
+    lifetime-confirmation-uuid-in-millis: 86_000_000
