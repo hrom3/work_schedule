@@ -5,7 +5,7 @@ import by.bsuir.controller.request.UserWorkedTimeResponse;
 import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.User;
 import by.bsuir.domain.UserWorkedTime;
-import by.bsuir.domain.viewhelper.View;
+import by.bsuir.service.viewhelper.View;
 import by.bsuir.exception.DateAndTimeException;
 import by.bsuir.exception.NoSuchEntityException;
 import by.bsuir.exception.UnauthorizedException;
@@ -53,6 +53,9 @@ public class WorkedTimeRestController {
     private final ConverterDateTimeStamp converterDateTimeStamp;
 
     private final WorkTimeHelper workTimeHelper;
+
+    private static final String START_MUST_BE_BEFORE_END =
+            "Start time must be before end time";
 
 
     @GetMapping
@@ -120,7 +123,7 @@ public class WorkedTimeRestController {
             throw new DateAndTimeException("Start and Finish Date must be the same");
         }
         if (request.getStartTime().isAfter(request.getEndTime())) {
-            throw new DateAndTimeException("Start time must be before end time");
+            throw new DateAndTimeException(START_MUST_BE_BEFORE_END);
         }
         Timestamp startTime = converterDateTimeStamp.converterDateAndTimeToTimeStamp(
                 dateStart, request.getStartTime());
@@ -140,7 +143,7 @@ public class WorkedTimeRestController {
                     paramType = "header")
     })
     @JsonView(View.ExtendedPublicView.class)
-    @PostMapping("/create")
+    @PostMapping()
     public ResponseEntity<UserWorkedTime> createUserWorkedTime(
             UserWorkedTimeRequest request,
             @ApiIgnore Principal principal) {
@@ -160,7 +163,7 @@ public class WorkedTimeRestController {
         LocalDate dateNew = LocalDate.parse(request.getDate());
 
         if (request.getStartTime().isAfter(request.getEndTime())) {
-            throw new DateAndTimeException("Start time must be before end time");
+            throw new DateAndTimeException(START_MUST_BE_BEFORE_END);
         }
 
         Timestamp startTime = converterDateTimeStamp.converterDateAndTimeToTimeStamp(
@@ -215,7 +218,7 @@ public class WorkedTimeRestController {
         String workDescription = request.getWork();
 
         if (request.getStartTime().isAfter(request.getEndTime())) {
-            throw new DateAndTimeException("Start time must be before end time");
+            throw new DateAndTimeException(START_MUST_BE_BEFORE_END);
         }
 
         Timestamp startTime = converterDateTimeStamp.converterDateAndTimeToTimeStamp(
@@ -260,7 +263,7 @@ public class WorkedTimeRestController {
     @ApiOperation(value = "Find all worked time for user by token and in a day")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "date_to_search", dataType = "string",
-                    paramType = "path", value = "Date to search format 2021-12-23",
+                    paramType = "path", value = "Date to search format YYYY-MM-DD",
                     required = true, defaultValue = "2021-08-01"),
             @ApiImplicitParam(name = "X-Auth-Token",
                     value = "token", required = true,
@@ -269,9 +272,9 @@ public class WorkedTimeRestController {
     })
     @JsonView(View.PublicView.class)
     public ResponseEntity<List<UserWorkedTime>> searchWorkInDate(
-            @PathVariable String date_to_search,
+            @PathVariable(name = "date_to_search") String dateToSearch,
             @ApiIgnore Principal principal) {
-
+        // TODO: Converter
         String login = principalUtil.getUsername(principal);
         Optional<User> searchResult =
                 userDataRepository.findByCredentialLogin(login);
@@ -280,13 +283,13 @@ public class WorkedTimeRestController {
         }
         User foundUser = searchResult.get();
 
-        LocalDate startDate = LocalDate.parse(date_to_search);
+        LocalDate startDate = LocalDate.parse(dateToSearch);
 
         Timestamp startTimeStamp = converterDateTimeStamp.converterDateToTimeStamp(
-                LocalDate.parse(date_to_search));
+                LocalDate.parse(dateToSearch));
 
         Timestamp endTimeStamp = converterDateTimeStamp.converterDateToTimeStamp(
-                startDate.plusDays(1l));
+                startDate.plusDays(1L));
 
         List<UserWorkedTime> searchResultWorkToChange
                 = userWorkedTimeDataRepository.findByUserIdAndStartTimeBetween(
@@ -295,11 +298,11 @@ public class WorkedTimeRestController {
     }
 
 
-    @GetMapping("/search_work_in_day_with_wirtime/{date_to_search}")
-    @ApiOperation(value = "Find all worked time and time of work for user by token and in a day")
+    @GetMapping("/search_work_in_month_with_worked_time/{date_to_search}")
+    @ApiOperation(value = "Find all worked time and time of work for user by token and in a month")
     @ApiImplicitParams({
             @ApiImplicitParam(name = "date_to_search", dataType = "string",
-                    paramType = "path", value = "Date to search format 2021-12-23",
+                    paramType = "path", value = "Date to search format YYYY-MM-DD",
                     required = true, defaultValue = "2021-08-01"),
             @ApiImplicitParam(name = "X-Auth-Token",
                     value = "token", required = true,
@@ -308,9 +311,9 @@ public class WorkedTimeRestController {
     })
     @JsonView(View.PublicView.class)
     public ResponseEntity<UserWorkedTimeResponse> searchWorkInDateWithTime(
-            @PathVariable String date_to_search,
+            @PathVariable(name = "date_to_search") String dateToSearch,
             @ApiIgnore Principal principal) {
-
+        // TODO: Converter
         String login = principalUtil.getUsername(principal);
         Optional<User> searchResult =
                 userDataRepository.findByCredentialLogin(login);
@@ -319,47 +322,108 @@ public class WorkedTimeRestController {
         }
         User foundUser = searchResult.get();
 
-        LocalDate startDate = LocalDate.parse(date_to_search);
+        LocalDate initial = LocalDate.parse(dateToSearch);
+        LocalDate startDate = initial.withDayOfMonth(1);
+        LocalDate endDate = initial.withDayOfMonth(initial.lengthOfMonth());
+
 
         Timestamp startTimeStamp = converterDateTimeStamp.converterDateToTimeStamp(
-                LocalDate.parse(date_to_search));
+                startDate);
 
         Timestamp endTimeStamp = converterDateTimeStamp.converterDateToTimeStamp(
-                startDate.plusDays(1l));
+                endDate);
 
-        List<UserWorkedTime> searchResultWorkToChange
+        List<UserWorkedTime> searchResultWork
                 = userWorkedTimeDataRepository.findByUserIdAndStartTimeBetween(
                 foundUser.getId(), startTimeStamp, endTimeStamp);
 
-        Long workedTimeInDay = 0L;
+        long workedTimeInMonth = 0L;
 
-        for (UserWorkedTime workedTime : searchResultWorkToChange) {
+        for (UserWorkedTime workedTime : searchResultWork) {
 
             if (workedTime.getEndTime().before(workedTime.getStartTime())) {
-                throw new DateAndTimeException("Start time must be before end time");
+                throw new DateAndTimeException(START_MUST_BE_BEFORE_END);
             }
-            workedTimeInDay += workedTime.getEndTime().getTime()
+            workedTimeInMonth += workedTime.getEndTime().getTime()
                     - workedTime.getStartTime().getTime();
-
         }
 
-        long hours = TimeUnit.MILLISECONDS.toHours(workedTimeInDay);
-        workedTimeInDay -= TimeUnit.HOURS.toMillis(hours);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(workedTimeInDay);
-        workedTimeInDay -= TimeUnit.MINUTES.toMillis(minutes);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(workedTimeInDay);
+        long needToWorkInMonth = workTimeHelper.needToWorkInMonthInMilliseconds
+                (initial, foundUser.getRate().getWorkHour());
 
-        StringBuilder sb = new StringBuilder();
-        sb.append(hours);
-        sb.append(" : ");
-        sb.append(minutes);
-        sb.append(" : ");
-        sb.append(seconds);
+        long  overtimeMillis = workedTimeInMonth - needToWorkInMonth;
+
+        String workedTime = workTimeHelper.workedTimeFromMillisecToStr(workedTimeInMonth);
+        String needToWork = workTimeHelper.workedTimeFromMillisecToStr(needToWorkInMonth);
+        String overtime = workTimeHelper.workedTimeFromMillisecToStr(overtimeMillis);
 
         UserWorkedTimeResponse urt = new UserWorkedTimeResponse(
-                searchResultWorkToChange, sb.toString());
+                searchResultWork,  workedTime, needToWork, overtime);
 
         return ResponseEntity.ok(urt);
     }
+
+
+    @GetMapping("/search_work_in_day_with_worked_time/{date_to_search}")
+    @ApiOperation(value = "Find all worked time and time of work for user by token and in a day")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "date_to_search", dataType = "string",
+                    paramType = "path", value = "Date to search format YYYY-MM-DD",
+                    required = true, defaultValue = "2021-08-01"),
+            @ApiImplicitParam(name = "X-Auth-Token",
+                    value = "token", required = true,
+                    dataType = "string",
+                    paramType = "header")
+    })
+    @JsonView(View.PublicView.class)
+    public ResponseEntity<UserWorkedTimeResponse> searchWorkedInMonthWithTime(
+            @PathVariable(name = "date_to_search") String dateToSearch,
+            @ApiIgnore Principal principal) {
+
+        // TODO: Converter
+        String login = principalUtil.getUsername(principal);
+        Optional<User> searchResult =
+                userDataRepository.findByCredentialLogin(login);
+        if (searchResult.isEmpty()) {
+            throw new NoSuchEntityException(MyMessages.NO_SUCH_USER + login);
+        }
+        User foundUser = searchResult.get();
+
+        LocalDate startDate = LocalDate.parse(dateToSearch);
+
+        Timestamp startTimeStamp = converterDateTimeStamp.converterDateToTimeStamp(
+                LocalDate.parse(dateToSearch));
+
+        Timestamp endTimeStamp = converterDateTimeStamp.converterDateToTimeStamp(
+                startDate.plusDays(1L));
+
+        List<UserWorkedTime> searchResultWork
+                = userWorkedTimeDataRepository.findByUserIdAndStartTimeBetween(
+                foundUser.getId(), startTimeStamp, endTimeStamp);
+
+        long workedTimeInDay = 0L;
+
+        for (UserWorkedTime workedTime : searchResultWork) {
+
+            if (workedTime.getEndTime().before(workedTime.getStartTime())) {
+                throw new DateAndTimeException(START_MUST_BE_BEFORE_END);
+            }
+            workedTimeInDay += workedTime.getEndTime().getTime()
+                    - workedTime.getStartTime().getTime();
+        }
+        long needToWorkInDay = TimeUnit.HOURS.toMillis(foundUser.getRate().getWorkHour());
+
+        long  overtimeMillis = workedTimeInDay - needToWorkInDay;
+
+        String workedTime = workTimeHelper.workedTimeFromMillisecToStr(workedTimeInDay);
+        String needToWork = workTimeHelper.workedTimeFromMillisecToStr(needToWorkInDay);
+        String overtime = workTimeHelper.workedTimeFromMillisecToStr(overtimeMillis);
+
+        UserWorkedTimeResponse urt = new UserWorkedTimeResponse(
+                searchResultWork,  workedTime, needToWork, overtime);
+
+        return ResponseEntity.ok(urt);
+    }
+
 
 }

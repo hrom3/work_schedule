@@ -1,7 +1,7 @@
 package by.bsuir.controller.request;
 
 import by.bsuir.domain.UserWorkedTime;
-import by.bsuir.domain.viewhelper.View;
+import by.bsuir.service.viewhelper.View;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.AllArgsConstructor;
@@ -17,5 +17,11 @@ public class UserWorkedTimeResponse {
     List<UserWorkedTime> userWorkTimes;
 
     @JsonView(View.PublicView.class)
-    String time;
+    String workedTime;
+
+    @JsonView(View.PublicView.class)
+    String needToWork;
+
+    @JsonView(View.PublicView.class)
+    String overtime;
 }
