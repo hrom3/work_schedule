@@ -22,7 +22,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import springfox.documentation.annotations.ApiIgnore;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @RestController
@@ -48,7 +50,7 @@ public class AuthenticationController {
     })
     @PostMapping
     public ResponseEntity<AuthResponse> loginUser(@RequestBody AuthRequest request
-            /*, @ApiIgnore Principal principal*/) {
+            , @ApiIgnore Principal principal) {
 
         //TODO: take out in a separate method
         /*Check is e-mail confirmed*/

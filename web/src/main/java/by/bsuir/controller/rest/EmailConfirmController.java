@@ -26,8 +26,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class EmailConfirmController {
 
-    private static final Logger log = LoggerFactory.getLogger(EmailConfirmController.class);
-
     private final IUserDataRepository userRepository;
 
     private final IConfirmationDataRepository confirmationDataRepository;

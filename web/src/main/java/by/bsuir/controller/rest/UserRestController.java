@@ -251,7 +251,6 @@ public class UserRestController {
 
         Role foundRole = roleRepository.findById(createRequest.getRoleId()).get();
         Set<Role> userRoles = user.getRoles();
-        //Set<Role> roles = Set.copyOf(roleRepository.findAllById(createRequest.getRoleIds()));
 
         user.setName(createRequest.getName());
         user.setSurname(createRequest.getSurname());
@@ -262,7 +261,6 @@ public class UserRestController {
         user.setChanged(new Timestamp(System.currentTimeMillis()));
         user.setRate(rate);
         user.setRoom(room);
-        //user.setRoles(roles);
 
         userDataRepository.save(user);
 

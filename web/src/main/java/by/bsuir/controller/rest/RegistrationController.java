@@ -84,10 +84,6 @@ public class RegistrationController {
         //converter
         User generatedUser = userGenerator.generateLiteUser();
 
-       /* Role foundRole = roleRepository.findById(createRequest.getRoleId()).get();
-        Set<Role> roles = new HashSet<>();
-        roles.add(foundRole);*/
-
         generatedUser.setName(createRequest.getName());
         generatedUser.setSurname(createRequest.getSurname());
         generatedUser.setMiddleName(createRequest.getMiddleName());
