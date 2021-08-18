@@ -2,6 +2,7 @@ package by.bsuir.controller.rest;
 
 import by.bsuir.controller.request.UserWorkedTimeRequest;
 import by.bsuir.controller.request.UserWorkedTimeResponse;
+import by.bsuir.controller.request.UserWorkedTimeSearchRequest;
 import by.bsuir.domain.ESystemRoles;
 import by.bsuir.domain.User;
 import by.bsuir.domain.UserWorkedTime;
@@ -108,7 +109,7 @@ public class WorkedTimeRestController {
     @JsonView(View.InternalView.class)
     public ResponseEntity<List<UserWorkedTime>> findWorkedTimeForUserBetweenTime
             (@ApiIgnore Principal principal,
-             UserWorkedTimeRequest request) {
+             UserWorkedTimeSearchRequest request) {
         String login = principalUtil.getUsername(principal);
         Optional<User> searchResult =
                 userDataRepository.findByCredentialLogin(login);
