@@ -337,22 +337,28 @@ public class WorkedTimeRestController {
                 = userWorkedTimeDataRepository.findByUserIdAndStartTimeBetween(
                 foundUser.getId(), startTimeStamp, endTimeStamp);
 
-        long workedTimeInDay = 0L;
+        long workedTimeInMonth = 0L;
 
         for (UserWorkedTime workedTime : searchResultWork) {
 
             if (workedTime.getEndTime().before(workedTime.getStartTime())) {
                 throw new DateAndTimeException(START_MUST_BE_BEFORE_END);
             }
-            workedTimeInDay += workedTime.getEndTime().getTime()
+            workedTimeInMonth += workedTime.getEndTime().getTime()
                     - workedTime.getStartTime().getTime();
-
         }
 
-        String workedTime = workedTimeFromMillisecToStr(workedTimeInDay);
+        long needToWorkInMonth = workTimeHelper.needToWorkInMonthInMilliseconds
+                (initial, foundUser.getRate().getWorkHour());
+
+        long  overtimeMillis = workedTimeInMonth - needToWorkInMonth;
+
+        String workedTime = workTimeHelper.workedTimeFromMillisecToStr(workedTimeInMonth);
+        String needToWork = workTimeHelper.workedTimeFromMillisecToStr(needToWorkInMonth);
+        String overtime = workTimeHelper.workedTimeFromMillisecToStr(overtimeMillis);
 
         UserWorkedTimeResponse urt = new UserWorkedTimeResponse(
-                searchResultWork,  workedTime);
+                searchResultWork,  workedTime, needToWork, overtime);
 
         return ResponseEntity.ok(urt);
     }
@@ -361,7 +367,7 @@ public class WorkedTimeRestController {
     @GetMapping("/search_work_in_day_with_worked_time/{date_to_search}")
     @ApiOperation(value = "Find all worked time and time of work for user by token and in a day")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "date_in_month_to_search", dataType = "string",
+            @ApiImplicitParam(name = "date_to_search", dataType = "string",
                     paramType = "path", value = "Date to search format YYYY-MM-DD",
                     required = true, defaultValue = "2021-08-01"),
             @ApiImplicitParam(name = "X-Auth-Token",
@@ -405,27 +411,19 @@ public class WorkedTimeRestController {
             workedTimeInDay += workedTime.getEndTime().getTime()
                     - workedTime.getStartTime().getTime();
         }
+        long needToWorkInDay = TimeUnit.HOURS.toMillis(foundUser.getRate().getWorkHour());
 
-        String workedTime = workedTimeFromMillisecToStr(workedTimeInDay);
+        long  overtimeMillis = workedTimeInDay - needToWorkInDay;
+
+        String workedTime = workTimeHelper.workedTimeFromMillisecToStr(workedTimeInDay);
+        String needToWork = workTimeHelper.workedTimeFromMillisecToStr(needToWorkInDay);
+        String overtime = workTimeHelper.workedTimeFromMillisecToStr(overtimeMillis);
 
         UserWorkedTimeResponse urt = new UserWorkedTimeResponse(
-                searchResultWork,  workedTime);
+                searchResultWork,  workedTime, needToWork, overtime);
 
         return ResponseEntity.ok(urt);
     }
 
-
-
-    private String workedTimeFromMillisecToStr(long milliseconds) {
-
-        long hours = TimeUnit.MILLISECONDS.toHours(milliseconds);
-        milliseconds -= TimeUnit.HOURS.toMillis(hours);
-        long minutes = TimeUnit.MILLISECONDS.toMinutes(milliseconds);
-        milliseconds -= TimeUnit.MINUTES.toMillis(minutes);
-        long seconds = TimeUnit.MILLISECONDS.toSeconds(milliseconds);
-
-        return hours + " : " + minutes + " : " + seconds;
-
-    }
 
 }
