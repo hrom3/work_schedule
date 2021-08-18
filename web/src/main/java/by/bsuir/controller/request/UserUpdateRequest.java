@@ -38,11 +38,10 @@ public class UserUpdateRequest {
     @ApiParam(value = "1 - ADMIN; 2 - USER; 3 - MODERATOR",
             defaultValue = "2", allowableValues = "range[1, 3]")
     private Integer roleId;
-    //private ArrayList<Integer> roleIds;
 
-    @ApiParam(value = "must be unique", required = true, allowEmptyValue = false)
+    @ApiParam(value = "must be unique", required = true)
     private String login;
 
-    @ApiParam(value = "not null", required = true, allowEmptyValue = false)
+    @ApiParam(value = "not null", required = true)
     private String password;
 }

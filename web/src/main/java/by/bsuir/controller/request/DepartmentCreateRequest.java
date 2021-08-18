@@ -9,7 +9,6 @@ import lombok.Data;
 @AllArgsConstructor
 public class DepartmentCreateRequest {
 
-
     @ApiParam(required = true)
     private String departmentName;
 

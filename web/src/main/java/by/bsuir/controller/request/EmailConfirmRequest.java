@@ -8,9 +8,9 @@ import lombok.Data;
 @AllArgsConstructor
 public class EmailConfirmRequest {
 
-    @ApiParam(value = "Long, not null", required = true, allowEmptyValue = false)
+    @ApiParam(value = "Long, not null", required = true)
     private Long id;
-    @ApiParam(value = "String, not null", required = true, allowEmptyValue = false)
+    @ApiParam(value = "String, not null", required = true)
     private String uuid;
 
 }
