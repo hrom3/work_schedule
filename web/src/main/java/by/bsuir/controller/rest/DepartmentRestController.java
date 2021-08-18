@@ -48,7 +48,7 @@ public class DepartmentRestController {
         return ResponseEntity.ok(departmentRepository.findAll());
     }
 
-    @GetMapping("/search/{query}")
+    @GetMapping("/search/name/{query}")
     @ApiOperation(value = "Find departments by query")
     @JsonView(View.PublicView.class)
     public ResponseEntity<List<Department>> userSearch(@PathVariable String query) {
@@ -59,7 +59,7 @@ public class DepartmentRestController {
     @GetMapping("/search/{id}")
     @ApiOperation(value = "Find department by id")
     @JsonView(View.PublicView.class)
-    public ResponseEntity<Department> findOneById(@PathVariable Integer id) {
+    public ResponseEntity<Department> findById(@PathVariable Integer id) {
 
         Optional<Department> foundDepartment = departmentRepository.findById(id);
 

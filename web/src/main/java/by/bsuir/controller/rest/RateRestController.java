@@ -49,7 +49,7 @@ public class RateRestController {
 
     @GetMapping("/search/{id}")
     @ApiOperation(value = "Find employees rate by id")
-    @JsonView(View.PublicView.class)
+    @JsonView(View.InternalView.class)
     public ResponseEntity<Rate> findById(@PathVariable Integer id) {
 
         Optional<Rate> foundRate = rateRepository.findById(id);
