@@ -5,6 +5,7 @@ import by.bsuir.service.viewhelper.View;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,7 +45,8 @@ public class UserWorkedTime {
     @ManyToOne
     @JoinColumn(name = "id_users")
     @JsonView(View.ExtendedPublicView.class)
-    @JsonIgnoreProperties("user")
+    //@JsonIgnoreProperties("user")
+    @JsonManagedReference
     private User user;
 
     @Column

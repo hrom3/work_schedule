@@ -1,6 +1,9 @@
 package by.bsuir.domain;
 
+import by.bsuir.service.viewhelper.View;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -40,15 +43,19 @@ public class Rate {
     private Integer id;
 
     @Column(name = "salary_rate")
+    @JsonView(View.InternalView.class)
     private Float salaryRate;
 
     @Column(name = "work_hour")
+    @JsonView(View.InternalView.class)
     private Integer workHour;
 
     @Column(name = "work_hour_short_day")
+
     private Integer workHourShortDay;
 
     @OneToMany(mappedBy = "rate", fetch = FetchType.EAGER)
+    @JsonView(View.InternalView.class)
     @JsonBackReference
     private Set<User> users = Collections.emptySet();
 }

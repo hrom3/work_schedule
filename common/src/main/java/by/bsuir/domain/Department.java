@@ -2,6 +2,7 @@ package by.bsuir.domain;
 
 import by.bsuir.service.viewhelper.View;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonView;
 import lombok.Data;
@@ -46,7 +47,8 @@ public class Department {
     private String departmentName;
 
     @OneToMany(mappedBy = "department", fetch = FetchType.EAGER)
-    @JsonManagedReference
+    //@JsonManagedReference
+    @JsonBackReference
     @JsonView(View.InternalView.class)
     private Set<User> users = Collections.emptySet();
 }

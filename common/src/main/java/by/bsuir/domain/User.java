@@ -2,6 +2,7 @@ package by.bsuir.domain;
 
 import by.bsuir.service.viewhelper.View;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -79,7 +80,8 @@ public class User {
 
     @ManyToOne
     @JoinColumn(name = "department_id")
-    @JsonIgnoreProperties("users")
+    //@JsonIgnoreProperties("users")
+    @JsonManagedReference
     @JsonView(View.PublicView.class)
     private Department department;
 
@@ -122,8 +124,8 @@ public class User {
     private Set<Role> roles = Collections.emptySet();
 
     @OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
-    @JsonIgnoreProperties("user")
-    //@JsonBackReference
+    //@JsonIgnoreProperties("user")
+    @JsonBackReference
     @JsonView(View.ExtendedPublicView.class)
     private Set<UserWorkedTime> userWorkedTimes = Collections.emptySet();
 }
