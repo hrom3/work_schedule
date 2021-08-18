@@ -28,29 +28,16 @@ public class LoggingAspect {
         log.info("Method " + joinPoint.getSignature().getName() + " finished");
     }
 
-    @Pointcut("execution(* by.bsuir.repository.obsolete.impl.JdbcTemplateUserRepository.*(..))")
+    /*@Pointcut("execution(* by.bsuir.repository.obsolete.impl.JdbcTemplateUserRepository.*(..))")
     public void aroundRepositoryPointcut() {
-    }
+    }*/
 
 
     @Pointcut("execution(* by.bsuir.service.email.impl.EmailServiceImpl.*(..))")
     public void emailSenderPointcut() {
     }
 
-   /* @Around("aroundRepositoryPointcut()")
-    public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
-        log.info("Method " + joinPoint.getSignature().getName() + " start");
-        long time = System.currentTimeMillis();
-        Object proceed = joinPoint.proceed();
-        long time = System.currentTimeMillis() - time;
-        log.info("Method " + joinPoint.getSignature().getName() + " finished" +
-                "\n \t\t Execute time = = " + time +" ms");
-
-        return proceed;
-    } Мой метод
-    */
-
-    @Around("aroundRepositoryPointcut()")
+    @Around("emailSenderPointcut()")
     public Object logAroundMethods(ProceedingJoinPoint joinPoint) throws Throwable {
         log.info("Method " + joinPoint.getSignature().getName() + " start");
         StopWatch timer = new StopWatch();
