@@ -17,5 +17,11 @@ public class UserWorkedTimeResponse {
     List<UserWorkedTime> userWorkTimes;
 
     @JsonView(View.PublicView.class)
-    String time;
+    String workedTime;
+
+    @JsonView(View.PublicView.class)
+    String needToWork;
+
+    @JsonView(View.PublicView.class)
+    String overtime;
 }
