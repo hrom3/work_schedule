@@ -69,7 +69,7 @@ public class EmailRestController {
                 HttpStatus.OK);
     }
 
-    @ApiOperation(value = "Send confirmation email (for test)")
+    @ApiOperation(value = "Send confirmation email")
     @GetMapping(value = "/confirmation-email/{id}")
     public ResponseEntity<String> sendConfirmationEmail(@PathVariable Long id) {
 
