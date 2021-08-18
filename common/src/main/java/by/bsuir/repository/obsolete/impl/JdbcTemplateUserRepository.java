@@ -43,8 +43,6 @@ public class JdbcTemplateUserRepository implements IJDBCUserRepository {
         user.setCreated(rs.getTimestamp(IUserColumns.CREATED));
         user.setChanged(rs.getTimestamp(IUserColumns.CHANGED));
         user.setIsDeleted(rs.getBoolean(IUserColumns.IS_DELETED));
-        //user.setRateId(rs.getInt(IUserColumns.RATE_ID));
-        //user.setRoomId(rs.getInt(IUserColumns.ROOM_ID));
         return user;
     }
 
@@ -88,25 +86,6 @@ public class JdbcTemplateUserRepository implements IJDBCUserRepository {
 
         return findOne(createdUserId);
     }
-
-//    @Override
-//    public void addOne(User entity) {
-//        final String createQuery = "insert into users (name, surname, middle_name, " +
-//                "email, birth_day, department_id, created, changed, is_deleted, " +
-//                "rate_id, room_id) " + "values (:name, :surname, :middleName, " +
-//                ":email, :birthDay, :departmentId, :created, :changed, :isDeleted, " +
-//                ":rateId, :roomId);";
-//
-//        MapSqlParameterSource params = generateUserParamsMap(entity);
-//        namedParameterJdbcTemplate.update(createQuery, params);
-//    }
-
-//    @Override
-//    public void save(List<User> entities) {
-//        for (User entry : entities) {
-//            addOne(entry);
-//        }
-//    }
 
     @Override
     public User update(User entity) {
@@ -155,12 +134,6 @@ public class JdbcTemplateUserRepository implements IJDBCUserRepository {
         return result > 0;
     }
 
-    //Specification
-    //Criteria API
-    //Search Criteria object
-    //like '%query%' and like '%query%' and like '%query%'
-    //ElasticSearch
-    //PostgresFTS
     @Override
     public List<User> findUsersByQuery(Integer limit, String query) {
         final String searchQuery = "select * from users where name like :query " +
@@ -214,9 +187,6 @@ public class JdbcTemplateUserRepository implements IJDBCUserRepository {
 
     @Override
     public User findUserByLogin(String login) {
-//        final String findUserByLogin = "select * from users " +
-//        "where id = :id" +
-//                "(select id_users from credential where login = :login);";
         final String findUserByLogin = "select " +
                 "u.id as id, " +
                 "u.name as name, " +
@@ -243,7 +213,6 @@ public class JdbcTemplateUserRepository implements IJDBCUserRepository {
             throw new NoSuchEntityException("No such user with this login");
 
         }
-//        return findOne(2L);
     }
 
     @Override
@@ -285,13 +254,9 @@ public class JdbcTemplateUserRepository implements IJDBCUserRepository {
         params.addValue("middleName", entity.getMiddleName());
         params.addValue("email", entity.getEmail());
         params.addValue("birthDay", entity.getBirthDay());
-        //params.addValue("departmentId", entity.getDepartmentId());
         params.addValue("created", entity.getCreated());
         params.addValue("changed", entity.getChanged());
         params.addValue("isDeleted", entity.getIsDeleted());
-        //params.addValue("rateId", entity.getRateId());
-        //params.addValue("roomId", entity.getRoomId());
-
         return params;
     }
 }

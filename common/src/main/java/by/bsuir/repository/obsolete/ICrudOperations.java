@@ -9,7 +9,7 @@ import java.util.List;
  * @param <K> - primary key of object
  * @param <T> - object type
  */
-
+@Deprecated
 public interface ICrudOperations<K, T> {
 
     List<T> findAll();
@@ -17,10 +17,6 @@ public interface ICrudOperations<K, T> {
     T findOne(K id);
 
     T save(T entity);
-
-//    void addOne(T entity);
-
-//    void save(List<T> entities);
 
     T update(T entity);
 

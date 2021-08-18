@@ -19,6 +19,7 @@ import java.util.List;
 @Repository
 @Primary
 @RequiredArgsConstructor
+@Deprecated
 public class UserWorkedTimeRepositoryImpl implements IUserWorkedTimeRepository {
 
     private final SessionFactory sessionFactory;
