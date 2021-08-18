@@ -21,7 +21,6 @@ public class ConfirmationDataGenerator {
         confirmationData.setDueDate(new Timestamp(System.currentTimeMillis()
                 + LIFETIME_CONFIRMATION_UUID_IN_MILLIS));
 
-
         return confirmationData;
     }
 
