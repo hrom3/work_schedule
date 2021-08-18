@@ -25,12 +25,6 @@ public class ConfirmationData {
     @Id
     @GeneratedValue(
             strategy = GenerationType.IDENTITY
-            /*, strategy = GenerationType.SEQUENCE,
-            generator =  "confirmation_id_table_id"
-    )
-    @SequenceGenerator(
-            name = "confirmation_id_table_id",
-            sequenceName = "confirmation_id_table_id_seq"*/
     )
     private Long id;
 

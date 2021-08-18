@@ -38,8 +38,4 @@ public class IssueFromJira {
 
     @Column(name = "jira_issues_id")
     private Long jiraIssuesId;
-
-    //@OneToMany
-    //@JsonManagedReference
-    //private Set<UserWorkedTime> userWorkedTimes = Collections.emptySet();
 }

@@ -4,6 +4,6 @@ public enum ESystemRoles {
     ROLE_ADMIN,
     ROLE_USER,
     ROLE_MODERATOR,
-    ROLE_GUEST
-
+    ROLE_GUEST,
+    ROLE_BOSS
 }
